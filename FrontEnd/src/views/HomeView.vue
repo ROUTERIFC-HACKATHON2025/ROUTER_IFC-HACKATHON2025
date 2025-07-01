@@ -6,4 +6,10 @@
 </template>
 
 <style scoped>
+    h1 {
+      color: black;
+      text-align: center;
+      font-size: 2em;
+      margin-top: 20px;
+    }
 </style>
