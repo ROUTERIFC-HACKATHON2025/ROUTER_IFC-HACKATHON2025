@@ -4,7 +4,6 @@ import { useThemeManagerStore } from '@/stores/themeManager'
 import { RouterLink } from 'vue-router'
 
 const themeManager = useThemeManagerStore()
-
 onMounted(themeManager.init)
 </script>
 
