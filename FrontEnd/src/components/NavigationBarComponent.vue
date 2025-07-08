@@ -35,7 +35,10 @@ onMounted(themeManager.init)
       <nav aria-label="Menu principal">
         <ul>
           <li><RouterLink to="/" :style="{ color: themeManager.text }">Início</RouterLink></li>
-          <li><RouterLink to="/dashboard" :style="{ color: themeManager.text }">Dashboard</RouterLink></li>
+          <li><RouterLink to="/" :style="{ color: themeManager.text }">Sobre</RouterLink></li>
+          <li><RouterLink to="/" :style="{ color: themeManager.text }">Equipe</RouterLink></li>
+          <li><RouterLink to="/" :style="{ color: themeManager.text }">Contatos</RouterLink></li>
+
           <li>
             <RouterLink to="/login">
               <span class="mdi mdi-account" :style="{ color: themeManager.text }" aria-label="Login"></span>
