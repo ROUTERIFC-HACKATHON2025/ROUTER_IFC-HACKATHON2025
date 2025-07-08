@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <h1>HOME PAGE</h1>
+    <h1>DASHBOARD</h1>
 </template>
 
 <style scoped>
