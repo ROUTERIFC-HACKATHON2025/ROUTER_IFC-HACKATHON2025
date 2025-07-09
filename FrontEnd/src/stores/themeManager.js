@@ -6,6 +6,7 @@ const CORES_CLARAS = {
   fundoAlternativo: '#f1f1f1',
   texto: '#383838',
   detalhe: '#1863A2',
+  detalheAlternativo: '#59A3E2',
   icone: 'mdi mdi-weather-sunny',
   logo: '/Logo-ROUTER.png',
   logoFooter: '/Logo-ROUTER-footer.png',
@@ -17,6 +18,7 @@ const CORES_ESCURAS = {
   fundoAlternativo: '#1f1f1f',
   texto: '#e4e4e4',
   detalhe: '#003F74',
+  detalheAlternativo: '#1863A2',
   icone: 'mdi mdi-weather-night',
   logo: '/Logo-ROUTER-escuro.png',
   logoFooter: '/Logo-ROUTER-footer-escuro.png',
@@ -28,6 +30,7 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
   const fundoAlternativo = ref(CORES_CLARAS.fundoAlternativo)
   const text = ref(CORES_CLARAS.texto)
   const detalhe = ref(CORES_CLARAS.detalhe)
+  const detalheAlternativo = ref(CORES_CLARAS.detalheAlternativo)
   const logo = ref(CORES_CLARAS.logo)
   const logofooter = ref(CORES_CLARAS.logoFooter)
   const icone = ref(CORES_CLARAS.icone)
@@ -40,6 +43,7 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
     fundoAlternativo.value = CORES_ESCURAS.fundoAlternativo
     text.value = CORES_ESCURAS.texto
     detalhe.value = CORES_ESCURAS.detalhe
+    detalheAlternativo.value = CORES_ESCURAS.detalheAlternativo
     logo.value = CORES_ESCURAS.logo
     logofooter.value = CORES_ESCURAS.logoFooter
     icone.value = CORES_ESCURAS.icone
@@ -51,6 +55,7 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
     fundoAlternativo.value = CORES_CLARAS.fundoAlternativo
     text.value = CORES_CLARAS.texto
     detalhe.value = CORES_CLARAS.detalhe
+    detalheAlternativo.value = CORES_CLARAS.detalheAlternativo
     logo.value = CORES_CLARAS.logo
     logofooter.value = CORES_CLARAS.logoFooter
     icone.value = CORES_CLARAS.icone
@@ -77,6 +82,7 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
     logo,
     logofooter,
     icone,
+    detalheAlternativo,
     menininha,
     toggleTheme,
     init,
