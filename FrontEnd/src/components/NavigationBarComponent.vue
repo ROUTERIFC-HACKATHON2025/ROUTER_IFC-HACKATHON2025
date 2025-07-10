@@ -14,7 +14,13 @@ onMounted(themeManager.init)
   </div>
 
   <header :style="{ backgroundColor: themeManager.fundo }">
-    <div class="container" :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
+    <div
+      class="container"
+      :style="{
+        backgroundColor: themeManager.fundo,
+        borderBottom: '2px solid ' + themeManager.detalhe
+      }"
+    >
       <div class="logo">
         <img :src="themeManager.logo" alt="Logotipo ROUTER" />
         <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">
@@ -26,7 +32,11 @@ onMounted(themeManager.init)
         <input
           type="text"
           placeholder="Pesquisar..."
-          :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, border: '2px solid ' + themeManager.detalhe }"
+          :style="{
+            backgroundColor: themeManager.fundo,
+            color: themeManager.text,
+            border: '2px solid ' + themeManager.detalhe
+          }"
         />
         <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
       </div>
@@ -37,7 +47,6 @@ onMounted(themeManager.init)
           <li><RouterLink to="/" :style="{ color: themeManager.text }">Sobre</RouterLink></li>
           <li><RouterLink to="/equipe" :style="{ color: themeManager.text }">Equipe</RouterLink></li>
           <li><RouterLink to="/" :style="{ color: themeManager.text }">Contatos</RouterLink></li>
-
           <li>
             <RouterLink to="/login">
               <span class="mdi mdi-account" :style="{ color: themeManager.text }" aria-label="Login"></span>
@@ -63,6 +72,12 @@ onMounted(themeManager.init)
 .top-bar span {
   cursor: pointer;
   font-size: 1.2rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.top-bar span:hover {
+  transform: rotate(20deg) scale(1.2);
+  color: #fff;
 }
 
 .container {
@@ -78,6 +93,7 @@ onMounted(themeManager.init)
   display: flex;
   align-items: center;
   gap: 12px;
+  transition: all 0.3s ease;
 }
 
 .logo img {
@@ -102,6 +118,7 @@ onMounted(themeManager.init)
   border-radius: 25px;
   width: 400px;
   font-size: 1rem;
+  border: 2px solid;
 }
 
 .search input:focus {
@@ -115,6 +132,11 @@ onMounted(themeManager.init)
   transform: translateY(-50%);
   font-size: 1.3em;
   pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+.search input:focus + .mdi {
+  transform: translateY(-50%) scale(1.2);
 }
 
 nav ul {
@@ -132,10 +154,13 @@ nav ul li a {
   text-decoration: none;
   padding: 5px 8px;
   border-radius: 5px;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 nav ul li a:hover {
   text-decoration: underline;
+  font-weight: bold;
 }
 
 nav ul li a span {
@@ -166,4 +191,4 @@ nav ul li a span {
     width: 100%;
   }
 }
-</style> 
+</style>

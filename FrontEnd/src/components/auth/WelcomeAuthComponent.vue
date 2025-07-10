@@ -9,9 +9,9 @@ const authState = useAuthStateStore()
 
 <template>
   <section class="login-container" :style="{ backgroundColor: themeManager.fundo }">
-    <img class="login-image" :src="themeManager.menininha" alt="Ilustração de login" />
+    <img class="login-image fade-in-left" :src="themeManager.menininha" alt="Ilustração de login" />
 
-    <div class="login-box">
+    <div class="login-box fade-in-right">
       <h1 :style="{ color: themeManager.text }">
         FAÇA LOGIN EM SUA CONTA <br />
         NO <span class="highlight">ROUTER IFC!</span>
@@ -21,20 +21,20 @@ const authState = useAuthStateStore()
 
       <div class="button-group">
         <button
-          class="login-button"
+          class="login-button glow"
           :style="{ backgroundColor: themeManager.detalhe }"
           @click="authState.mudarState('autentificacao')"
         >
-          <span class="mdi mdi-seat-passenger"></span>
+          <span class="mdi mdi-seat-passenger icon"></span>
           <p>Conta Passageiro</p>
         </button>
 
         <button
-          class="login-button"
+          class="login-button glow"
           :style="{ backgroundColor: themeManager.detalhe }"
           @click="authState.mudarState('autentificacao')"
         >
-          <span class="mdi mdi-bus-school"></span>
+          <span class="mdi mdi-bus-school icon"></span>
           <p>Conta Motorista</p>
         </button>
       </div>
@@ -54,11 +54,13 @@ const authState = useAuthStateStore()
   align-items: center;
   padding: 20px 200px 80px 200px;
   flex-wrap: wrap;
+  animation: fadeIn 1s ease-in-out;
 }
 
 .login-image {
   width: 500px;
   max-width: 100%;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
 .login-box {
@@ -66,6 +68,8 @@ const authState = useAuthStateStore()
   flex-direction: column;
   text-align: right;
   max-width: 500px;
+  transition: all 0.4s ease;
+  animation: fadeInUp 0.8s ease-out;
 }
 
 h1 {
@@ -73,11 +77,13 @@ h1 {
   font-weight: bold;
   margin-bottom: 1rem;
   line-height: 1.1;
+  transition: color 0.3s ease;
 }
 
 .highlight {
   color: #59A3E2;
   font-weight: bold;
+  transition: color 0.3s ease;
 }
 
 .subtext {
@@ -99,7 +105,7 @@ h1 {
   border: none;
   width: 240px;
   padding: 15px 0;
-  border-radius: 6px;
+  border-radius: 10px;
   font-size: 1rem;
   font-weight: 500;
   align-items: center;
@@ -107,11 +113,22 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition: background-color 0.3s;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.login-button span {
+.login-button:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.icon {
   font-size: 3rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.login-button:hover .icon {
+  transform: scale(1.2);
 }
 
 .login-button p {
@@ -119,19 +136,43 @@ h1 {
   margin: 0;
 }
 
-.login-button:hover {
-  background-color: #09243f;
-}
-
 .register-text {
   font-size: 1rem;
   text-align: center;
+  margin-top: 10px;
 }
 
 .register-link {
   color: #59A3E2;
   font-weight: 500;
   text-decoration: underline;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.register-link:hover {
+  color: #1863A2;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @media (max-width: 768px) {
@@ -155,4 +196,4 @@ h1 {
     width: 100%;
   }
 }
-</style> 
+</style>

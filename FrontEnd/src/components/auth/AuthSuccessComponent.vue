@@ -163,7 +163,7 @@ function sairDaConta() {
             </label>
           </div>
         </div>
-        <button class="confirmar" :style="{backgroundColor: themeManager.detalhe}">CONFIRMAR</button>
+        <button class="confirmar" :style="{ backgroundColor: themeManager.detalhe }">CONFIRMAR</button>
       </div>
     </div>
   </section>
@@ -177,12 +177,23 @@ function sairDaConta() {
   gap: 16px;
   justify-content: space-between;
   flex-wrap: wrap;
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
 }
 
 .row {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+.perfil,
+.transporte,
+.mapa,
+.ida-volta {
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+  transition: all 0.3s ease;
 }
 
 .perfil {
@@ -238,13 +249,11 @@ function sairDaConta() {
   align-items: center;
 }
 
-.enderecos ul li p {
-  margin: 0;
-  font-size: 14px;
-}
-
-.enderecos ul li span {
-  font-size: 18px;
+.enderecos ul li p{
+  font-size: 15px;
+  border: none;
+  align-items: center;
+  margin-top: 5px;
 }
 
 .inputs p {
@@ -275,6 +284,7 @@ function sairDaConta() {
   width: 100%;
   outline: none;
   color: #383838;
+  transition: all 0.3s ease;
 }
 
 .input-group input[readonly] {
@@ -285,6 +295,12 @@ function sairDaConta() {
 .data-campo span {
   cursor: pointer;
   font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.senha-campo span:hover,
+.data-campo span:hover {
+  transform: scale(1.2);
 }
 
 .data-campo {
@@ -305,6 +321,12 @@ function sairDaConta() {
   text-align: center;
   cursor: pointer;
   font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.sair:hover {
+  color: rgb(255, 97, 97);
+  transform: scale(1.05);
 }
 
 .right-side {
@@ -338,6 +360,7 @@ function sairDaConta() {
   display: flex;
   gap: 12px;
   align-items: center;
+  transition: all 0.3s ease;
 }
 
 .card .avatar {
@@ -396,6 +419,7 @@ function sairDaConta() {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  transition: all 0.3s ease;
 }
 
 .ida-card p {
@@ -419,6 +443,23 @@ function sairDaConta() {
   font-weight: bold;
   font-size: 14px;
   align-self: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.confirmar:hover {
+  transform: scale(1.05);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (min-width: 768px) {
@@ -438,4 +479,4 @@ function sairDaConta() {
     min-width: 90vw;
   }
 }
-</style> 
+</style>
