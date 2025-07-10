@@ -13,6 +13,7 @@ const showPassword = ref(false)
 
 onMounted(() => {
   themeManager.init()
+  authState.restaurarState()
 })
 
 function toggleShowPassword() {
@@ -23,7 +24,7 @@ function handleLogin() {
   const emailVal = email.value.trim().toLowerCase()
   const senhaVal = senha.value.trim()
 
-  if (emailVal === 'adm@gmail.com' && senhaVal === 'adm') {
+  if (emailVal === 'a@a' && senhaVal === 'a') {
     erro.value = ''
     authState.mudarState('finalizado')
   } else {
@@ -180,10 +181,6 @@ function handleLogin() {
   transform: translateY(-50%);
   font-size: 1.3rem;
   cursor: pointer;
-  transition: color 0.2s ease;
-}
-.toggle-eye:hover {
-  color: #59a3e2 !important;
 }
 
 .submit-btn {

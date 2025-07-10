@@ -7,11 +7,12 @@ import WelcomeAuthComponent  from '@/components/auth/WelcomeAuthComponent.vue'
 import AuthFormComponent     from '@/components/auth/AuthFormComponent.vue'
 import AuthSuccessComponent  from '@/components/auth/AuthSuccessComponent.vue'
 
-const themeManager  = useThemeManagerStore()
-const authState  = useAuthStateStore()
+const themeManager = useThemeManagerStore()
+const authState = useAuthStateStore()
 
 onMounted(() => {
   themeManager.init()
+  authState.restaurarState()
 })
 </script>
 
@@ -21,4 +22,4 @@ onMounted(() => {
     <AuthFormComponent    v-else-if="authState.state === 'autentificacao'" />
     <AuthSuccessComponent v-else />
   </main>
-</template> 
+</template>

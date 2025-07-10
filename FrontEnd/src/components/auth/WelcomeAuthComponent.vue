@@ -1,10 +1,17 @@
 <script setup>
+import { onMounted } from 'vue'
 import { useThemeManagerStore } from '@/stores/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import { RouterLink } from 'vue-router'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
+
+onMounted(() => {
+  themeManager.init()
+  authState.restaurarState()
+})
+
 </script>
 
 <template>
@@ -53,6 +60,7 @@ const authState = useAuthStateStore()
   justify-content: space-between;
   align-items: center;
   padding: 20px 200px 80px 200px;
+  min-width: 100vh;
   flex-wrap: wrap;
   animation: fadeIn 1s ease-in-out;
 }

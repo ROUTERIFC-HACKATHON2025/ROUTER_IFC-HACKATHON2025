@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useThemeManagerStore } from '@/stores/themeManager'
 import { useUserProfileStore } from '@/stores/userProfile'
@@ -46,6 +47,12 @@ function sairDaConta() {
   authState.reset()
   router.push('/')
 }
+
+onMounted(() => {
+  themeManager.init()
+  authState.restaurarState() 
+})
+
 </script>
 
 <template>
@@ -360,7 +367,6 @@ function sairDaConta() {
   display: flex;
   gap: 12px;
   align-items: center;
-  transition: all 0.3s ease;
 }
 
 .card .avatar {
@@ -419,7 +425,6 @@ function sairDaConta() {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition: all 0.3s ease;
 }
 
 .ida-card p {
