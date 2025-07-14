@@ -5,8 +5,8 @@ const themeManager = useThemeManagerStore()
 </script>
 
 <template>
-  <section class="equipe-container" :style="{ backgroundColor: themeManager.fundo }">
-    <div class="header" :style="{ borderBottom: '2px solid ' + themeManager.detalhe }">
+  <section class="equipe-container" :style="{ backgroundColor: themeManager.fundo}">
+    <div class="header" :style="{background: 'url('+ themeManager.linhaEquipe +') no-repeat center center', backgroundSize: 'auto 101%', borderBottom: '2px solid ' + themeManager.detalhe }">
       <img src="/public/equipe.png" alt="Ilustração equipe" class="illustration" />
       <div class="intro">
         <h1 :style="{ color: themeManager.text }">
@@ -130,7 +130,7 @@ const themeManager = useThemeManagerStore()
 }
 
 h1 {
-  font-size: 3em;
+  font-size: 5em;
   font-weight: bold;
   line-height: 1.2;
 }

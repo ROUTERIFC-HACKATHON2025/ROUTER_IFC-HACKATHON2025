@@ -10,7 +10,8 @@ const CORES_CLARAS = {
   icone: 'mdi mdi-weather-sunny',
   logo: '/Logo-ROUTER.png',
   logoFooter: '/Logo-ROUTER-footer.png',
-  menininha: '/auth-welcome-illustration.png'
+  menininha: '/auth-welcome-illustration.png',
+  linhaEquipeClara: '/linhaEquipeClaro.svg'
 }
 
 const CORES_ESCURAS = {
@@ -22,7 +23,8 @@ const CORES_ESCURAS = {
   icone: 'mdi mdi-weather-night',
   logo: '/Logo-ROUTER-escuro.png',
   logoFooter: '/Logo-ROUTER-footer-escuro.png',
-  menininha: '/auth-welcome-illustration-dark.png'
+  menininha: '/auth-welcome-illustration-dark.png',
+  linhaEquipeEscura: '/linhaEquipeEscuro.svg'
 }
 
 export const useThemeManagerStore = defineStore('themeManager', () => {
@@ -35,6 +37,7 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
   const logofooter = ref(CORES_CLARAS.logoFooter)
   const icone = ref(CORES_CLARAS.icone)
   const menininha = ref(CORES_CLARAS.menininha)
+  const linhaEquipe = ref(CORES_CLARAS.linhaEquipeClara)
 
   const isDark = computed(() => fundo.value === CORES_ESCURAS.fundo)
 
@@ -48,6 +51,7 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
     logofooter.value = CORES_ESCURAS.logoFooter
     icone.value = CORES_ESCURAS.icone
     menininha.value = CORES_ESCURAS.menininha
+    linhaEquipe.value = CORES_ESCURAS.linhaEquipeEscura
   }
 
   const applyLight = () => {
@@ -60,6 +64,7 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
     logofooter.value = CORES_CLARAS.logoFooter
     icone.value = CORES_CLARAS.icone
     menininha.value = CORES_CLARAS.menininha
+    linhaEquipe.value = CORES_CLARAS.linhaEquipeClara
   }
 
   const toggleTheme = () => {
@@ -86,6 +91,7 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
     menininha,
     toggleTheme,
     init,
-    isDark
+    isDark,
+    linhaEquipe
   }
 }) 
