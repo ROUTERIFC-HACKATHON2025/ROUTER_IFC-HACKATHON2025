@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useThemeManagerStore } from '@/stores/themeManager'
+import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 
 const themeManager = useThemeManagerStore()
@@ -36,7 +36,7 @@ function handleLogin() {
 <template>
   <section class="login-container" :style="{ backgroundColor: themeManager.fundo }">
     <div class="left-panel" :style="{ backgroundColor: themeManager.detalhe }">
-      <img src="/auth-form-illustration.png" alt="Login Illustration" />
+      <img src="/public/src-auth/auth-form-illustration.png" alt="Login Illustration" />
     </div>
 
     <div class="right-panel" :style="{ backgroundColor: themeManager.fundo }">

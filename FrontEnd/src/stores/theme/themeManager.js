@@ -2,32 +2,29 @@ import { defineStore } from 'pinia'
 import { ref, computed, watchEffect } from 'vue'
 
 const CORES_CLARAS = {
+  icone: 'mdi mdi-weather-sunny',
   fundo: '#ffffff',
   fundoAlternativo: '#f1f1f1',
   texto: '#383838',
   detalhe: '#1863A2',
   detalheAlternativo: '#59A3E2',
-  icone: 'mdi mdi-weather-sunny',
-  logo: '/Logo-ROUTER.png',
-  logoFooter: '/Logo-ROUTER-footer.png',
-  menininha: '/auth-welcome-illustration.png',
-  linhaEquipeClara: '/linhaEquipeClaro.svg'
+  logo: '/src-logos/Logo-ROUTER.png',
+  logoFooter: '/src-logos/Logo-ROUTER-footer.png',
 }
 
 const CORES_ESCURAS = {
+  icone: 'mdi mdi-weather-night',
   fundo: '#1a1a1a',
   fundoAlternativo: '#1f1f1f',
   texto: '#e4e4e4',
   detalhe: '#003F74',
   detalheAlternativo: '#1863A2',
-  icone: 'mdi mdi-weather-night',
-  logo: '/Logo-ROUTER-escuro.png',
-  logoFooter: '/Logo-ROUTER-footer-escuro.png',
-  menininha: '/auth-welcome-illustration-dark.png',
-  linhaEquipeEscura: '/linhaEquipeEscuro.svg'
+  logo: '/src-logos/Logo-ROUTER-escuro.png',
+  logoFooter: '/src-logos/Logo-ROUTER-footer-escuro.png',
 }
 
 export const useThemeManagerStore = defineStore('themeManager', () => {
+  const icone = ref(CORES_CLARAS.icone)
   const fundo = ref(CORES_CLARAS.fundo)
   const fundoAlternativo = ref(CORES_CLARAS.fundoAlternativo)
   const text = ref(CORES_CLARAS.texto)
@@ -35,13 +32,11 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
   const detalheAlternativo = ref(CORES_CLARAS.detalheAlternativo)
   const logo = ref(CORES_CLARAS.logo)
   const logofooter = ref(CORES_CLARAS.logoFooter)
-  const icone = ref(CORES_CLARAS.icone)
-  const menininha = ref(CORES_CLARAS.menininha)
-  const linhaEquipe = ref(CORES_CLARAS.linhaEquipeClara)
 
   const isDark = computed(() => fundo.value === CORES_ESCURAS.fundo)
 
   const applyDark = () => {
+    icone.value = CORES_ESCURAS.icone
     fundo.value = CORES_ESCURAS.fundo
     fundoAlternativo.value = CORES_ESCURAS.fundoAlternativo
     text.value = CORES_ESCURAS.texto
@@ -49,12 +44,10 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
     detalheAlternativo.value = CORES_ESCURAS.detalheAlternativo
     logo.value = CORES_ESCURAS.logo
     logofooter.value = CORES_ESCURAS.logoFooter
-    icone.value = CORES_ESCURAS.icone
-    menininha.value = CORES_ESCURAS.menininha
-    linhaEquipe.value = CORES_ESCURAS.linhaEquipeEscura
   }
 
   const applyLight = () => {
+    icone.value = CORES_CLARAS.icone
     fundo.value = CORES_CLARAS.fundo
     fundoAlternativo.value = CORES_CLARAS.fundoAlternativo
     text.value = CORES_CLARAS.texto
@@ -62,9 +55,6 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
     detalheAlternativo.value = CORES_CLARAS.detalheAlternativo
     logo.value = CORES_CLARAS.logo
     logofooter.value = CORES_CLARAS.logoFooter
-    icone.value = CORES_CLARAS.icone
-    menininha.value = CORES_CLARAS.menininha
-    linhaEquipe.value = CORES_CLARAS.linhaEquipeClara
   }
 
   const toggleTheme = () => {
@@ -86,12 +76,10 @@ export const useThemeManagerStore = defineStore('themeManager', () => {
     detalhe,
     logo,
     logofooter,
-    icone,
     detalheAlternativo,
-    menininha,
     toggleTheme,
     init,
     isDark,
-    linhaEquipe
+    icone,
   }
-}) 
+})

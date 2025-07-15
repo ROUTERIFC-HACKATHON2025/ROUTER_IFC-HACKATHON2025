@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useThemeManagerStore } from '@/stores/themeManager'
+import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useUserProfileStore } from '@/stores/userProfile'
 import { useAuthStateStore } from '@/stores/authState'
 

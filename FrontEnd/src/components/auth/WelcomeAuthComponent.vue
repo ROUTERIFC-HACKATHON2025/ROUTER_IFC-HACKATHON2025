@@ -1,11 +1,13 @@
 <script setup>
 import { onMounted } from 'vue'
-import { useThemeManagerStore } from '@/stores/themeManager'
+import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import { RouterLink } from 'vue-router'
+import { useThemeAuthStore } from '@/stores/theme/themeAuth'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
+const themeAuth = useThemeAuthStore()
 
 onMounted(() => {
   themeManager.init()
@@ -16,12 +18,12 @@ onMounted(() => {
 
 <template>
   <section class="login-container" :style="{ backgroundColor: themeManager.fundo }">
-    <img class="login-image fade-in-left" :src="themeManager.menininha" alt="Ilustração de login" />
+    <img class="login-image fade-in-left" :src="themeAuth.menininha" alt="Ilustração de login" />
 
     <div class="login-box fade-in-right">
       <h1 :style="{ color: themeManager.text }">
         FAÇA LOGIN EM SUA CONTA <br />
-        NO <span class="highlight">ROUTER IFC!</span>
+        NO <span class="highlight" :style="{ color: themeManager.detalheAlternativo }">ROUTER IFC!</span>
       </h1>
 
       <p class="subtext" :style="{ color: themeManager.text }">Como você deseja logar?</p>
@@ -48,7 +50,7 @@ onMounted(() => {
 
       <p class="register-text" :style="{ color: themeManager.text }">
         Ainda não tem uma conta?
-        <RouterLink class="register-link" to="/cadastro">Cadastre-se</RouterLink>
+        <RouterLink class="register-link" to="/cadastro" :style="{ color: themeManager.detalheAlternativo }">Cadastre-se</RouterLink>
       </p>
     </div>
   </section>
@@ -89,7 +91,6 @@ h1 {
 }
 
 .highlight {
-  color: #59A3E2;
   font-weight: bold;
   transition: color 0.3s ease;
 }
@@ -151,14 +152,13 @@ h1 {
 }
 
 .register-link {
-  color: #59A3E2;
   font-weight: 500;
   text-decoration: underline;
   transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 .register-link:hover {
-  color: #1863A2;
+  color: #003F74;
 }
 
 @keyframes fadeInUp {

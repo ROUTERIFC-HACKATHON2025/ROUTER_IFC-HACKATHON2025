@@ -1,13 +1,15 @@
 <script setup>
-import { useThemeManagerStore } from '@/stores/themeManager'
+import { useThemeManagerStore } from '@/stores/theme/themeManager'
+import { useThemeEquipeStore } from '@/stores/theme/themeEquipe'
 
 const themeManager = useThemeManagerStore()
+const themeEquipe = useThemeEquipeStore()
 </script>
 
 <template>
   <section class="equipe-container" :style="{ backgroundColor: themeManager.fundo}">
-    <div class="header" :style="{background: 'url('+ themeManager.linhaEquipe +') no-repeat center center', backgroundSize: 'auto 101%', borderBottom: '2px solid ' + themeManager.detalhe }">
-      <img src="/public/equipe.png" alt="Ilustração equipe" class="illustration" />
+    <div class="header" :style="{background: 'url('+ themeEquipe.linhaEquipe +') no-repeat center center', backgroundSize: 'auto 101%', borderBottom: '2px solid ' + themeManager.detalhe }">
+      <img src="/public/src-equipe/equipe.png" alt="Ilustração equipe" class="illustration" />
       <div class="intro">
         <h1 :style="{ color: themeManager.text }">
           NOSSA <span :style="{ color: themeManager.detalheAlternativo }">EQUIPE</span>
@@ -19,7 +21,7 @@ const themeManager = useThemeManagerStore()
     </div>
     <div class="cards" :style="{ backgroundColor: themeManager.fundo }">
       <div class="card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }">
-        <img src="/public/GabrielaSenderski-foto.png" alt="Gabriela Senderski" class="profile-img" />
+        <img src="/public/src-equipe/GabrielaSenderski-foto.png" alt="Gabriela Senderski" class="profile-img" />
         <div class="info">
           <h2>Gabriela Senderski</h2>
           <p>
@@ -48,14 +50,14 @@ const themeManager = useThemeManagerStore()
             <li><span class="mdi mdi-email"></span></li>
           </ul>
         </div>
-        <img src="/public/HenriqueBorba-foto.png" alt="Henrique S. S. Borba" class="profile-img" />
+        <img src="/public/src-equipe/HenriqueBorba-foto.png" alt="Henrique S. S. Borba" class="profile-img" />
       </div>
       <div class="card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }">
-        <img src="/public/HigorBraga-foto.png" alt="Higor T. A. Braga" class="profile-img" />
+        <img src="/public/src-equipe/HigorBraga-foto.png" alt="Higor T. A. Braga" class="profile-img" />
         <div class="info">
           <h2>Higor T. A. Braga</h2>
           <p>
-            Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
+            Tenho 16 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
             backend de Django, auxiliando também em partes do frontend com Vue.js.
           </p>
           <ul class="social-icons">
@@ -80,10 +82,10 @@ const themeManager = useThemeManagerStore()
             <li><span class="mdi mdi-email"></span></li>
           </ul>
         </div>
-        <img src="/public/MariaTavares-foto.png" alt="Maria E. G. Tavares" class="profile-img" />
+        <img src="/public/src-equipe/MariaTavares-foto.png" alt="Maria E. G. Tavares" class="profile-img" />
       </div>
       <div class="card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }">
-        <img src="/public/PauloPereira-foto.png" alt="Paulo A. Pereira" class="profile-img" />
+        <img src="/public/src-equipe/PauloPereira-foto.png" alt="Paulo A. Pereira" class="profile-img" />
         <div class="info">
           <h2>Paulo A. Pereira</h2>
           <p>

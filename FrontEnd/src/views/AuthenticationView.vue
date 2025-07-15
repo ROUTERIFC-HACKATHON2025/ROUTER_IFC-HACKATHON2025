@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
-import { useThemeManagerStore } from '@/stores/themeManager'
+import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 
 import WelcomeAuthComponent  from '@/components/auth/WelcomeAuthComponent.vue'

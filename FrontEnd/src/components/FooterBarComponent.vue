@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
-import { useThemeManagerStore } from '@/stores/themeManager'
+import { useThemeManagerStore } from '@/stores/theme/themeManager'
 
 const themeManager = useThemeManagerStore()
 onMounted(themeManager.init)
