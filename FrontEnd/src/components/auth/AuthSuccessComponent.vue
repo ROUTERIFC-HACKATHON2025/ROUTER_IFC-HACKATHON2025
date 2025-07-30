@@ -1,6 +1,5 @@
 <script setup>
-import { ref } from 'vue'
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useUserProfileStore } from '@/stores/userProfile'
@@ -11,11 +10,11 @@ const userProfile = useUserProfileStore()
 const authState = useAuthStateStore()
 const router = useRouter()
 
-const nome = ref(userProfile.nome)
-const telefone = ref(userProfile.telefone)
-const email = ref(userProfile.email)
-const senha = ref(userProfile.senha)
-const nascimento = ref(userProfile.nascimento)
+const nome = ref(userProfile.nome ?? '')
+const telefone = ref(userProfile.telefone ?? '')
+const email = ref(userProfile.email ?? '')
+const senha = ref(userProfile.senha ?? '')
+const nascimento = ref(userProfile.nascimento ?? '')
 
 const verSenha = ref(false)
 const modoEdicao = ref(false)
@@ -34,11 +33,11 @@ function toggleEdicao() {
       nascimento: nascimento.value
     })
   } else {
-    nome.value = userProfile.nome
-    telefone.value = userProfile.telefone
-    email.value = userProfile.email
-    senha.value = userProfile.senha
-    nascimento.value = userProfile.nascimento
+    nome.value = userProfile.nome ?? ''
+    telefone.value = userProfile.telefone ?? ''
+    email.value = userProfile.email ?? ''
+    senha.value = userProfile.senha ?? ''
+    nascimento.value = userProfile.nascimento ?? ''
   }
   modoEdicao.value = !modoEdicao.value
 }
@@ -50,9 +49,8 @@ function sairDaConta() {
 
 onMounted(() => {
   themeManager.init()
-  authState.restaurarState() 
+  authState.restaurarState()
 })
-
 </script>
 
 <template>
@@ -184,8 +182,6 @@ onMounted(() => {
   gap: 16px;
   justify-content: space-between;
   flex-wrap: wrap;
-  animation: fadeInUp 0.6s ease forwards;
-  opacity: 0;
 }
 
 .row {
@@ -198,8 +194,6 @@ onMounted(() => {
 .transporte,
 .mapa,
 .ida-volta {
-  animation: fadeInUp 0.6s ease forwards;
-  opacity: 0;
   transition: all 0.3s ease;
 }
 
@@ -456,32 +450,4 @@ onMounted(() => {
   transform: scale(1.05);
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (min-width: 768px) {
-  .ida-grid {
-    flex-direction: row;
-  }
-}
-
-@media (max-width: 767px) {
-  .right-side {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .transporte,
-  .mapa {
-    min-width: 90vw;
-  }
-}
 </style>

@@ -44,7 +44,7 @@ onMounted(themeManager.init)
       <nav aria-label="Menu principal">
         <ul>
           <li><RouterLink to="/" :style="{ color: themeManager.text }">Início</RouterLink></li>
-          <li><RouterLink to="/" :style="{ color: themeManager.text }">Sobre</RouterLink></li>
+          <li><RouterLink to="/SobreNos" :style="{ color: themeManager.text }">Sobre</RouterLink></li>
           <li><RouterLink to="/equipe" :style="{ color: themeManager.text }">Equipe</RouterLink></li>
           <li><RouterLink to="/" :style="{ color: themeManager.text }">Contatos</RouterLink></li>
           <li>
@@ -67,6 +67,10 @@ onMounted(themeManager.init)
   color: #e4e4e4;
   font-weight: 600;
   font-size: 0.85rem;
+}
+
+.top-bar p{
+  font-size: 1em;
 }
 
 .top-bar span {

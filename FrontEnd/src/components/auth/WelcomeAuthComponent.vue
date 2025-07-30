@@ -17,7 +17,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="login-container" :style="{ backgroundColor: themeManager.fundo }">
+  <section class="login-container" :style="{ backgroundColor: themeManager.fundo, background: 'url(' + themeAuth.linha + ') no-repeat left center',
+        backgroundSize: 'auto 101%', }">
     <img class="login-image fade-in-left" :src="themeAuth.menininha" alt="Ilustração de login" />
 
     <div class="login-box fade-in-right">
@@ -50,7 +51,7 @@ onMounted(() => {
 
       <p class="register-text" :style="{ color: themeManager.text }">
         Ainda não tem uma conta?
-        <RouterLink class="register-link" to="/cadastro" :style="{ color: themeManager.detalheAlternativo }">Cadastre-se</RouterLink>
+        <RouterLink class="register-link" to="/Register" :style="{ color: themeManager.detalheAlternativo }">Cadastre-se</RouterLink>
       </p>
     </div>
   </section>
@@ -61,7 +62,8 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 200px 80px 200px;
+  padding: 20px 0 80px 0;
+  margin: 0px 120px;
   min-width: 100vh;
   flex-wrap: wrap;
   animation: fadeIn 1s ease-in-out;
@@ -159,49 +161,5 @@ h1 {
 
 .register-link:hover {
   color: #003F74;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@media (max-width: 768px) {
-  .login-container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 40px 20px;
-  }
-
-  .login-box {
-    text-align: center;
-    margin-top: 2rem;
-  }
-
-  .button-group {
-    justify-content: center;
-  }
-
-  .login-button {
-    width: 100%;
-  }
 }
 </style>

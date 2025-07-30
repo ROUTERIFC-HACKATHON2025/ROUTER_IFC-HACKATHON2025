@@ -5,7 +5,7 @@ const CORES_CLARAS = {
   icone: 'mdi mdi-weather-sunny',
   fundo: '#ffffff',
   fundoAlternativo: '#f1f1f1',
-  texto: '#383838',
+  texto: '#000',
   detalhe: '#1863A2',
   detalheAlternativo: '#59A3E2',
   logo: '/src-logos/Logo-ROUTER.png',

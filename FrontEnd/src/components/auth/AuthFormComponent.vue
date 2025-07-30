@@ -21,7 +21,7 @@ function toggleShowPassword() {
 }
 
 function handleLogin() {
-  const emailVal = email.value.trim().toLowerCase()
+  const emailVal = email.value.trim()
   const senhaVal = senha.value.trim()
 
   if (emailVal === 'a@a' && senhaVal === 'a') {
@@ -93,17 +93,6 @@ function handleLogin() {
 </template>
 
 <style scoped>
-@keyframes scaleFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 .login-container {
   display: flex;
   height: 100vh;
@@ -213,46 +202,5 @@ function handleLogin() {
   color: red;
   font-size: 0.9rem;
   animation: shake 0.3s ease;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@media (max-width: 900px) {
-  .login-container {
-    flex-direction: column;
-  }
-
-  .left-panel {
-    display: none;
-  }
-
-  .right-panel {
-    width: 100%;
-    padding: 40px 20px;
-  }
-
-  .form-box {
-    max-width: 100%;
-  }
 }
 </style>
