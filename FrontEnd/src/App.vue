@@ -1,15 +1,15 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import HeaderComponent from './components/HeaderComponent.vue'
-import FooterComponent from './components/FooterComponent.vue'
+import NavigationBarComponent from './components/NavigationBarComponent.vue'
+import FooterBarComponent from './components/FooterBarComponent.vue'
 </script>
 
 <template>
-  <header-component />
-  <main>
+  <navigation-bar-component />
+  <main >
     <RouterView />
   </main>
-  <footer-component />
+  <footer-bar-component />
 </template>
 
 <style scoped>
