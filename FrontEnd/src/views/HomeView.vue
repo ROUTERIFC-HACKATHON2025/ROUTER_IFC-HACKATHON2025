@@ -74,10 +74,7 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
           <div class="content-box">
             <div>
               <p :style="{ color: themeManager.text }">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempus velit ut rhoncus condimentum. Etiam
-                congue pulvinar nisi. Donec cursus ex arcu, eu convallis metus accumsan sed. Integer sed congue ante.
-                Nunc eleifend nibh in purus sagittis bibendum. Fusce pharetra rhoncus pulvinar. Nulla quis mauris
-                elementum, blandit leo at, ultrices lacus.
+                Nosso site oferece aos motoristas a oportunidade de se cadastrarem e acessarem rotas disponíveis conforme sua região. Eles têm um painel próprio onde podem gerenciar seus horários e receber notificações sobre alterações de rota ou imprevistos. Além disso, prezamos pela segurança, exigindo documentos atualizados e treinamento básico sobre atendimento e primeiros socorros.
               </p>
               <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre-se como Motorista</button>
             </div>
@@ -89,10 +86,7 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
           <div class="content-box">
             <div>
               <p :style="{ color: themeManager.text }">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempus velit ut rhoncus condimentum. Etiam
-                congue pulvinar nisi. Donec cursus ex arcu, eu convallis metus accumsan sed. Integer sed congue ante.
-                Nunc eleifend nibh in purus sagittis bibendum. Fusce pharetra rhoncus pulvinar. Nulla quis mauris
-                elementum, blandit leo at, ultrices lacus.
+                As empresas de transporte escolar que se cadastram no nosso site ganham visibilidade e organização. A plataforma permite o gerenciamento das rotas, dos motoristas e dos veículos em tempo real. Com isso, garantimos mais eficiência no serviço prestado e mais confiança por parte das famílias.
               </p>
               <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre sua Empresa</button>
             </div>
@@ -104,12 +98,9 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
           <div class="content-box">
             <div>
               <p :style="{ color: themeManager.text }">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempus velit ut rhoncus condimentum. Etiam
-                congue pulvinar nisi. Donec cursus ex arcu, eu convallis metus accumsan sed. Integer sed congue ante.
-                Nunc eleifend nibh in purus sagittis bibendum. Fusce pharetra rhoncus pulvinar. Nulla quis mauris
-                elementum, blandit leo at, ultrices lacus.
+                Para os passageiros, nosso site oferece praticidade e acompanhamento em tempo real. Os alunos contam com um transporte confiável e organizado, tornando o trajeto escolar mais seguro e tranquilo todos os dias.
               </p>
-              <button :style="{ backgroundColor: themeManager.detalhe }"> cadastre-se como Passageiro</button>
+              <button :style="{ backgroundColor: themeManager.detalhe }"> Cadastre-se como Passageiro</button>
             </div>
             <img src="/src-home/estudantes.png" alt="Passageiros" />
           </div>
@@ -258,12 +249,13 @@ h1 span {
 
 .content-box p {
   flex: 1;
-  font-size: 1.2rem;
   line-height: 1.6;
+  text-align: justify;
 }
 
 .content-box img {
   flex: 1;
+  margin-left: 100px;
   min-width: 400px;
   border-radius: 12px;
 }

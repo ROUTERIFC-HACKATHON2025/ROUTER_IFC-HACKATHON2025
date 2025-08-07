@@ -82,11 +82,12 @@ function handleLogin() {
           </button>
         </form>
 
-        <p class="footer" :style="{ color: themeManager.text }">
-          <button class="link" @click="authState.mudarState('inicio')" :style="{ color: themeManager.detalhe }">
-            &larr; Voltar
+        <p class="register-text" :style="{ color: themeManager.text }">
+        Ainda não tem uma conta?
+          <button class="register-link" @click="authState.mudarState('autentificacao')" :style="{ color: themeManager.detalhe }">
+             Cadastre-se
           </button>
-        </p>
+      </p>
       </div>
     </div>
   </section>
@@ -190,17 +191,22 @@ function handleLogin() {
   margin-top: 1.5rem;
 }
 
-.link {
-  background: none;
-  border: none;
-  text-decoration: underline;
-  font-weight: 500;
-  cursor: pointer;
+.register-text {
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 10px;
 }
 
-.erro-msg {
-  color: red;
-  font-size: 0.9rem;
-  animation: shake 0.3s ease;
+.register-link {
+  background: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-decoration: underline;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  border: none;
+}
+
+.register-link:hover {
+  color: #003F74;
 }
 </style>

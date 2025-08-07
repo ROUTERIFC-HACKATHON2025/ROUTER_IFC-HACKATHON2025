@@ -2,8 +2,8 @@
 import { onMounted } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
-import { RouterLink } from 'vue-router'
 import { useThemeAuthStore } from '@/stores/theme/themeAuth'
+import { RouterLink } from 'vue-router'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
@@ -23,36 +23,40 @@ onMounted(() => {
 
     <div class="login-box fade-in-right">
       <h1 :style="{ color: themeManager.text }">
-        FAÇA LOGIN EM SUA CONTA <br />
-        NO <span class="highlight" :style="{ color: themeManager.detalheAlternativo }">ROUTER IFC!</span>
+        SE CADASTRE 
+        NO <br /><span class="highlight" :style="{ color: themeManager.detalheAlternativo }">ROUTER IFC!</span>
       </h1>
 
-      <p class="subtext" :style="{ color: themeManager.text }">Como você deseja logar?</p>
+      <p class="subtext" :style="{ color: themeManager.text }">Como você deseja se cadastrar?</p>
 
       <div class="button-group">
-        <button
+        <RouterLink to="/Register">
+          <button
           class="login-button glow"
           :style="{ backgroundColor: themeManager.detalhe }"
-          @click="authState.mudarState('autentificacao')"
+          @click="authState.mudarStateAuth('Passageiro')"
         >
           <span class="mdi mdi-seat-passenger icon"></span>
           <p>Conta Passageiro</p>
         </button>
-
+        </RouterLink>
+        
+        <RouterLink to="/Register">
         <button
           class="login-button glow"
           :style="{ backgroundColor: themeManager.detalhe }"
-          @click="authState.mudarState('autentificacao')"
+          @click="authState.mudarStateAuth('Motorista')"
         >
           <span class="mdi mdi-bus-school icon"></span>
           <p>Conta Motorista</p>
         </button>
+        </RouterLink>
       </div>
-
-      <p class="register-text" :style="{ color: themeManager.text }">
-        Ainda não tem uma conta?
-        <RouterLink class="register-link" to="/Register" :style="{ color: themeManager.detalheAlternativo }">Cadastre-se</RouterLink>
-      </p>
+       <p class="footer" :style="{ color: themeManager.text }">
+          <button class="link" @click="authState.mudarState('inicio')" :style="{ color: themeManager.detalhe }">
+            &larr; Voltar
+          </button>
+        </p>
     </div>
   </section>
 </template>
@@ -85,7 +89,6 @@ onMounted(() => {
 }
 
 h1 {
-  font-size: 2.4rem;
   font-weight: bold;
   margin-bottom: 1rem;
   line-height: 1.1;
@@ -147,19 +150,11 @@ h1 {
   margin: 0;
 }
 
-.register-text {
-  font-size: 1rem;
-  text-align: center;
-  margin-top: 10px;
-}
-
-.register-link {
-  font-weight: 500;
+.link {
+  background: none;
+  border: none;
   text-decoration: underline;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-
-.register-link:hover {
-  color: #003F74;
+  font-weight: 500;
+  cursor: pointer;
 }
 </style>

@@ -21,10 +21,30 @@ export const useAuthStateStore = defineStore('authState', () => {
     }
   }
 
+  const mudarStateAuth = (novoState) => {
+    state.value = novoState
+    localStorage.setItem('authStateAuth', novoState)  
+  }
+
+   const resetAuth = () => {
+    state.value = 'Passageiro'
+    localStorage.setItem('authState', 'Passageiro')   
+  }
+
+  const restaurarStateAuth = () => {
+    const salvo = localStorage.getItem('authState')
+    if (salvo === 'Passageiro' || salvo === 'Motorista') {
+      state.value = salvo
+    }
+  }
+
   return {
     state,
     mudarState,
     reset,
-    restaurarState
+    restaurarState,
+    mudarStateAuth,
+    resetAuth,
+    restaurarStateAuth
   }
 })

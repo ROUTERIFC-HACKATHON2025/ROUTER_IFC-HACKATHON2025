@@ -18,8 +18,8 @@ onMounted(() => {
 
 <template>
   <main :style="{ backgroundColor: themeManager.fundo }">
-    <WelcomeAuthComponent v-if="authState.state === 'inicio'" />
-    <AuthFormComponent    v-else-if="authState.state === 'autentificacao'" />
+    <WelcomeAuthComponent v-if="authState.state === 'autentificacao'" />
+    <AuthFormComponent    v-else-if="authState.state === 'inicio'" />
     <AuthSuccessComponent v-else-if="authState.state === 'finalizado'" />
   </main>
 </template>
