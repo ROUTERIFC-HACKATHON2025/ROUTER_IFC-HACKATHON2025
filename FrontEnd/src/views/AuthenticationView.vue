@@ -5,7 +5,9 @@ import { useAuthStateStore } from '@/stores/authState'
 
 import WelcomeAuthComponent from '@/components/auth/WelcomeAuthComponent.vue'
 import AuthFormComponent from '@/components/auth/AuthFormComponent.vue'
-import AuthSuccessComponent from '@/components/auth/AuthSuccessComponent.vue'
+import PassageiroComponent from '@/components/auth/AuthSuccess/PassageiroComponent.vue'
+import MotoristaComponent from '@/components/auth/AuthSuccess/MotoristaComponent.vue'
+import AdminComponent from '@/components/auth/AuthSuccess/AdminComponent.vue'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
@@ -18,8 +20,16 @@ onMounted(() => {
 
 <template>
   <main :style="{ backgroundColor: themeManager.fundo }">
-    <WelcomeAuthComponent v-if="authState.state === 'inicio'" />
-    <AuthFormComponent    v-else-if="authState.state === 'autentificacao'" />
-    <AuthSuccessComponent v-else-if="authState.state === 'finalizado'" />
+    <WelcomeAuthComponent v-if="authState.state === 'autentificacao'" />
+    <AuthFormComponent    v-else-if="authState.state === 'inicio'" />
+    <PassageiroComponent v-else-if="authState.state === 'passageiro'" />
+    <MotoristaComponent v-else-if="authState.state === 'motorista'" />
+    <AdminComponent      v-else-if="authState.state === 'admin'" />
   </main>
 </template>
+
+<style scoped>
+main {
+  padding-top: 110px;
+}
+</style>

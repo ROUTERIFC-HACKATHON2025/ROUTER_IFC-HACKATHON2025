@@ -2,8 +2,8 @@
 import { onMounted } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
-import { RouterLink } from 'vue-router'
 import { useThemeAuthStore } from '@/stores/theme/themeAuth'
+import { RouterLink } from 'vue-router'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
@@ -23,36 +23,40 @@ onMounted(() => {
 
     <div class="login-box fade-in-right">
       <h1 :style="{ color: themeManager.text }">
-        FAÇA LOGIN EM SUA CONTA <br />
-        NO <span class="highlight" :style="{ color: themeManager.detalheAlternativo }">ROUTER IFC!</span>
+        SE CADASTRE 
+        NO <br /><span class="highlight" :style="{ color: themeManager.detalheAlternativo }">ROUTER IFC!</span>
       </h1>
 
-      <p class="subtext" :style="{ color: themeManager.text }">Como você deseja logar?</p>
+      <p class="subtext" :style="{ color: themeManager.text }">Como você deseja se cadastrar?</p>
 
       <div class="button-group">
-        <button
+        <RouterLink to="/Register">
+          <button
           class="login-button glow"
           :style="{ backgroundColor: themeManager.detalhe }"
-          @click="authState.mudarState('autentificacao')"
+          @click="authState.mudarStateAuth('Passageiro')"
         >
           <span class="mdi mdi-seat-passenger icon"></span>
           <p>Conta Passageiro</p>
         </button>
-
+        </RouterLink>
+        
+        <RouterLink to="/Register">
         <button
           class="login-button glow"
           :style="{ backgroundColor: themeManager.detalhe }"
-          @click="authState.mudarState('autentificacao')"
+          @click="authState.mudarStateAuth('Motorista')"
         >
           <span class="mdi mdi-bus-school icon"></span>
           <p>Conta Motorista</p>
         </button>
+        </RouterLink>
       </div>
-
-      <p class="register-text" :style="{ color: themeManager.text }">
-        Ainda não tem uma conta?
-        <RouterLink class="register-link" to="/Register" :style="{ color: themeManager.detalheAlternativo }">Cadastre-se</RouterLink>
-      </p>
+       <p class="footer" :style="{ color: themeManager.text }">
+          <button class="link" @click="authState.mudarState('inicio')" :style="{ color: themeManager.detalhe }">
+            &larr; Voltar
+          </button>
+        </p>
     </div>
   </section>
 </template>
@@ -62,17 +66,13 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0 80px 0;
   margin: 0px 120px;
-  min-width: 100vh;
-  flex-wrap: wrap;
-  animation: fadeIn 1s ease-in-out;
+  min-width: 80vh;
 }
 
 .login-image {
-  width: 500px;
+  width: 470px;
   max-width: 100%;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
 .login-box {
@@ -80,27 +80,15 @@ onMounted(() => {
   flex-direction: column;
   text-align: right;
   max-width: 500px;
-  transition: all 0.4s ease;
-  animation: fadeInUp 0.8s ease-out;
 }
 
 h1 {
-  font-size: 2.4rem;
-  font-weight: bold;
   margin-bottom: 1rem;
-  line-height: 1.1;
-  transition: color 0.3s ease;
-}
-
-.highlight {
-  font-weight: bold;
-  transition: color 0.3s ease;
+  font-size: 3.5rem;
 }
 
 .subtext {
-  font-size: 1.1rem;
   margin-bottom: 1.5rem;
-  font-weight: bold;
 }
 
 .button-group {
@@ -108,7 +96,6 @@ h1 {
   justify-content: right;
   gap: 1rem;
   margin-bottom: 1.5rem;
-  flex-wrap: wrap;
 }
 
 .login-button {
@@ -118,7 +105,7 @@ h1 {
   padding: 15px 0;
   border-radius: 10px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: bold;
   align-items: center;
   cursor: pointer;
   display: flex;
@@ -147,19 +134,11 @@ h1 {
   margin: 0;
 }
 
-.register-text {
-  font-size: 1rem;
-  text-align: center;
-  margin-top: 10px;
-}
-
-.register-link {
-  font-weight: 500;
+.link {
+  background: none;
+  border: none;
   text-decoration: underline;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-
-.register-link:hover {
-  color: #003F74;
+  font-weight: 500;
+  cursor: pointer;
 }
 </style>

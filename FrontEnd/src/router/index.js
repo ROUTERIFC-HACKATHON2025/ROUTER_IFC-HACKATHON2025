@@ -4,6 +4,8 @@ import AuthenticationView from '../views/AuthenticationView.vue'
 import EquipeView from '@/views/EquipeView.vue'
 import SobreNosView from '@/views/SobreNosView.vue'
 import RegisterView from '@/views/RegisterView.vue'
+import EmpresaView from '@/views/EmpresaView.vue'
+import IndySulView from '@/views/IndySulView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +35,16 @@ const router = createRouter({
       name: 'Register',
       component: RegisterView,
     },
+    {
+      path: '/Empresa',
+      name: 'Empresa',
+      component: EmpresaView,
+    },
+    {
+      path: '/IndySul',
+      name: 'IndySul',
+      component: IndySulView,
+    }
   ],
 })
 export default router
