@@ -15,7 +15,7 @@ h1 span{
 }
 
 .subtext {
-  font-size: 1.1rem;
+  font-size: 1.1em;
 }
 
 h2{
@@ -39,4 +39,22 @@ p{
 }
 a{
   text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 3rem;
+  }
+
+  h2 {
+    font-size: 1.7rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    font-size: 0.8rem;
+  }
 }
