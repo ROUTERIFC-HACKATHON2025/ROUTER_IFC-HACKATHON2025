@@ -15,3 +15,9 @@ const authState = useAuthStateStore()
     <register-motorista-component v-else/>
   </main>
 </template>
+
+<style scoped>
+main {
+  padding-top: 110px;
+}
+</style>

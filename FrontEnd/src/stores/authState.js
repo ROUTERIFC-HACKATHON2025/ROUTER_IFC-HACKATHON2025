@@ -16,7 +16,7 @@ export const useAuthStateStore = defineStore('authState', () => {
 
   const restaurarState = () => {
     const salvo = localStorage.getItem('authState')
-    if (salvo === 'inicio' || salvo === 'autentificacao' || salvo === 'finalizado') {
+    if (salvo === 'inicio' || salvo === 'autentificacao' || salvo === 'passageiro' || salvo === 'motorista' || salvo === 'admin') {
       state.value = salvo
     }
   }
@@ -32,9 +32,26 @@ export const useAuthStateStore = defineStore('authState', () => {
   }
 
   const restaurarStateAuth = () => {
-    const salvo = localStorage.getItem('authState')
-    if (salvo === 'Passageiro' || salvo === 'Motorista') {
-      state.value = salvo
+    const salvoAuth = localStorage.getItem('authStateAuth')
+    if (salvoAuth === 'Passageiro' || salvoAuth === 'Motorista') {
+      state.value = salvoAuth
+    }
+  }
+
+   const mudarStateEmpresa = (novoState) => {
+    state.value = novoState
+    localStorage.setItem('authStateEmpresa', novoState)  
+  }
+
+   const resetEmpresa = () => {
+    state.value = 'Empresa'
+    localStorage.setItem('authState', 'Empresa')   
+  }
+
+  const restaurarStateEmpresa = () => {
+    const salvoEmpresa = localStorage.getItem('authStateEmpresa')
+    if (salvoEmpresa === 'Indy' || salvoEmpresa === 'Sul') {
+      state.value = salvoEmpresa
     }
   }
 
@@ -45,6 +62,9 @@ export const useAuthStateStore = defineStore('authState', () => {
     restaurarState,
     mudarStateAuth,
     resetAuth,
-    restaurarStateAuth
+    restaurarStateAuth,
+    mudarStateEmpresa,
+    resetEmpresa,
+    restaurarStateEmpresa
   }
 })

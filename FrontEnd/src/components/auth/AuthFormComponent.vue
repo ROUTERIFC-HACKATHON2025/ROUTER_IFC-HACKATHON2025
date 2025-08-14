@@ -24,9 +24,16 @@ function handleLogin() {
   const emailVal = email.value.trim()
   const senhaVal = senha.value.trim()
 
-  if (emailVal === 'a@a' && senhaVal === 'a') {
+  if (emailVal === 'p@p' && senhaVal === 'p') {
     erro.value = ''
-    authState.mudarState('finalizado')
+    authState.mudarState('passageiro')
+  } else if (emailVal === 'm@m' && senhaVal === 'm') {
+    erro.value = ''
+    authState.mudarState('motorista')
+  } else if (emailVal === 'admin@admin' && senhaVal === 'admin') {
+    erro.value = ''
+    authState.mudarState('admin')
+
   } else {
     erro.value = 'E‑mail ou senha incorretos.'
   }
@@ -49,45 +56,42 @@ function handleLogin() {
 
           <div class="input-group">
             <span class="mdi mdi-email icon" :style="{ color: themeManager.text }"></span>
-            <input
-              v-model="email"
-              type="email"
-              placeholder="E‑mail"
-              class="input"
-              autocomplete="email"
-              :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }"
-            />
+            <input v-model="email" type="email" placeholder="E‑mail" class="input" autocomplete="email"
+              :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div class="input-group">
             <span class="mdi mdi-lock icon" :style="{ color: themeManager.text }"></span>
-            <input
-              v-model="senha"
-              :type="showPassword ? 'text' : 'password'"
-              placeholder="Senha"
-              autocomplete="current-password"
-              class="input"
-              :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, BorderColor: themeManager.text }"
-            />
-            <span
-              class="mdi toggle-eye"
-              :class="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-              @click="toggleShowPassword"
-              :style="{ color: themeManager.text }"
-            ></span>
+            <input v-model="senha" :type="showPassword ? 'text' : 'password'" placeholder="Senha"
+              autocomplete="current-password" class="input"
+              :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, borderColor: themeManager.text }" />
+            <span class="mdi toggle-eye" :class="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click="toggleShowPassword"
+              :style="{ color: themeManager.text }"></span>
           </div>
-
+          <button class="recover-link" @click="authState.mudarState('autentificacao')"
+            :style="{ color: themeManager.text }">
+            Esqueceu a senha?
+          </button>
           <button type="submit" class="submit-btn" :style="{ backgroundColor: themeManager.detalhe }">
             Entrar
           </button>
         </form>
 
         <p class="register-text" :style="{ color: themeManager.text }">
-        Ainda não tem uma conta?
-          <button class="register-link" @click="authState.mudarState('autentificacao')" :style="{ color: themeManager.detalhe }">
-             Cadastre-se
+          Ainda não tem uma conta?
+          <button class="register-link" @click="authState.mudarState('autentificacao')"
+            :style="{ color: themeManager.detalhe }">
+            Cadastre-se
           </button>
-      </p>
+        </p>
+        <div class="social-login">
+          <p :style="{ color: themeManager.text }">Fazer login por outra plataforma?</p>
+          <ul>
+            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }" class="mdi mdi-google" ></span></button></li>
+            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }" class="mdi mdi-facebook"></span></button></li>
+            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }" class="mdi mdi-twitter"></span></button></li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -96,9 +100,7 @@ function handleLogin() {
 <style scoped>
 .login-container {
   display: flex;
-  height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
-  animation: scaleFadeIn 0.6s ease-out;
+  height: 80vh;
 }
 
 .left-panel {
@@ -110,7 +112,7 @@ function handleLogin() {
 }
 
 .left-panel img {
-  max-width: 80%;
+  max-width: 70%;
 }
 
 .right-panel {
@@ -129,19 +131,17 @@ function handleLogin() {
 
 .title {
   font-size: 2.5rem;
-  font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
 .subtitle {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.5rem;
 }
 
 .input-group {
@@ -154,12 +154,13 @@ function handleLogin() {
   border-radius: 12px;
   font-size: 1rem;
   border: 1px solid;
+  margin-top: 1rem;
 }
 
 .icon {
   position: absolute;
   left: 14px;
-  top: 50%;
+  top: 60%;
   transform: translateY(-50%);
   font-size: 1.3rem;
 }
@@ -167,7 +168,7 @@ function handleLogin() {
 .toggle-eye {
   position: absolute;
   right: 14px;
-  top: 50%;
+  top: 60%;
   transform: translateY(-50%);
   font-size: 1.3rem;
   cursor: pointer;
@@ -183,6 +184,7 @@ function handleLogin() {
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s ease;
 }
+
 .submit-btn:hover {
   transform: scale(1.05);
 }
@@ -192,21 +194,66 @@ function handleLogin() {
 }
 
 .register-text {
-  font-size: 1rem;
+  font-size: 0.8rem;
   text-align: center;
   margin-top: 10px;
 }
 
 .register-link {
   background: none;
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 0.8rem;
   text-decoration: underline;
   transition: color 0.3s ease, text-shadow 0.3s ease;
   border: none;
+  cursor: pointer;
+}
+
+.recover-link {
+  background: none;
+  font-size: 0.8rem;
+  border: none;
+  cursor: pointer;
+  margin: 0 0 0 70%;
 }
 
 .register-link:hover {
   color: #003F74;
+}
+
+.social-login {
+  margin-top: 1rem;
+}
+
+.social-login p {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.social-login ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+} 
+
+.social-login li button {
+  background: none;
+  border: 2px solid;
+  padding: 2px 4px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.social-login li button:hover {
+  transform: scale(1.1);
+}
+
+.erro-msg {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
 }
 </style>

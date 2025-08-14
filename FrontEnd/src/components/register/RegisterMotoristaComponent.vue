@@ -16,6 +16,22 @@ const motorista = ref({
   cnhArquivo: null
 })
 
+const empresas = ['SulTurismo', 'IndyTour']
+const aberto = ref(false)
+
+function toggleSelect() {
+  aberto.value = !aberto.value
+}
+
+function selecionarEmpresa(nome) {
+  motorista.value.empresa = nome
+  aberto.value = false
+}
+
+function handleFileChange(e) {
+  motorista.value.cnhArquivo = e.target.files[0]
+}
+
 function cadastrar() {
   console.log('Dados enviados:', motorista.value)
 }
@@ -33,29 +49,98 @@ function cadastrar() {
         </h2>
 
         <div class="grid">
-          <input v-model="motorista.nome" placeholder="Nome Completo *" required
-             :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
-          <input v-model="motorista.email" type="email" placeholder="E-mail *" required
-             :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
-          <input v-model="motorista.cpf" placeholder="CPF *" required
-             :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
-          <input v-model="motorista.telefone" placeholder="Telefone *" required
-             :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
-          <input v-model="motorista.nascimento" type="date" placeholder="Data de nascimento *" required
-             :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
-          <input v-model="motorista.senha" type="password" placeholder="Crie uma senha *" required
-             :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
-          <input v-model="motorista.confirmarSenha" type="password" placeholder="Confirme sua senha *" required
-             :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
-          
-          <select v-model="motorista.empresa" required  :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}">
-            <option disabled value="">Selecione a empresa *</option>
-            <option value="SulTurismo">SulTurismo</option>
-            <option value="IndyTour">IndyTour</option>
-          </select>
+          <div>
+            <p>Nome Completo: *</p>
+            <input v-model="motorista.nome" required
+              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+          </div>
+          <div>
+            <p>E-mail: *</p>
+            <input v-model="motorista.email" type="email" required
+              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+          </div>
+          <div>
+            <p>CPF: *</p>
+            <input v-model="motorista.cpf" placeholder="000.000.000-00" required
+              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+          </div>
+          <div>
+            <p>Telefone: *</p>
+            <input v-model="motorista.telefone" class="input-field-mid" required
+              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+          </div>
+          <div>
+            <p>Data de nascimento: *</p>
+            <input v-model="motorista.nascimento" type="date" class="input-field-mid" required
+              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+          </div>
+          <div>
+            <p>Crie uma senha: *</p>
+            <input v-model="motorista.senha" type="password" required
+              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+          </div>
+          <div>
+            <p>Confirme sua senha: *</p>
+            <input v-model="motorista.confirmarSenha" type="password" required
+              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+          </div>
 
-          <input  type="file" @change="e => motorista.cnhArquivo = e.target.files[0] "
-            required :style="{borderColor: '#fffff000', backgroundColor: themeManager.fundo, color: themeManager.text}"/>
+          <div>
+            <p>Selecione a empresa: *</p>
+            <div
+              class="select-custom"
+              :style="{
+                borderColor: themeManager.detalhe,
+                backgroundColor: themeManager.detalhe,
+                color: '#fff'
+              }"
+              @click="toggleSelect"
+            >
+              {{ motorista.empresa || 'Selecione a empresa' }}
+              <span class="seta"><span :class="aberto ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'"></span></span>
+            </div>
+
+            <div
+              v-show="aberto"
+              class="opcoes"
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo }"
+            >
+              <div
+                v-for="empresa in empresas"
+                :key="empresa"
+                class="opcao"
+                @click.stop="selecionarEmpresa(empresa)"
+                :class="{ selecionada: motorista.empresa === empresa }"
+                :style="{
+                  color: themeManager.text,
+                  backgroundColor: motorista.empresa === empresa ? themeManager.detalhe : themeManager.fundo,
+                  color: motorista.empresa === empresa ? '#fff' : themeManager.text
+                }"
+              >
+                {{ empresa }}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p>CNH (Arquivo): *</p>
+            <div
+              class="file-upload"
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }"
+            >
+              <label for="cnhInput" class="btn-upload" :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">
+                Selecionar arquivo
+              </label>
+              <input
+                id="cnhInput"
+                type="file"
+                accept=".pdf,.jpg,.jpeg,.png"
+                @change="handleFileChange"
+                required
+              />
+              <span class="file-name" v-if="motorista.cnhArquivo">{{ motorista.cnhArquivo.name }}</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -69,27 +154,21 @@ function cadastrar() {
 <style scoped>
 .form-container {
   margin: 0 300px;
-  padding: 50px 0 200px 0;
+  padding: 0px 0 200px 0;
   border-radius: 8px;
   font-family: sans-serif;
-  align-items: center;
 }
 
 form {
   border: 2px solid;
-  padding: 20px 100px 160px 100px;
+  padding: 40px 100px 160px 100px;
   border-radius: 10px;
 }
 
 h1 {
   text-align: center;
-  font-weight: bold;
-  font-size: 2.4em;
-  margin: 40px 0;
-}
-
-h1 span {
-  font-weight: bold;
+  font-size: 2.5rem;
+  padding: 100px 0 60px 0;
 }
 
 .space {
@@ -98,36 +177,105 @@ h1 span {
   border-bottom: 2px solid;
 }
 
-h2 {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
-input,
-select {
+.grid div {
+  margin-bottom: 10px;
+}
+
+.grid div p{
+  font-size: 0.8rem;
+}
+
+input {
   padding: 0.7rem;
   border: 1px solid;
-  border-radius: 15px;
-  width: 100%;
-  align-items: center;
+  border-radius: 10px;
+  min-width: 350px;
 }
 
-button.submit {
-  display: block;
-  margin: auto;
-  padding: 0.8rem 2rem;
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
+.input-field-mid {
+  min-width: 170px;
+}
+
+.select-custom {
+  margin-bottom: 0;
+  padding: 0.7rem;
+  border: 2px solid;
+  border-radius: 10px;
+  min-width: 350px;
   cursor: pointer;
-  transition: 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.seta {
+  font-size: 0.8rem;
+}
+
+.opcoes {
+  border: 2px solid;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.opcao {
+  padding: 0.7rem;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.selecionada {
+  font-weight: bold;
+}
+
+.file-upload {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-radius: 10px;
+  min-width: 350px;
+  position: relative;
+}
+
+.file-upload input[type='file'] {
+  display: none;
+}
+
+.btn-upload {
+  cursor: pointer;
+  padding: 0.7rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.file-name {
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+
+button.submit {
+  margin-top: 20px;
+  width: 50%;
+  padding: 14px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s ease;
+  margin-left: 25%;
+}
+
+button.submit:hover {
+  transform: scale(1.05);
 }
 </style>

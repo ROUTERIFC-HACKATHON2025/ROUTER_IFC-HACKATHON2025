@@ -66,17 +66,13 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0 80px 0;
   margin: 0px 120px;
-  min-width: 100vh;
-  flex-wrap: wrap;
-  animation: fadeIn 1s ease-in-out;
+  min-width: 80vh;
 }
 
 .login-image {
-  width: 500px;
+  width: 470px;
   max-width: 100%;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
 .login-box {
@@ -84,26 +80,15 @@ onMounted(() => {
   flex-direction: column;
   text-align: right;
   max-width: 500px;
-  transition: all 0.4s ease;
-  animation: fadeInUp 0.8s ease-out;
 }
 
 h1 {
-  font-weight: bold;
   margin-bottom: 1rem;
-  line-height: 1.1;
-  transition: color 0.3s ease;
-}
-
-.highlight {
-  font-weight: bold;
-  transition: color 0.3s ease;
+  font-size: 3.5rem;
 }
 
 .subtext {
-  font-size: 1.1rem;
   margin-bottom: 1.5rem;
-  font-weight: bold;
 }
 
 .button-group {
@@ -111,7 +96,6 @@ h1 {
   justify-content: right;
   gap: 1rem;
   margin-bottom: 1.5rem;
-  flex-wrap: wrap;
 }
 
 .login-button {
@@ -121,7 +105,7 @@ h1 {
   padding: 15px 0;
   border-radius: 10px;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: bold;
   align-items: center;
   cursor: pointer;
   display: flex;

@@ -1,18 +1,51 @@
 <script setup>
-import { onMounted } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { RouterLink } from 'vue-router'
 
+
 const themeManager = useThemeManagerStore()
 onMounted(themeManager.init)
+
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+
+const showHeader = ref(true)
+let lastScroll = 0
+let headerHeight = 0
+
+function handleScroll() {
+  const currentScroll = window.scrollY
+
+  if (currentScroll > headerHeight) {
+    if (currentScroll < lastScroll) {
+      showHeader.value = true
+    } else {
+      showHeader.value = false 
+    }
+  }
+
+  lastScroll = currentScroll
+}
+
+onMounted(() => {
+  const headerEl = document.querySelector('header')
+  if (headerEl) {
+    headerHeight = headerEl.offsetHeight
+  }
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
 
 <template>
-  <div class="top-bar" :style="{ backgroundColor: themeManager.detalhe }">
+  <div class="header"
+    :class="showHeader ? 'animate-slideDown' : 'animate-slideUp'">
+    <div class="top-bar" :style="{ backgroundColor: themeManager.detalhe }">
     <p>Transporte escolar para o IFC de forma segura e fácil.</p>
     <span :class="themeManager.icone" @click="themeManager.toggleTheme" aria-label="Alternar tema"></span>
   </div>
-
   <header :style="{ backgroundColor: themeManager.fundo }">
     <div
       class="container"
@@ -46,7 +79,7 @@ onMounted(themeManager.init)
           <li><RouterLink to="/" :style="{ color: themeManager.text }">Início</RouterLink></li>
           <li><RouterLink to="/SobreNos" :style="{ color: themeManager.text }">Sobre</RouterLink></li>
           <li><RouterLink to="/equipe" :style="{ color: themeManager.text }">Equipe</RouterLink></li>
-          <li><RouterLink to="/" :style="{ color: themeManager.text }">Empresas</RouterLink></li>
+          <li><RouterLink to="/Empresa" :style="{ color: themeManager.text }">Empresas</RouterLink></li>
           <li>
             <RouterLink to="/login">
               <span class="mdi mdi-account" :style="{ color: themeManager.text }" aria-label="Login"></span>
@@ -56,9 +89,18 @@ onMounted(themeManager.init)
       </nav>
     </div>
   </header>
+  </div>
 </template>
 
 <style scoped>
+.header {
+  position: fixed;
+  top: 0%;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
+
 .top-bar {
   display: flex;
   align-items: center;
@@ -171,28 +213,34 @@ nav ul li a span {
   font-size: 2em;
 }
 
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 15px;
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
   }
-
-  .logo,
-  .search,
-  nav {
-    width: 100%;
-    margin-bottom: 8px;
-  }
-
-  nav ul {
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-  }
-
-  .search input {
-    width: 100%;
+  100% {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.6s ease forwards;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.6s ease forwards;
+}
+
 </style>

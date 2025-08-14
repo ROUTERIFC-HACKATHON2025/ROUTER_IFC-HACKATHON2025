@@ -118,13 +118,14 @@ const themeEquipe = useThemeEquipeStore()
 </template>
 
 <style scoped>
+.equipe-header{
+  padding: 110px 120px 0px;
+}
+
 .header {
-  margin: 0 120px 0px;
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
   align-items: center;
-  padding: 60px 0;
   gap: 20px;
   min-height: 80vh;
 }
@@ -142,23 +143,12 @@ const themeEquipe = useThemeEquipeStore()
   padding-right: 70px;
 }
 
-h1 {
-  font-weight: bold;
-  line-height: 1.2;
-}
-
-h1 span {
-  font-weight: bold;
-}
-
 .subtext {
-  font-size: 1.2rem;
   margin-top: 10px;
-  font-weight: 500;
 }
 
 .cards {
-  padding: 60px 200px;
+  padding: 80px 200px;
 }
 
 .card-left,
@@ -168,7 +158,6 @@ h1 span {
   padding: 30px;
   max-width: 700px;
   border-radius: 16px;
-  flex-wrap: wrap;
   color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   transition: transform 0.3s ease;
@@ -181,7 +170,6 @@ h1 span {
 .card-right {
   background-color: var(--detalhe);
   margin: 40px 0 40px auto;
-  flex-direction: row-reverse;
 }
 
 .card-left:hover,
@@ -193,8 +181,16 @@ h1 span {
   text-align: right;
 }
 
+.card-right h2 {
+  text-align: right;
+}
+
 .card-right .social-icons {
   justify-content: right;
+}
+
+.card-left h2 {
+  text-align: left;
 }
 
 .profile-img {
@@ -211,14 +207,12 @@ h1 span {
 }
 
 .info h2 {
-  font-weight: bold;
   font-size: 1.5rem;
   margin-bottom: 10px;
 }
 
 .info p {
   font-size: 1rem;
-  line-height: 1.5;
   margin-bottom: 15px;
 }
 

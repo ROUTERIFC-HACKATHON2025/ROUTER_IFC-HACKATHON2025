@@ -109,8 +109,8 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="editar" @click="toggleEdicao">
-        {{ modoEdicao ? 'Salvar' : 'Editar' }} | Ver informação completa
+      <div class="editar" >
+        <span @click="toggleEdicao">{{ modoEdicao ? 'Salvar' : 'Editar' }}</span> | Ver informação completa
       </div>
 
       <div class="sair" @click="sairDaConta">SAIR DA CONTA</div>
@@ -176,8 +176,8 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  padding: 24px 130px 100px 130px;
-  min-height: 100vh;
+  padding: 20px 130px 60px 130px;
+  min-height: 80vh;
   display: flex;
   gap: 16px;
   justify-content: space-between;
@@ -188,13 +188,6 @@ onMounted(() => {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
-}
-
-.perfil,
-.transporte,
-.mapa,
-.ida-volta {
-  transition: all 0.3s ease;
 }
 
 .perfil {
@@ -285,7 +278,6 @@ onMounted(() => {
   width: 100%;
   outline: none;
   color: #383838;
-  transition: all 0.3s ease;
 }
 
 .input-group input[readonly] {
@@ -296,12 +288,6 @@ onMounted(() => {
 .data-campo span {
   cursor: pointer;
   font-size: 18px;
-  transition: transform 0.2s ease;
-}
-
-.senha-campo span:hover,
-.data-campo span:hover {
-  transform: scale(1.2);
 }
 
 .data-campo {
@@ -408,7 +394,6 @@ onMounted(() => {
 
 .ida-grid {
   display: flex;
-  flex-direction: column;
   gap: 16px;
 }
 
