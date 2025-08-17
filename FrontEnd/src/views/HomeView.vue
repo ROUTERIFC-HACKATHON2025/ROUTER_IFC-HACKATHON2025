@@ -168,17 +168,18 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
         <span :style="{ color: themeManager.detalheAlternativo }"> SERVIÇOS</span>
       </h2>
 
-      <div class="tab-buttons">
-        <button v-for="aba in abas" :key="aba" class="tab-button" :class="{ active: abaSelecionada === aba }"
+      <div class="tab-buttons" >
+        <button  v-for="aba in abas" :key="aba" class="tab-button" :class="{ active: abaSelecionada === aba }"
           @click="abaSelecionada = aba" :style="{
             backgroundColor: abaSelecionada === aba ? themeManager.detalhe : themeManager.detalheAlternativo,
-            color: '#f1f1f1'
+            color: '#f1f1f1',
+            borderColor: themeManager.detalhe
           }">
           {{ aba }}
         </button>
       </div>
 
-      <div class="tab-content" :style="{ border: '2px solid' + themeManager.detalheAlternativo }">
+      <div class="tab-content" :style="{ border: '1.5px solid' + themeManager.detalhe}">
         <div v-if="abaSelecionada === 'Motoristas'">
           <div class="content-box">
             <div>
@@ -226,9 +227,6 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
 </template>
 
 <style scoped>
-.celular {
-  display: none
-}
 
 .Home-header {
   padding: 110px 120px 0;
@@ -368,25 +366,19 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
 }
 
 @media (max-width: 768px) {
-  .notebook {
-    display: none;
-  }
-
-  .celular {
-    display: block;
-  }
 
   .Home-header {
-    padding: 0;
+    padding: 200px 0 0 0;
   }
 
   .header {
     gap: 0px;
-    min-height: 40vh;
+    min-height: 30vh;
   }
 
   h1 {
     padding-bottom: 20px;
+    margin: 0 40px;
   }
 
   .intro {
@@ -395,8 +387,8 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
   }
 
   .subtext {
-    margin-top: 5px;
-    max-width: 40vh;
+    font-size: 0.964rem;
+    max-width: 100vh;
     text-align: center;
     margin: 20px;
   }
@@ -448,7 +440,7 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
   }
 
   .tab-section {
-    padding: 100px 10px;
+    padding: 50px 10px;
   }
 
   .tab-section h2 {
@@ -458,20 +450,23 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
   .tab-buttons {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
   }
 
   .tab-button {
-    padding: 6px 0px;
+    padding: 8px 0px;
     font-weight: bold;
-    font-size: 1em;
+    font-size: 1.2rem;
     border: none;
     cursor: pointer;
     transition: 0.3s;
-    width: 33%;
+    width: 100%;
+    border: 1.5px solid;
+    border-bottom: none;
   }
 
   .tab-content {
-    padding: 0px 0px;
+    padding: 10px;
     text-align: center;
   }
 
@@ -479,7 +474,7 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
     display: flex;
     justify-content: space-between;
     align-items: center;
-    text-align: left;
+    text-align: center;
   }
 
   .content-box p {
@@ -488,15 +483,15 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
   }
 
   .content-box button {
-    padding: 4px;
+    padding: 7px;
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: 1rem;
     border: none;
     cursor: pointer;
     width: 50%;
     color: #fff;
     border-radius: 4px;
-    margin-top: 0px;
+    margin-top: 5px;
   }
 }
 </style>

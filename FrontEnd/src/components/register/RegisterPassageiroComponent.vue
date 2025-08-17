@@ -233,4 +233,24 @@ button.submit:hover {
   transform: scale(1.05);
 }
 
+@media (max-width: 768px) {
+  .form-container {
+  margin: 0 10px;
+  padding: 20px 0 100px 0;
+}
+
+form{
+  padding: 40px 20px 100px 20px;
+}
+
+#telefone {
+  margin-left: 0rem;
+}
+
+.input-field-add {
+  min-width: 350px;
+  height: 100px;
+}
+}
+
 </style>

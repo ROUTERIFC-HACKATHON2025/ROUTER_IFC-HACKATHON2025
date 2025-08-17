@@ -256,4 +256,25 @@ function handleLogin() {
   font-size: 0.8rem;
   margin-top: 0.5rem;
 }
+
+@media (max-width: 768px) {
+  .login-container {
+    margin-top: 20px;
+    flex-direction: column;
+    height: 70vh;
+  }
+
+  .left-panel {
+    display: none;
+  }
+
+  .right-panel {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .form-box {
+    width: 100%;
+  }
+}
 </style>

@@ -1,12 +1,10 @@
 <script setup>
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { RouterLink } from 'vue-router'
-
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const themeManager = useThemeManagerStore()
 onMounted(themeManager.init)
-
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 
 const showHeader = ref(true)
 let lastScroll = 0
@@ -14,86 +12,139 @@ let headerHeight = 0
 
 function handleScroll() {
   const currentScroll = window.scrollY
-
   if (currentScroll > headerHeight) {
-    if (currentScroll < lastScroll) {
-      showHeader.value = true
-    } else {
-      showHeader.value = false 
-    }
+    showHeader.value = currentScroll < lastScroll
   }
-
   lastScroll = currentScroll
 }
 
 onMounted(() => {
-  const headerEl = document.querySelector('header')
-  if (headerEl) {
-    headerHeight = headerEl.offsetHeight
-  }
+  const forma = window.innerWidth < 768 ? '.celular' : '.notebook'
+  const headerEl = document.querySelector(forma)
+  if (headerEl) headerHeight = headerEl.offsetHeight
   window.addEventListener('scroll', handleScroll)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
 })
+
+// Estado do menu no celular
+const menuAberto = ref(false)
+function abrirMenu() {
+  menuAberto.value = true
+}
+function fecharMenu() {
+  menuAberto.value = false
+}
 </script>
 
 <template>
-  <div class="header"
-    :class="showHeader ? 'animate-slideDown' : 'animate-slideUp'">
+  <div class="notebook" :class="showHeader ? 'animate-slideDown' : 'animate-slideUp'">
     <div class="top-bar" :style="{ backgroundColor: themeManager.detalhe }">
-    <p>Transporte escolar para o IFC de forma segura e fácil.</p>
-    <span :class="themeManager.icone" @click="themeManager.toggleTheme" aria-label="Alternar tema"></span>
-  </div>
-  <header :style="{ backgroundColor: themeManager.fundo }">
-    <div
-      class="container"
-      :style="{
-        backgroundColor: themeManager.fundo,
-        borderBottom: '2px solid ' + themeManager.detalhe
-      }"
-    >
-      <div class="logo">
-        <img :src="themeManager.logo" alt="Logotipo ROUTER" />
-        <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">
-          Sua rota<br /><span>mais segura</span>
-        </p>
-      </div>
+      <p>Transporte escolar para o IFC de forma segura e fácil.</p>
+      <span :class="themeManager.icone" @click="themeManager.toggleTheme" aria-label="Alternar tema"></span>
+    </div>
+    <header :style="{ backgroundColor: themeManager.fundo }">
+      <div class="container"
+        :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
+        <div class="logo">
+          <img :src="themeManager.logo" alt="Logotipo ROUTER" />
+          <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">
+            Sua rota<br /><span>mais segura</span>
+          </p>
+        </div>
 
-      <div class="search">
-        <input
-          type="text"
-          placeholder="Pesquisar..."
-          :style="{
+        <div class="search">
+          <input type="text" placeholder="Pesquisar..." :style="{
             backgroundColor: themeManager.fundo,
             color: themeManager.text,
             border: '2px solid ' + themeManager.detalhe
-          }"
-        />
-        <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
-      </div>
+          }" />
+          <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
+        </div>
 
-      <nav aria-label="Menu principal">
+        <nav aria-label="Menu principal">
+          <ul>
+            <li>
+              <RouterLink to="/" :style="{ color: themeManager.text }">Início</RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/SobreNos" :style="{ color: themeManager.text }">Sobre</RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/equipe" :style="{ color: themeManager.text }">Equipe</RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/Empresa" :style="{ color: themeManager.text }">Empresas</RouterLink>
+            </li>
+            <li>
+              <RouterLink to="/login">
+                <span class="mdi mdi-account" :style="{ color: themeManager.text }"></span>
+              </RouterLink>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  </div>
+
+  <div class="celular" :class="showHeader ? 'animate-slideDown' : 'animate-slideUp'">
+    <header :style="{ backgroundColor: themeManager.fundo }">
+      <div class="container"
+        :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
+        <div class="logo-bar">
+          <div class="logo">
+            <img :src="themeManager.logo" alt="Logotipo ROUTER" />
+            <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">
+              Sua rota<br /><span>mais segura</span>
+            </p>
+          </div>
+          <div>
+            <span class="mdi mdi-view-headline" @click="abrirMenu" :style="{ color: themeManager.text }"></span>
+          </div>
+        </div>
+
+        <div class="search">
+          <input type="text" placeholder="Pesquisar..." :style="{
+            backgroundColor: themeManager.fundo,
+            color: themeManager.text,
+            border: '2px solid ' + themeManager.detalhe
+          }" />
+          <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
+        </div>
+      </div>
+      <nav class="menu-mobile" :class="{ 'menu-aberto': menuAberto }" :style="{ backgroundColor: themeManager.fundo }">
+        <div class="menu-top">
+          <RouterLink to="/login" @click="fecharMenu">
+            <span class="mdi mdi-account" :style="{ color: themeManager.text }"></span>
+          </RouterLink>
+          <span class="mdi mdi-close-outline" @click="fecharMenu" :style="{color: themeManager.text}"></span>
+        </div>
         <ul>
-          <li><RouterLink to="/" :style="{ color: themeManager.text }">Início</RouterLink></li>
-          <li><RouterLink to="/SobreNos" :style="{ color: themeManager.text }">Sobre</RouterLink></li>
-          <li><RouterLink to="/equipe" :style="{ color: themeManager.text }">Equipe</RouterLink></li>
-          <li><RouterLink to="/Empresa" :style="{ color: themeManager.text }">Empresas</RouterLink></li>
           <li>
-            <RouterLink to="/login">
-              <span class="mdi mdi-account" :style="{ color: themeManager.text }" aria-label="Login"></span>
-            </RouterLink>
+            <RouterLink to="/" :style="{ color: themeManager.text }" @click="fecharMenu">Início</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/SobreNos" :style="{ color: themeManager.text }" @click="fecharMenu">Sobre</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/equipe" :style="{ color: themeManager.text }" @click="fecharMenu">Equipe</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/Empresa" :style="{ color: themeManager.text }" @click="fecharMenu">Empresas</RouterLink>
           </li>
         </ul>
+        <span :class="themeManager.icone" :style="{ color: themeManager.text }"
+          @click="themeManager.toggleTheme"></span>
       </nav>
-    </div>
-  </header>
+    </header>
   </div>
 </template>
 
 <style scoped>
-.header {
+.notebook,
+.celular {
   position: fixed;
   top: 0%;
   left: 0;
@@ -111,7 +162,7 @@ onUnmounted(() => {
   font-size: 0.85rem;
 }
 
-.top-bar p{
+.top-bar p {
   font-size: 1em;
 }
 
@@ -181,7 +232,7 @@ onUnmounted(() => {
   transition: transform 0.3s ease;
 }
 
-.search input:focus + .mdi {
+.search input:focus+.mdi {
   transform: translateY(-50%) scale(1.2);
 }
 
@@ -218,6 +269,7 @@ nav ul li a span {
     transform: translateY(-100%);
     opacity: 0;
   }
+
   100% {
     transform: translateY(0);
     opacity: 1;
@@ -229,6 +281,7 @@ nav ul li a span {
     transform: translateY(0);
     opacity: 1;
   }
+
   100% {
     transform: translateY(-100%);
     opacity: 0;
@@ -243,4 +296,64 @@ nav ul li a span {
   animation: slideUp 0.6s ease forwards;
 }
 
+.menu-mobile {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 75%;
+  height: 100%;
+  z-index: 1000;
+  padding: 20px;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease-in-out;
+}
+
+.menu-aberto {
+  right: 0;
+ min-height: 100vh;
+}
+
+.menu-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu-mobile .mdi {
+  font-size: 2rem;
+}
+
+.menu-mobile ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-mobile ul li {
+  margin: 5px 0;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin: 0 20px;
+    display: block;
+  }
+
+  .logo-bar {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .logo-bar .mdi {
+    font-size: 2.5rem;
+  }
+
+  .search input {
+    width: 100%;
+    height: 40px;
+  }
+}
 </style>

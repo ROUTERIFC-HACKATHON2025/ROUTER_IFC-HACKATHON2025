@@ -7,7 +7,7 @@ onMounted(themeManager.init)
 </script>
 
 <template>
-  <footer :style="{ backgroundColor: themeManager.detalhe }">
+  <footer class="notebook" :style="{ backgroundColor: themeManager.detalhe }">
     <div class="container">
       <div class="footer-content">
         <div class="footer-section">
@@ -44,12 +44,53 @@ onMounted(themeManager.init)
       </div>
     </div>
   </footer>
+  <footer class="celular" :style="{ backgroundColor: themeManager.detalhe }">
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <div class="footer-section" id="footer-section-space">
+            <img :src="themeManager.logofooter" alt="Logo da Router">
+            <p>Transporte escolar <br> para o IFC de forma <br> segura e fácil.</p>
+          </div>
+          <div class="footer-section">
+            <h2>Serviços</h2>
+            <ul>
+              <li>Para Motoristas</li>
+              <li>Para Estudantes</li>
+              <li>Para Empresas</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="footer-section-icons" id="footer-section-icons-space">
+            <h2>Redes Sociais</h2>
+            <ul class="social-icons">
+              <li><a href="#"><span class="mdi mdi-instagram"></span></a></li>
+              <li><a href="#"><span class="mdi mdi-facebook"></span></a></li>
+              <li><a href="#"><span class="mdi mdi-twitter"></span></a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h2>Empresa</h2>
+            <ul>
+              <li>Sobre nós</li>
+              <li>Equipe</li>
+              <li>Contato</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Router-IFC. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <style scoped>
 footer {
   color: #e4e4e4;
-  font-family: 'Segoe UI', sans-serif;
 }
 
 .container {
@@ -73,7 +114,7 @@ footer {
 }
 
 .footer-section h2 {
-  font-size: 1.8em;
+  font-size: 1.8rem;
   font-weight: bold;
   color: #fff;
   margin-bottom: 10px;
@@ -94,7 +135,7 @@ footer {
 }
 
 .footer-section p {
-  font-size: 1em;
+  font-size: 1rem;
   line-height: 1.6;
 }
 
@@ -106,13 +147,13 @@ footer {
 
 .footer-content .footer-section-icons h2 {
   margin-bottom: 5px;
-  font-size: 1.8em;
+  font-size: 1.8rem;
   font-weight: bold;
   color: #fff;
 }
 
 .social-icons li a {
-  font-size: 2em;
+  font-size: 2rem;
   color: #e4e4e4;
   transition: color 0.3s;
 }
@@ -124,7 +165,48 @@ footer {
 .footer-bottom {
   text-align: center;
   margin-top: 25px;
-  font-size: 0.9em;
+  font-size: 0.9rem;
   color: #cfcfcf;
 }
-</style> 
+
+@media (max-width: 768px) {
+  #footer-section-space {
+    margin-bottom: 20px;
+  }
+
+  #footer-section-icons-space {
+    margin-bottom: 50px;
+  }
+
+  .footer-section img {
+    width: 100px;
+    margin-bottom: 0px;
+  }
+
+  .footer-section h2 {
+    font-size: 1.5rem;
+    text-align: left;
+  }
+
+  .footer-section ul li {
+    font-size: 0.8rem;
+  }
+
+
+  .footer-section p {
+    font-size: 0.8rem;
+  }
+
+  .social-icons {
+    gap: 10px;
+  }
+
+  .footer-content .footer-section-icons h2 {
+    font-size: 1.5rem;
+  }
+
+  .social-icons li a {
+    font-size: 1.5rem;
+  }
+}
+</style>

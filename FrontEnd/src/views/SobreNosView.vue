@@ -5,7 +5,7 @@ const themeManager = useThemeManagerStore()
 </script>
 
 <template>
-    <main :style="{ backgroundColor: themeManager.fundo }">
+    <main class="notebook" :style="{ backgroundColor: themeManager.fundo }">
         <section class="sobre-nos">
             <div :style="{ borderBottom: '2px solid' + themeManager.detalhe }">
                 <h1 class="title" :style="{ color: themeManager.text }">
@@ -26,6 +26,59 @@ const themeManager = useThemeManagerStore()
                 </div>
                 <div class="imagem">
                     <img src="/src-sobre/business.png" alt="Quem somos" />
+                </div>
+            </div>
+
+            <div class="objetivo" :style="{ backgroundColor: themeManager.detalhe }">
+                <h2 class="objetivo-titulo">NOSSO OBJETIVO</h2>
+                <p>
+                    Queremos facilitar a locomoção dos estudantes até o instituto, otimizando o tempo de todos os
+                    envolvidos no transporte. Para isso, disponibilizamos diversos serviços, que viabilizam uma melhor
+                    experiência para todos.<br>
+                    Quando se pensa em estudar no IFC Araquari, deve se pensar em RouterIFC!
+                </p>
+            </div>
+
+            <div class="saiba-mais">
+                <h2 class="saiba-mais-titulo" :style="{ color: themeManager.detalhe }">SAIBA MAIS</h2>
+                <div class="saiba-mais-conteudo">
+                    <p class="textLeft" :style="{ color: themeManager.text }">
+                        Nossos serviços são prestados exclusivamente para o IFC Araquari, um instituto com ensino médio
+                        técnico em agropecuária, informática para internet e química, e graduação em agronomia, medicina
+                        veterinária, sistemas de informação, ciências agrícolas, química e redes de computadores.
+
+                    </p>
+                    <p class="textRight" :style="{ color: themeManager.text, borderColor: themeManager.text }">
+                        Caso queira saber mais sobre o Instituto Federal Catarinense - Campus Araquari acesse o site: <a
+                            href="https://araquari.ifc.edu.br/" :style="{ color: themeManager.detalheAlternativo }"
+                            target="_blank">https://araquari.ifc.edu.br/</a><br /><br />
+                        Entre em contato com a RouterIFC para mais informações:<br />
+                        emailrouter@gmail.com<br />
+                        @instadorouter
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <main class="celular" :style="{ backgroundColor: themeManager.fundo }">
+        <section class="sobre-nos">
+            <div>
+                <h1 class="title" :style="{ color: themeManager.text, borderBottom: '2px solid ' + themeManager.detalheAlternativo }">
+                    SOBRE <span :style="{ color: themeManager.detalheAlternativo }">NÓS!</span>
+                </h1>
+                <img src="/src-sobre/business.png" alt="Quem somos" />
+            </div>
+        </section>
+        <section>
+            <div class="quem-somos">
+                <div class="texto">
+                    <h2 class="subtitulo" :style="{ color: themeManager.detalheAlternativo }">QUEM SOMOS?</h2>
+                    <p :style="{ color: themeManager.text }">
+                        Somos um website desenvolvido com o objetivo de facilitar a organização de empresas de
+                        transporte de alunos no Instituto Federal Catarinense (IFC) - Câmpus Araquari.<br>
+                        A nossa principal funcionalidade é otimizar a locomoção dos alunos no trajeto “casa - escola”,
+                        por meio de ferramentas que viabilizem uma melhor comunicação entre empresa e cliente.
+                    </p>
                 </div>
             </div>
 
@@ -143,5 +196,95 @@ const themeManager = useThemeManagerStore()
 
 a {
     text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .sobre-nos {
+    padding: 230px 0 0 0;
+    align-items: center;
+    text-align: center;
+}
+
+.sobre-nos div {
+    display: block;
+    justify-content: center;
+    text-align: center;
+    gap: 0px;
+    min-height: 30vh;
+    padding-top: 0;
+}
+
+img {
+    min-width: 10px;
+    width: 400px;
+    height: auto;
+}
+
+  h1 {
+    padding-bottom: 20px;
+    margin: 0 40px;
+  }
+
+  .quem-somos {
+    padding: 0 20px 50px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quem-somos h2 {
+    text-align: center;
+    font-size: 2rem;
+}
+
+.quem-somos .texto {
+    flex: 1;
+    text-align: justify;
+}
+
+.subtitulo {
+    margin-bottom: 20px;
+}
+
+.objetivo {
+    margin: 0 10px;
+    padding: 15px;
+    border-radius: 4px;
+    color: white;
+    text-align: justify;
+}
+
+.objetivo-titulo {
+    margin-bottom: 20px;
+}
+
+.saiba-mais {
+    margin: 50px 20px 0 20px;
+    padding-bottom: 80px;
+}
+
+.saiba-mais-titulo {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.saiba-mais-conteudo {
+    display: block;
+    justify-content: space-between;
+}
+
+.saiba-mais-conteudo p {
+    width: 100%;
+}
+
+.saiba-mais-conteudo .textRight {
+    text-align: right;
+    padding-left: 0px;
+    margin-left: 0px;
+    border-left: none;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid;
+}
 }
 </style>

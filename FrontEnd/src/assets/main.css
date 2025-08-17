@@ -5,7 +5,7 @@ h1, h2, h3, h4, h5, h6, p, a, button, input, textarea {
 }
 
 h1{
-  font-size: 4.5em;
+  font-size: 4.5rem;
   font-weight: 600;
   line-height: 1;
 }
@@ -15,11 +15,11 @@ h1 span{
 }
 
 .subtext {
-  font-size: 1.1em;
+  font-size: 1.1rem;
 }
 
 h2{
-  font-size: 3em;
+  font-size: 3rem;
   font-weight: 600;
   text-align: center;
   line-height: 1.1;
@@ -30,15 +30,19 @@ h2 span{
 }
 
 h3{
-  font-size: 2.5em;
+  font-size: 2.5rem;
 }
 
 p{
-  font-size: 1.3em;
+  font-size: 1.3rem;
   line-height: 1.6;
 }
 a{
   text-decoration: none;
+}
+
+.celular {
+  display: none;
 }
 
 @media (max-width: 768px) {
@@ -55,6 +59,14 @@ a{
   }
 
   p {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .notebook {
+    display: none;
+  }
+
+  .celular {
+    display: block;
   }
 }
