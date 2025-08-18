@@ -212,7 +212,6 @@ h1 {
     max-width: 600px;
   }
 
-
   .parcerias .cards {
     display: flex;
     justify-content: space-around;
