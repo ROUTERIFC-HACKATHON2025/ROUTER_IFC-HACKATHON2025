@@ -5,7 +5,7 @@ const themeManager = useThemeManagerStore();
 </script>
 
 <template>
-  <main class="pagina-empresas" :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }">
+  <main class="notebook" :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }">
     <section class="empresas">
       <h1 :style="{ borderColor: themeManager.detalhe }"><span :style="{color: themeManager.detalheAlternativo}">INDY</span>TOUR</h1>
       <div class="descricao" :style="{ borderColor: themeManager.detalhe }">
@@ -25,10 +25,30 @@ const themeManager = useThemeManagerStore();
       </div>
     </section>
   </main>
+  <main class="celular" :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }">
+    <section class="empresas">
+      <h1 :style="{ borderColor: themeManager.detalhe }"><span :style="{color: themeManager.detalheAlternativo}">INDY</span>TOUR</h1>
+      <div class="descricao" :style="{ borderColor: themeManager.detalhe }">
+        <img src="/public/src-empresa/Logoindytour.png" alt="Ilustração empresa" :style="{ borderColor: themeManager.text }" />
+        <p>
+          A IndyTour, criada em 2020, é uma empresa de transporte por vans que atende os estudantes do Instituto Federal Catarinense - Campus Araquari (IFC)com segurança, pontualidade e conforto. Fundada por motoristas experientes, surgiu para facilitar o acesso à escola, principalmente para alunos que moram longe. Com veículos bem cuidados, rotas organizadas e motoristas capacitados, a IndyTour se tornou uma parceira importante na rotina escolar, ajudando os estudantes a chegarem ao campus com tranquilidade todos os dias.
+        </p>
+      </div>
+    </section>
+    <section class="preco">
+      <img src="/public/src-empresa/onibusIndy.png" alt="">
+      <div class="info" :style="{ borderColor: themeManager.text }">
+        <p><strong>Mensalidade:</strong> <span :style="{ color: themeManager.detalheAlternativo }">11x de</span> R$ 600,00 <span :style="{ color: themeManager.detalheAlternativo }">ou 12x de</span> R$ 550,00</p>
+        <p><strong>Endereço:</strong> R. Faustino Busarello, 520 - Boehmerwald, Joinville - SC, 89235-330</p>
+        <p><strong>Telefone:</strong> (47) 99221-4606</p>
+        <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span class="mdi mdi-instagram"></span> @indy_tour</span></p>
+      </div>
+    </section>
+  </main>
 </template>
 
 <style scoped>
-.pagina-empresas {
+.notebook {
   padding: 190px 120px 80px 120px;
 }
 
@@ -85,6 +105,77 @@ h1 {
 .info p strong {
   font-weight: bold;
   text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .celular {
+    padding: 230px 0 50px 0;
+  }
+
+  h1,
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    border-bottom: 2px solid;
+    padding-bottom: 20px;
+    margin: 0 40px 30px 40px;
+  }
+
+  .empresas .descricao {
+    padding: 0 15px 0px 15px;
+    margin-bottom: 50px;
+    display: block;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    border-bottom: none;
+    text-align: center;
+  }
+
+  .empresas p {
+    max-width: 600px;
+    text-align: justify;
+  }
+
+  .empresas img {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 20px;
+}
+
+
+.preco {
+  display: block;
+  justify-content: space-between;
+  padding: 0 20px 0px 20px;
+  text-align: center;
+
+}
+
+.preco img{
+  width: 350px;
+  height: auto;
+}
+
+.info {
+  text-align: left;
+  border-left: 2px none;
+  padding: 0px;
+  margin-left: 0;
+}
+
+.info p {
+  margin: 10px 0;
+  font-size: 0.9rem;
+}
+
+.info p strong {
+  font-weight: bold;
+  text-decoration: underline;
+}
 }
 
 </style>
