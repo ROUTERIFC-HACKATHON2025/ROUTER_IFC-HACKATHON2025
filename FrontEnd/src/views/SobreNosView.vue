@@ -1,121 +1,163 @@
 <script setup>
+import { onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 
 const themeManager = useThemeManagerStore()
+
+onMounted(async () => {
+  await nextTick()
+
+  const animateElements = () => {
+    const elements = document.querySelectorAll('.animate-on-scroll')
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view')
+        } else {
+          entry.target.classList.remove('in-view')
+        }
+      })
+    }, { threshold: 0.1 })
+
+    elements.forEach(el => observer.observe(el))
+  }
+
+  animateElements()
+
+  // Re-observe os elementos caso a página seja rolada ou elementos sejam adicionados dinamicamente
+  window.addEventListener('scroll', () => {
+    animateElements()
+  })
+})
 </script>
 
 <template>
-    <main class="notebook" :style="{ backgroundColor: themeManager.fundo }">
-        <section class="sobre-nos">
-            <div :style="{ borderBottom: '2px solid' + themeManager.detalhe }">
-                <h1 class="title" :style="{ color: themeManager.text }">
-                    SOBRE <span :style="{ color: themeManager.detalheAlternativo }">NÓS!</span>
-                </h1>
-            </div>
-        </section>
-        <section>
-            <div class="quem-somos">
-                <div class="texto">
-                    <h2 class="subtitulo" :style="{ color: themeManager.detalheAlternativo }">QUEM SOMOS?</h2>
-                    <p :style="{ color: themeManager.text }">
-                        Somos um website desenvolvido com o objetivo de facilitar a organização de empresas de
-                        transporte de alunos no Instituto Federal Catarinense (IFC) - Câmpus Araquari.<br>
-                        A nossa principal funcionalidade é otimizar a locomoção dos alunos no trajeto “casa - escola”,
-                        por meio de ferramentas que viabilizem uma melhor comunicação entre empresa e cliente.
-                    </p>
-                </div>
-                <div class="imagem">
-                    <img src="/src-sobre/business.png" alt="Quem somos" />
-                </div>
-            </div>
+  <!-- Notebook -->
+  <main class="notebook" :style="{ backgroundColor: themeManager.fundo }">
+    <section class="sobre-nos animate-on-scroll">
+      <div :style="{ borderBottom: '2px solid ' + themeManager.detalhe }">
+        <h1 class="title" :style="{ color: themeManager.text }">
+          SOBRE <span :style="{ color: themeManager.detalheAlternativo }">NÓS!</span>
+        </h1>
+      </div>
+    </section>
 
-            <div class="objetivo" :style="{ backgroundColor: themeManager.detalhe }">
-                <h2 class="objetivo-titulo">NOSSO OBJETIVO</h2>
-                <p>
-                    Queremos facilitar a locomoção dos estudantes até o instituto, otimizando o tempo de todos os
-                    envolvidos no transporte. Para isso, disponibilizamos diversos serviços, que viabilizam uma melhor
-                    experiência para todos.<br>
-                    Quando se pensa em estudar no IFC Araquari, deve se pensar em RouterIFC!
-                </p>
-            </div>
+    <section>
+      <div class="quem-somos animate-on-scroll">
+        <div class="texto animate-on-scroll">
+          <h2 class="subtitulo animate-on-scroll" :style="{ color: themeManager.detalheAlternativo }">QUEM SOMOS?</h2>
+          <p :style="{ color: themeManager.text }">
+            Somos um website desenvolvido com o objetivo de facilitar a organização de empresas de
+            transporte de alunos no Instituto Federal Catarinense (IFC) - Câmpus Araquari.<br>
+            A nossa principal funcionalidade é otimizar a locomoção dos alunos no trajeto “casa - escola”,
+            por meio de ferramentas que viabilizem uma melhor comunicação entre empresa e cliente.
+          </p>
+        </div>
+        <div class="imagem animate-on-scroll">
+          <img src="/src-sobre/business.png" alt="Quem somos" />
+        </div>
+      </div>
 
-            <div class="saiba-mais">
-                <h2 class="saiba-mais-titulo" :style="{ color: themeManager.detalhe }">SAIBA MAIS</h2>
-                <div class="saiba-mais-conteudo">
-                    <p class="textLeft" :style="{ color: themeManager.text }">
-                        Nossos serviços são prestados exclusivamente para o IFC Araquari, um instituto com ensino médio
-                        técnico em agropecuária, informática para internet e química, e graduação em agronomia, medicina
-                        veterinária, sistemas de informação, ciências agrícolas, química e redes de computadores.
+      <div class="objetivo animate-on-scroll" :style="{ backgroundColor: themeManager.detalhe }">
+        <h2 class="objetivo-titulo animate-on-scroll">NOSSO OBJETIVO</h2>
+        <p>
+          Queremos facilitar a locomoção dos estudantes até o instituto, otimizando o tempo de todos os
+          envolvidos no transporte. Para isso, disponibilizamos diversos serviços, que viabilizam uma melhor
+          experiência para todos.<br>
+          Quando se pensa em estudar no IFC Araquari, deve se pensar em RouterIFC!
+        </p>
+      </div>
 
-                    </p>
-                    <p class="textRight" :style="{ color: themeManager.text, borderColor: themeManager.text }">
-                        Caso queira saber mais sobre o Instituto Federal Catarinense - Campus Araquari acesse o site: <a
-                            href="https://araquari.ifc.edu.br/" :style="{ color: themeManager.detalheAlternativo }"
-                            target="_blank">https://araquari.ifc.edu.br/</a><br /><br />
-                        Entre em contato com a RouterIFC para mais informações:<br />
-                        emailrouter@gmail.com<br />
-                        @instadorouter
-                    </p>
-                </div>
-            </div>
-        </section>
-    </main>
-    <main class="celular" :style="{ backgroundColor: themeManager.fundo }">
-        <section class="sobre-nos">
-            <div>
-                <h1 class="title" :style="{ color: themeManager.text, borderBottom: '2px solid ' + themeManager.detalheAlternativo }">
-                    SOBRE <span :style="{ color: themeManager.detalheAlternativo }">NÓS!</span>
-                </h1>
-                <img src="/src-sobre/business.png" alt="Quem somos" />
-            </div>
-        </section>
-        <section>
-            <div class="quem-somos">
-                <div class="texto">
-                    <h2 class="subtitulo" :style="{ color: themeManager.detalheAlternativo }">QUEM SOMOS?</h2>
-                    <p :style="{ color: themeManager.text }">
-                        Somos um website desenvolvido com o objetivo de facilitar a organização de empresas de
-                        transporte de alunos no Instituto Federal Catarinense (IFC) - Câmpus Araquari.<br>
-                        A nossa principal funcionalidade é otimizar a locomoção dos alunos no trajeto “casa - escola”,
-                        por meio de ferramentas que viabilizem uma melhor comunicação entre empresa e cliente.
-                    </p>
-                </div>
-            </div>
+      <div class="saiba-mais animate-on-scroll">
+        <h2 class="saiba-mais-titulo animate-on-scroll" :style="{ color: themeManager.detalhe }">SAIBA MAIS</h2>
+        <div class="saiba-mais-conteudo">
+          <p class="textLeft animate-on-scroll" :style="{ color: themeManager.text }">
+            Nossos serviços são prestados exclusivamente para o IFC Araquari, um instituto com ensino médio
+            técnico em agropecuária, informática para internet e química, e graduação em agronomia, medicina
+            veterinária, sistemas de informação, ciências agrícolas, química e redes de computadores.
+          </p>
+          <p class="textRight animate-on-scroll" :style="{ color: themeManager.text, borderColor: themeManager.text }">
+            Caso queira saber mais sobre o Instituto Federal Catarinense - Campus Araquari acesse o site: 
+            <a href="https://araquari.ifc.edu.br/" :style="{ color: themeManager.detalheAlternativo }" target="_blank">
+              https://araquari.ifc.edu.br/
+            </a><br /><br />
+            Entre em contato com a RouterIFC para mais informações:<br />
+            emailrouter@gmail.com<br />
+            @instadorouter
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
 
-            <div class="objetivo" :style="{ backgroundColor: themeManager.detalhe }">
-                <h2 class="objetivo-titulo">NOSSO OBJETIVO</h2>
-                <p>
-                    Queremos facilitar a locomoção dos estudantes até o instituto, otimizando o tempo de todos os
-                    envolvidos no transporte. Para isso, disponibilizamos diversos serviços, que viabilizam uma melhor
-                    experiência para todos.<br>
-                    Quando se pensa em estudar no IFC Araquari, deve se pensar em RouterIFC!
-                </p>
-            </div>
+  <!-- Celular -->
+  <main class="celular" :style="{ backgroundColor: themeManager.fundo }">
+    <section class="sobre-nos animate-on-scroll">
+      <div>
+        <h1 class="title animate-on-scroll" :style="{ color: themeManager.text, borderBottom: '2px solid ' + themeManager.detalheAlternativo }">
+          SOBRE <span :style="{ color: themeManager.detalheAlternativo }">NÓS!</span>
+        </h1>
+        <img class="animate-on-scroll" src="/src-sobre/business.png" alt="Quem somos" />
+      </div>
+    </section>
 
-            <div class="saiba-mais">
-                <h2 class="saiba-mais-titulo" :style="{ color: themeManager.detalhe }">SAIBA MAIS</h2>
-                <div class="saiba-mais-conteudo">
-                    <p class="textLeft" :style="{ color: themeManager.text }">
-                        Nossos serviços são prestados exclusivamente para o IFC Araquari, um instituto com ensino médio
-                        técnico em agropecuária, informática para internet e química, e graduação em agronomia, medicina
-                        veterinária, sistemas de informação, ciências agrícolas, química e redes de computadores.
+    <section>
+      <div class="quem-somos animate-on-scroll">
+        <div class="texto animate-on-scroll">
+          <h2 class="subtitulo animate-on-scroll" :style="{ color: themeManager.detalheAlternativo }">QUEM SOMOS?</h2>
+          <p :style="{ color: themeManager.text }">
+            Somos um website desenvolvido com o objetivo de facilitar a organização de empresas de
+            transporte de alunos no Instituto Federal Catarinense (IFC) - Câmpus Araquari.<br>
+            A nossa principal funcionalidade é otimizar a locomoção dos alunos no trajeto “casa - escola”,
+            por meio de ferramentas que viabilizem uma melhor comunicação entre empresa e cliente.
+          </p>
+        </div>
+      </div>
 
-                    </p>
-                    <p class="textRight" :style="{ color: themeManager.text, borderColor: themeManager.text }">
-                        Caso queira saber mais sobre o Instituto Federal Catarinense - Campus Araquari acesse o site: <a
-                            href="https://araquari.ifc.edu.br/" :style="{ color: themeManager.detalheAlternativo }"
-                            target="_blank">https://araquari.ifc.edu.br/</a><br /><br />
-                        Entre em contato com a RouterIFC para mais informações:<br />
-                        emailrouter@gmail.com<br />
-                        @instadorouter
-                    </p>
-                </div>
-            </div>
-        </section>
-    </main>
+      <div class="objetivo animate-on-scroll" :style="{ backgroundColor: themeManager.detalhe }">
+        <h2 class="objetivo-titulo animate-on-scroll">NOSSO OBJETIVO</h2>
+        <p>
+          Queremos facilitar a locomoção dos estudantes até o instituto, otimizando o tempo de todos os
+          envolvidos no transporte. Para isso, disponibilizamos diversos serviços, que viabilizam uma melhor
+          experiência para todos.<br>
+          Quando se pensa em estudar no IFC Araquari, deve se pensar em RouterIFC!
+        </p>
+      </div>
+
+      <div class="saiba-mais animate-on-scroll">
+        <h2 class="saiba-mais-titulo animate-on-scroll" :style="{ color: themeManager.detalhe }">SAIBA MAIS</h2>
+        <div class="saiba-mais-conteudo">
+          <p class="textLeft animate-on-scroll" :style="{ color: themeManager.text }">
+            Nossos serviços são prestados exclusivamente para o IFC Araquari, um instituto com ensino médio
+            técnico em agropecuária, informática para internet e química, e graduação em agronomia, medicina
+            veterinária, sistemas de informação, ciências agrícolas, química e redes de computadores.
+          </p>
+          <p class="textRight animate-on-scroll" :style="{ color: themeManager.text, borderColor: themeManager.text }">
+            Caso queira saber mais sobre o Instituto Federal Catarinense - Campus Araquari acesse o site: 
+            <a href="https://araquari.ifc.edu.br/" :style="{ color: themeManager.detalheAlternativo }" target="_blank">
+              https://araquari.ifc.edu.br/
+            </a><br /><br />
+            Entre em contato com a RouterIFC para mais informações:<br />
+            emailrouter@gmail.com<br />
+            @instadorouter
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
 </template>
 
 <style scoped>
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
 .sobre-nos {
     padding: 110px 120px 0;
     align-items: center;

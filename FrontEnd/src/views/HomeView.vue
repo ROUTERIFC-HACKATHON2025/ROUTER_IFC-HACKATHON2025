@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useThemeHomeStore } from '@/stores/theme/themeHome'
@@ -11,19 +11,33 @@ const authStore = useAuthStateStore()
 
 const abaSelecionada = ref('Passageiros')
 const abas = ['Motoristas', 'Empresas', 'Passageiros']
+
+onMounted(async () => {
+  await nextTick()
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view')
+      } else {
+        entry.target.classList.remove('in-view')
+      }
+    })
+  }, { threshold: 0.1 })
+
+  document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el))
+})
 </script>
 
 <template>
   <main class="notebook" :style="{ backgroundColor: themeManager.fundo }">
-
-    <section class="Home-header">
+    <section class="Home-header animate-on-scroll">
       <div class="header" :style="{
         background: 'url(' + themeHome.linhaHome + ') no-repeat left center',
         backgroundSize: 'auto 101%',
         borderBottom: '2px solid ' + themeManager.detalhe
       }">
-        <img src="/public/src-home/onibus_inicial.png" alt="Ilustração Home" class="illustration" />
-        <div class="intro">
+        <img src="/public/src-home/onibus_inicial.png" alt="Ilustração Home" class="illustration animate-on-scroll" />
+        <div class="intro animate-on-scroll">
           <h1 class="title" :style="{ color: themeManager.text }">
             BEM VINDO AO <span :style="{ color: themeManager.detalheAlternativo }">ROUTER IFC!</span>
           </h1>
@@ -34,94 +48,92 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
       </div>
     </section>
 
-    <section class="empresa" :style="{ borderColor: themeManager.detalhe }">
-      <div class="empresa-container " :style="{ backgroundColor: themeManager.detalhe }">
-
+    <section class="empresa animate-on-scroll" :style="{ borderColor: themeManager.detalhe }">
+      <div class="empresa-container" :style="{ backgroundColor: themeManager.detalhe }">
         <div class="empresa-titulo">
           <h2>EMPRESAS<br> PARCEIRAS:</h2>
         </div>
         <div class="empresas-lista">
-          <div class="empresa-card">
+          <div class="empresa-card animate-on-scroll">
             <img src="/public/src-home/logoindytour.png" alt="Logo Indy Tour" class="logo" />
             <h3>IndyTour</h3>
-            <p> <span class="mdi mdi-instagram"></span> @indy_tour<br><span class="mdi mdi-phone"></span> +55 (47)
-              99221-4606</p>
+            <p><span class="mdi mdi-instagram"></span> @indy_tour<br>
+               <span class="mdi mdi-phone"></span> +55 (47) 99221-4606</p>
           </div>
-
-          <div class="empresa-card">
+          <div class="empresa-card animate-on-scroll">
             <img src="/public/src-home/logosul.png" alt="Logo Sul Turismo" class="logo" />
             <h3>Sul Turismo</h3>
-            <p> <span class="mdi mdi-instagram"></span> @sulturismotransportes<br>
-              <span class="mdi mdi-phone"></span> +55 (47) 99676-7651
-            </p>
+            <p><span class="mdi mdi-instagram"></span> @sulturismotransportes<br>
+               <span class="mdi mdi-phone"></span> +55 (47) 99676-7651</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="tab-section">
-      <h2 class="section-title" :style="{ color: themeManager.text }">NOSSOS
-        <span :style="{ color: themeManager.detalheAlternativo }"> SERVIÇOS</span>
+    <section class="tab-section animate-on-scroll">
+      <h2 class="section-title" :style="{ color: themeManager.text }">
+        NOSSOS <span :style="{ color: themeManager.detalheAlternativo }"> SERVIÇOS</span>
       </h2>
 
       <div class="tab-buttons">
-        <button v-for="aba in abas" :key="aba" class="tab-button" :class="{ active: abaSelecionada === aba }"
-          @click="abaSelecionada = aba" :style="{
+        <button
+          v-for="aba in abas"
+          :key="aba"
+          class="tab-button"
+          :class="{ active: abaSelecionada === aba }"
+          @click="abaSelecionada = aba"
+          :style="{
             backgroundColor: abaSelecionada === aba ? themeManager.detalhe : themeManager.detalheAlternativo,
             color: '#f1f1f1'
-          }">
+          }"
+        >
           {{ aba }}
         </button>
       </div>
 
-      <div class="tab-content" :style="{ border: '2px solid' + themeManager.detalheAlternativo }">
-        <div v-if="abaSelecionada === 'Motoristas'">
-          <div class="content-box">
-            <div>
-              <p :style="{ color: themeManager.text }">
-                Nosso site oferece aos motoristas a oportunidade de se cadastrarem e acessarem rotas disponíveis
-                conforme sua região. Eles têm um painel próprio onde podem gerenciar seus horários e receber
-                notificações sobre alterações de rota ou imprevistos. Além disso, prezamos pela segurança, exigindo
-                documentos atualizados e treinamento básico sobre atendimento e primeiros socorros.
-              </p>
-              <RouterLink to="/register" @click="authStore.mudarStateAuth('Motorista')">
-                <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre-se como Motorista</button>
-              </RouterLink>
-            </div>
-            <img src="/src-home/onibus.png" alt="Motoristas" />
+      <div class="tab-content" :style="{ border: '2px solid ' + themeManager.detalheAlternativo }">
+        <div v-show="abaSelecionada === 'Motoristas'" class="content-box animate-on-scroll">
+          <div>
+            <p :style="{ color: themeManager.text }">
+              Nosso site oferece aos motoristas a oportunidade de se cadastrarem e acessarem rotas disponíveis
+              conforme sua região. Eles têm um painel próprio onde podem gerenciar seus horários e receber
+              notificações sobre alterações de rota ou imprevistos. Além disso, prezamos pela segurança, exigindo
+              documentos atualizados e treinamento básico sobre atendimento e primeiros socorros.
+            </p>
+            <RouterLink to="/register" @click="authStore.mudarStateAuth('Motorista')">
+              <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre-se como Motorista</button>
+            </RouterLink>
           </div>
+          <img src="/src-home/onibus.png" alt="Motoristas" class="animate-on-scroll" />
         </div>
 
-        <div v-else-if="abaSelecionada === 'Empresas'">
-          <div class="content-box">
-            <div>
-              <p :style="{ color: themeManager.text }">
-                As empresas de transporte escolar que se cadastram no nosso site ganham visibilidade e organização. A
-                plataforma permite o gerenciamento das rotas, dos motoristas e dos veículos em tempo real. Com isso,
-                garantimos mais eficiência no serviço prestado e mais confiança por parte das famílias.
-              </p>
-            </div>
-            <img src="/src-home/empresa.png" alt="Empresas" />
+        <div v-show="abaSelecionada === 'Empresas'" class="content-box animate-on-scroll">
+          <div>
+            <p :style="{ color: themeManager.text }">
+              As empresas de transporte escolar que se cadastram no nosso site ganham visibilidade e organização. A
+              plataforma permite o gerenciamento das rotas, dos motoristas e dos veículos em tempo real. Com isso,
+              garantimos mais eficiência no serviço prestado e mais confiança por parte das famílias.
+            </p>
           </div>
+          <img src="/src-home/empresa.png" alt="Empresas" class="animate-on-scroll" />
         </div>
 
-        <div v-else-if="abaSelecionada === 'Passageiros'">
-          <div class="content-box">
-            <div>
-              <p :style="{ color: themeManager.text }">
-                Para os passageiros, nosso site oferece praticidade e acompanhamento em tempo real. Os alunos contam com
-                um transporte confiável e organizado, tornando o trajeto escolar mais seguro e tranquilo todos os dias.
-              </p>
-              <RouterLink to="/register" @click="authStore.mudarStateAuth('Passageiro')">
-                <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre-se como Passageiro</button>
-              </RouterLink>
-            </div>
-            <img src="/src-home/estudantes.png" alt="Passageiros" />
+        <div v-show="abaSelecionada === 'Passageiros'" class="content-box animate-on-scroll">
+          <div>
+            <p :style="{ color: themeManager.text }">
+              Para os passageiros, nosso site oferece praticidade e acompanhamento em tempo real. Os alunos contam com
+              um transporte confiável e organizado, tornando o trajeto escolar mais seguro e tranquilo todos os dias.
+            </p>
+            <RouterLink to="/register" @click="authStore.mudarStateAuth('Passageiro')">
+              <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre-se como Passageiro</button>
+            </RouterLink>
           </div>
+          <img src="/src-home/estudantes.png" alt="Passageiros" class="animate-on-scroll" />
         </div>
       </div>
     </section>
   </main>
+
   <main class="celular" :style="{ backgroundColor: themeManager.fundo }">
 
     <section class="Home-header">
@@ -227,8 +239,18 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
 </template>
 
 <style scoped>
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(50px) scale(0.95);
+  transition: all 0.7s cubic-bezier(.2, .65, .25, 1);
+}
 
-.Home-header {
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.notebook .Home-header {
   padding: 110px 120px 0;
 }
 
@@ -303,16 +325,8 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
   font-size: 12px;
 }
 
-.icon {
-  margin-right: 4px;
-}
-
 .tab-section {
   padding: 80px 120px;
-}
-
-.tab-section h2 {
-  margin-bottom: 60px;
 }
 
 .tab-buttons {
@@ -494,4 +508,5 @@ const abas = ['Motoristas', 'Empresas', 'Passageiros']
     margin-top: 5px;
   }
 }
+
 </style>
