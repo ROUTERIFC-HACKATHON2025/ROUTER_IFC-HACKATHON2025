@@ -2,17 +2,40 @@
 import { RouterLink } from 'vue-router'
 import { useAuthStateStore } from '@/stores/authState';
 import { useThemeManagerStore } from '@/stores/theme/themeManager';
+import { onMounted, nextTick } from 'vue';
 
 const authState = useAuthStateStore();
 const themeManager = useThemeManagerStore();
 
+onMounted(async () => {
+  await nextTick();
+
+  const animateElements = () => {
+    const elements = document.querySelectorAll('.animate-on-scroll');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        } else {
+          entry.target.classList.remove('in-view');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    elements.forEach(el => observer.observe(el));
+  }
+
+  animateElements();
+
+  window.addEventListener('scroll', () => {
+    animateElements();
+  });
+})
 </script>
 
 <template>
   <main class="notebook" :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }">
-    <section class="empresas">
-      <h1 :style="{ color: themeManager.detalheAlternativo, borderColor: themeManager.detalhe }">EMPRESAS</h1>
-      <div class="descricao" :style="{ borderColor: themeManager.detalhe }">
+      <div class="descricao animate-on-scroll" :style="{ borderColor: themeManager.detalhe }">
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget ipsum elit. Duis non elementum quam.
           Morbi id luctus elit, sed maximus nisl. Sed maximus enim at erat posuere, et pharetra elit luctus.
@@ -25,29 +48,32 @@ const themeManager = useThemeManagerStore();
       </div>
     </section>
 
-    <section class="parcerias">
+    <section class="parcerias animate-on-scroll">
       <h2 :style="{ color: themeManager.detalheAlternativo }">PARCERIAS ATUAIS</h2>
-      <div class="cards" :style="{ backgroundColor: themeManager.detalhe }">
-        <div class="card">
+      <div class="cards animate-on-scroll" :style="{ backgroundColor: themeManager.detalhe }">
+        <div class="card animate-on-scroll">
           <img class="logo" src="/public/src-home/logoindytour.png" alt="IndyTour" />
           <div class="info">
             <p><strong>IndyTour</strong></p>
             <p>@indy_tour</p>
             <p><span class="mdi mdi-phone"></span> +55 (47) 99221-4606</p>
-            <RouterLink to="/IndySul" @click="authState.mudarStateEmpresa('Indy')"><button
-                :style="{ backgroundColor: themeManager.detalheAlternativo }">Saiba mais</button></RouterLink>
-
+            <RouterLink to="/IndySul" @click="authState.mudarStateEmpresa('Indy')">
+              <button :style="{ backgroundColor: themeManager.detalheAlternativo}">Saiba mais</button>
+            </RouterLink>
           </div>
         </div>
+
         <div class="line"></div>
-        <div class="card">
+
+        <div class="card animate-on-scroll">
           <img class="logo" src="/public/src-home/logosul.png" alt="Sul Turismo" />
           <div class="info">
             <p><strong>Sul Turismo</strong></p>
             <p>@sulturismotransportes</p>
             <p><span class="mdi mdi-phone"></span> +55 (47) 99676-7651</p>
-            <RouterLink to="/IndySul" @click="authState.mudarStateEmpresa('Sul')"><button
-                :style="{ backgroundColor: themeManager.detalheAlternativo }">Saiba mais</button></RouterLink>
+            <RouterLink to="/IndySul" @click="authState.mudarStateEmpresa('Sul')">
+              <button :style="{ backgroundColor: themeManager.detalheAlternativo}">Saiba mais</button>
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -101,6 +127,17 @@ const themeManager = useThemeManagerStore();
 </template>
 
 <style scoped>
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .notebook {
   padding: 190px 120px 80px 120px;
 }
@@ -117,7 +154,7 @@ h1 {
 }
 
 .empresas .descricao {
-  padding: 0 50px 0px 50px;
+  padding: 0 50px;
   margin-bottom: 100px;
   display: flex;
   align-items: center;
