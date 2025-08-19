@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 
@@ -11,9 +11,31 @@ const senha = ref('')
 const erro = ref('')
 const showPassword = ref(false)
 
-onMounted(() => {
+onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
+
+  await nextTick()
+
+  const animateElements = () => {
+    const elements = document.querySelectorAll('.animate-on-scroll')
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view')
+        } else {
+          entry.target.classList.remove('in-view')
+        }
+      })
+    }, { threshold: 0.1 })
+
+    elements.forEach(el => observer.observe(el))
+  }
+
+  animateElements()
+  window.addEventListener('scroll', () => {
+    animateElements()
+  })
 })
 
 function toggleShowPassword() {
@@ -33,7 +55,6 @@ function handleLogin() {
   } else if (emailVal === 'admin@admin' && senhaVal === 'admin') {
     erro.value = ''
     authState.mudarState('admin')
-
   } else {
     erro.value = 'E‑mail ou senha incorretos.'
   }
@@ -42,11 +63,11 @@ function handleLogin() {
 
 <template>
   <section class="login-container" :style="{ backgroundColor: themeManager.fundo }">
-    <div class="left-panel" :style="{ backgroundColor: themeManager.detalhe }">
+    <div class="left-panel animate-on-scroll fade-in-left" :style="{ backgroundColor: themeManager.detalhe }">
       <img src="/public/src-auth/auth-form-illustration.png" alt="Login Illustration" />
     </div>
 
-    <div class="right-panel" :style="{ backgroundColor: themeManager.fundo }">
+    <div class="right-panel animate-on-scroll fade-in-right" :style="{ backgroundColor: themeManager.fundo }">
       <div class="form-box">
         <h1 class="title" :style="{ color: themeManager.text }">Bem‑vindo de volta</h1>
         <p class="subtitle" :style="{ color: themeManager.text }">Acesse sua conta para continuar</p>
@@ -68,6 +89,7 @@ function handleLogin() {
             <span class="mdi toggle-eye" :class="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click="toggleShowPassword"
               :style="{ color: themeManager.text }"></span>
           </div>
+
           <button class="recover-link" @click="authState.mudarState('autentificacao')"
             :style="{ color: themeManager.text }">
             Esqueceu a senha?
@@ -84,6 +106,7 @@ function handleLogin() {
             Cadastre-se
           </button>
         </p>
+
         <div class="social-login">
           <p :style="{ color: themeManager.text }">Fazer login por outra plataforma?</p>
           <ul>
@@ -98,6 +121,34 @@ function handleLogin() {
 </template>
 
 <style scoped>
+/* Scroll animation */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade lateral */
+.fade-in-left {
+  transform: translateX(-50px);
+}
+.fade-in-left.in-view {
+  transform: translateX(0);
+}
+
+.fade-in-right {
+  transform: translateX(50px);
+}
+.fade-in-right.in-view {
+  transform: translateX(0);
+}
+
+/* Original Styles */
 .login-container {
   display: flex;
   height: 80vh;
@@ -216,10 +267,6 @@ function handleLogin() {
   margin: 0 0 0 70%;
 }
 
-.register-link:hover {
-  color: #003F74;
-}
-
 .social-login {
   margin-top: 1rem;
 }
@@ -255,5 +302,26 @@ function handleLogin() {
   color: red;
   font-size: 0.8rem;
   margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    margin-top: 20px;
+    flex-direction: column;
+    height: 70vh;
+  }
+
+  .left-panel {
+    display: none;
+  }
+
+  .right-panel {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .form-box {
+    width: 100%;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 
 const themeManager = useThemeManagerStore()
@@ -35,14 +35,36 @@ function handleFileChange(e) {
 function cadastrar() {
   console.log('Dados enviados:', motorista.value)
 }
+
+onMounted(async () => {
+  await nextTick()
+
+  const animateElements = () => {
+    const elements = document.querySelectorAll('.animate-on-scroll')
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view')
+        } else {
+          entry.target.classList.remove('in-view')
+        }
+      })
+    }, { threshold: 0.1 })
+
+    elements.forEach(el => observer.observe(el))
+  }
+
+  animateElements()
+  window.addEventListener('scroll', animateElements)
+})
 </script>
 
 <template>
-  <section class="form-container" :style="{ color: themeManager.text }">
+  <section class="form-container animate-on-scroll" :style="{ color: themeManager.text }">
     <h1>CADASTRO <span :style="{ color: themeManager.detalheAlternativo }">MOTORISTA</span></h1>
 
     <form @submit.prevent="cadastrar" :style="{ borderColor: themeManager.detalheAlternativo }">
-      <div class="space" :style="{ borderColor: themeManager.detalheAlternativo }">
+      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
         <h2>
           <span class="mdi mdi-account" :style="{ color: themeManager.detalheAlternativo }"></span>
           Informações Pessoais
@@ -89,11 +111,7 @@ function cadastrar() {
             <p>Selecione a empresa: *</p>
             <div
               class="select-custom"
-              :style="{
-                borderColor: themeManager.detalhe,
-                backgroundColor: themeManager.detalhe,
-                color: '#fff'
-              }"
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.detalhe, color: '#fff' }"
               @click="toggleSelect"
             >
               {{ motorista.empresa || 'Selecione a empresa' }}
@@ -112,7 +130,6 @@ function cadastrar() {
                 @click.stop="selecionarEmpresa(empresa)"
                 :class="{ selecionada: motorista.empresa === empresa }"
                 :style="{
-                  color: themeManager.text,
                   backgroundColor: motorista.empresa === empresa ? themeManager.detalhe : themeManager.fundo,
                   color: motorista.empresa === empresa ? '#fff' : themeManager.text
                 }"
@@ -152,6 +169,19 @@ function cadastrar() {
 </template>
 
 <style scoped>
+/* Scroll animation */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Original Styles */
 .form-container {
   margin: 0 300px;
   padding: 0px 0 200px 0;
@@ -260,7 +290,6 @@ input {
   font-style: italic;
 }
 
-
 button.submit {
   margin-top: 20px;
   width: 50%;
@@ -277,5 +306,29 @@ button.submit {
 
 button.submit:hover {
   transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    margin: 0 10px;
+    padding: 20px 0 100px 0;
+  }
+
+  form {
+    padding: 40px 20px 100px 20px;
+  }
+
+  .input-field-mid {
+    min-width: 150px;
+  }
+
+  .file-upload {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .file-name {
+    margin-top: 5px;
+  }
 }
 </style>

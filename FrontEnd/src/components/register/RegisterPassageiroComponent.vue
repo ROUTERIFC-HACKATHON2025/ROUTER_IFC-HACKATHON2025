@@ -1,9 +1,8 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 
 const themeManager = useThemeManagerStore()
-
 
 const aluno = ref({
   nome: '',
@@ -30,14 +29,40 @@ const endereco = ref({
   cidade: '',
   bairro: '',
 })
+
+onMounted(async () => {
+  await nextTick()
+
+  const animateElements = () => {
+    const elements = document.querySelectorAll('.animate-on-scroll')
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view')
+        } else {
+          entry.target.classList.remove('in-view')
+        }
+      })
+    }, { threshold: 0.1 })
+
+    elements.forEach(el => observer.observe(el))
+  }
+
+  animateElements()
+  window.addEventListener('scroll', animateElements)
+})
+
+function cadastrar() {
+  alert('Cadastro enviado! (a lógica real deve ser implementada)')
+}
 </script>
 
 <template>
-  <section class="form-container" :style="{color: themeManager.text}">
+  <section class="form-container animate-on-scroll" :style="{color: themeManager.text}">
     <h1>CADASTRO <span :style="{color: themeManager.detalheAlternativo}">PASSAGEIRO</span></h1>
     <form @submit.prevent="cadastrar" :style="{borderColor: themeManager.detalheAlternativo}">
 
-      <div class="space" :style="{borderColor: themeManager.detalheAlternativo}">
+      <div class="space animate-on-scroll" :style="{borderColor: themeManager.detalheAlternativo}">
         <h2><span class="mdi mdi-account" :style="{color: themeManager.detalheAlternativo}"></span> Informações Pessoais</h2>
         <div class="grid">
           <div>
@@ -54,7 +79,7 @@ const endereco = ref({
           </div>
           <div id="telefone">
             <p>Telefone: *</p>
-            <input v-model="aluno.telefone" class="input-field-mid"  required :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}"/>
+            <input v-model="aluno.telefone" class="input-field-mid" required :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}"/>
           </div>
           <div>
             <p>Data de Nascimento: *</p>
@@ -75,7 +100,7 @@ const endereco = ref({
         </div>
       </div>
 
-      <div class="space" :style="{borderColor: themeManager.detalheAlternativo}">
+      <div class="space animate-on-scroll" :style="{borderColor: themeManager.detalheAlternativo}">
         <h2 class="responsaveis"><span class="mdi mdi-human-male-male-child" :style="{color: themeManager.detalheAlternativo}"></span> Informações dos Responsáveis</h2>
         <p class="sub">(Apenas se for menor de 18 anos)</p>
         <div class="grid">
@@ -98,7 +123,7 @@ const endereco = ref({
         </div>
       </div>
 
-      <div class="space" :style="{borderColor: themeManager.detalheAlternativo}">
+      <div class="space animate-on-scroll" :style="{borderColor: themeManager.detalheAlternativo}">
         <h2><span class="mdi mdi-map-marker" :style="{color: themeManager.detalheAlternativo}"></span> Endereço Residencial</h2>
         <div class="grid">
           <div>
@@ -120,7 +145,7 @@ const endereco = ref({
           <div>
             <p>Bairro: *</p>
             <input v-model="endereco.bairro" class="input-field-mid" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}"/>
-        </div>
+          </div>
         </div>
       </div>
 
@@ -130,6 +155,19 @@ const endereco = ref({
 </template>
 
 <style scoped>
+/* Scroll animation */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Original Styles */
 .form-container {
   margin: 0 300px;
   padding: 0px 0 200px 0;
@@ -174,7 +212,6 @@ h2 span{
 
 .sub {
   font-size: 0.8rem;
-  margin-bottom: 0.5rem;
   text-align: center;
   margin-bottom: 20px;
 }
@@ -233,4 +270,23 @@ button.submit:hover {
   transform: scale(1.05);
 }
 
+@media (max-width: 768px) {
+  .form-container {
+    margin: 0 10px;
+    padding: 20px 0 100px 0;
+  }
+
+  form{
+    padding: 40px 20px 100px 20px;
+  }
+
+  #telefone {
+    margin-left: 0rem;
+  }
+
+  .input-field-add {
+    min-width: 350px;
+    height: 100px;
+  }
+}
 </style>
