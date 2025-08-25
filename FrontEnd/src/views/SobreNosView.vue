@@ -82,8 +82,8 @@ onMounted(async () => {
               https://araquari.ifc.edu.br/
             </a><br /><br />
             Entre em contato com a RouterIFC para mais informações:<br />
-            emailrouter@gmail.com<br />
-            @instadorouter
+            <a href="mailto: routerifc@gmail.com" :style="{ color: themeManager.detalheAlternativo}">routerifc@gmail.com</a><br />
+            <a href="https://www.instagram.com/routerifc" target="_blank" :style="{ color: themeManager.detalheAlternativo }">@routerifc</a>
           </p>
         </div>
       </div>
@@ -138,8 +138,8 @@ onMounted(async () => {
               https://araquari.ifc.edu.br/
             </a><br /><br />
             Entre em contato com a RouterIFC para mais informações:<br />
-            emailrouter@gmail.com<br />
-            @instadorouter
+            <a href="mailto:routerifc@gmail.com" :style="{ color: themeManager.detalheAlternativo}">routerifc@gmail.com</a><br />
+            <a href="https://www.instagram.com/routerifc" target="_blank" :style="{ color: themeManager.detalheAlternativo }">@routerifc</a>
           </p>
         </div>
       </div>

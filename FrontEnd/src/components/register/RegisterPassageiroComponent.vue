@@ -31,6 +31,8 @@ const endereco = ref({
 })
 
 onMounted(async () => {
+  themeManager.init()
+  authState.restaurarStateEmpresa()
   await nextTick()
 
   const animateElements = () => {

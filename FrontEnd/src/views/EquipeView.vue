@@ -144,7 +144,7 @@ onMounted(async () => {
 
     <section class="equipe-cards">
       <div class="cards">
-        <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }">
+        <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }">
           <img src="/public/src-equipe/GabrielaSenderski-foto.png" alt="Gabriela Senderski" class="profile-img" />
           <div class="info">
             <h2>Gabriela Senderski</h2>
@@ -161,7 +161,7 @@ onMounted(async () => {
           </div>
         </div>
 
-        <div class="card-right animate-card-right" :style="{ backgroundColor: themeManager.detalhe }">
+        <div class="card-right animate-on-scroll" :style="{ backgroundColor: themeManager.detalhe }">
           <div class="info">
             <h2>Henrique S. S. Borba</h2>
             <p>
@@ -177,7 +177,7 @@ onMounted(async () => {
           </div>
           <img src="/public/src-equipe/HenriqueBorba-foto.png" alt="Henrique S. S. Borba" class="profile-img" />
         </div>
-        <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
+        <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
             src="/public/src-equipe/HigorBraga-foto.png" alt="Higor T. A. Braga" class="profile-img" />
           <div class="info">
             <h2>Higor T. A. Braga</h2>
@@ -191,7 +191,7 @@ onMounted(async () => {
             </ul>
           </div>
         </div>
-        <div class="card-right animate-card-right" :style="{ backgroundColor: themeManager.detalhe }">
+        <div class="card-right animate-on-scroll" :style="{ backgroundColor: themeManager.detalhe }">
           <div class="info">
             <h2>Maria E. G. Tavares</h2>
             <p> Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
@@ -204,7 +204,7 @@ onMounted(async () => {
             </ul>
           </div> <img src="/public/src-equipe/MariaTavares-foto.png" alt="Maria E. G. Tavares" class="profile-img" />
         </div>
-        <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
+        <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
             src="/public/src-equipe/PauloPereira-foto.png" alt="Paulo A. Pereira" class="profile-img" />
           <div class="info">
             <h2>Paulo A. Pereira</h2>

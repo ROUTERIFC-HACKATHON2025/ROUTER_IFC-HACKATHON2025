@@ -1,4 +1,5 @@
 <script setup>
+import { RouterLink } from 'vue-router'
 import { onMounted } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 
@@ -17,25 +18,25 @@ onMounted(themeManager.init)
         <div class="footer-section">
           <h2>Serviços</h2>
           <ul>
-            <li>Para Motoristas</li>
-            <li>Para Estudantes</li>
-            <li>Para Empresas</li>
+            <li><RouterLink to="/login" :style="{ color: '#fff' }">Para Motoristas</RouterLink></li>
+            <li><RouterLink to="/login" :style="{ color: '#fff' }">Para Estudantes</RouterLink></li>
+            <li><RouterLink to="/empresas" :style="{ color: '#fff' }">Para Empresas</RouterLink></li>
           </ul>
         </div>
         <div class="footer-section">
           <h2>Empresa</h2>
           <ul>
-            <li>Sobre nós</li>
-            <li>Equipe</li>
-            <li>Contato</li>
+            <li><RouterLink to="/SobreNos" :style="{ color: '#fff' }">Sobre nós</RouterLink></li>
+            <li><RouterLink to="/equipe" :style="{ color: '#fff' }">Equipe</RouterLink></li>
+            <li><RouterLink to="/Empresa" :style="{ color: '#fff' }">Empresa</RouterLink></li>
           </ul>
         </div>
         <div class="footer-section-icons">
           <h2>Redes Sociais</h2>
           <ul class="social-icons">
-            <li><a href="#"><span class="mdi mdi-instagram"></span></a></li>
-            <li><a href="#"><span class="mdi mdi-facebook"></span></a></li>
-            <li><a href="#"><span class="mdi mdi-twitter"></span></a></li>
+            <li><a href="https://www.instagram.com/routerifc"><span class="mdi mdi-instagram"></span></a></li>
+            <li><a href="https://www.facebook.com/routerifc"><span class="mdi mdi-facebook"></span></a></li>
+            <li><a href="https://www.twitter.com/routerifc"><span class="mdi mdi-twitter"></span></a></li>
           </ul>
         </div>
       </div>
@@ -55,9 +56,9 @@ onMounted(themeManager.init)
           <div class="footer-section">
             <h2>Serviços</h2>
             <ul>
-              <li>Para Motoristas</li>
-              <li>Para Estudantes</li>
-              <li>Para Empresas</li>
+              <li><RouterLink to="/login" :style="{ color: '#fff' }">Para Motoristas</RouterLink></li>
+              <li><RouterLink to="/login" :style="{ color: '#fff' }">Para Estudantes</RouterLink></li>
+              <li><RouterLink to="/empresas" :style="{ color: '#fff' }">Para Empresas</RouterLink></li>
             </ul>
           </div>
         </div>
@@ -74,9 +75,9 @@ onMounted(themeManager.init)
           <div class="footer-section">
             <h2>Empresa</h2>
             <ul>
-              <li>Sobre nós</li>
-              <li>Equipe</li>
-              <li>Contato</li>
+              <li><RouterLink to="/SobreNos" :style="{ color: '#fff' }">Sobre nós</RouterLink></li>
+              <li><RouterLink to="/equipe" :style="{ color: '#fff' }">Equipe</RouterLink></li>
+              <li><RouterLink to="/Empresa" :style="{ color: '#fff' }">Empresa</RouterLink></li>
             </ul>
           </div>
         </div>

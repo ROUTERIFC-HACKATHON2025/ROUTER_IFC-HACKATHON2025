@@ -135,17 +135,17 @@ function handleLogin() {
 
 /* Fade lateral */
 .fade-in-left {
-  transform: translateX(-50px);
+  transform: translateY(50px);
 }
 .fade-in-left.in-view {
-  transform: translateX(0);
+  transform: translateY(0);
 }
 
 .fade-in-right {
-  transform: translateX(50px);
+  transform: translateY(50px);
 }
 .fade-in-right.in-view {
-  transform: translateX(0);
+  transform: translateY(0);
 }
 
 /* Original Styles */
