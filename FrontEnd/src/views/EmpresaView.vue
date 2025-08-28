@@ -34,7 +34,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- Layout Notebook -->
   <main class="notebook" :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }">
     <section class="empresas animate-on-scroll">
       <h1 :style="{ color: themeManager.detalheAlternativo, borderColor: themeManager.detalhe }">EMPRESAS</h1>
