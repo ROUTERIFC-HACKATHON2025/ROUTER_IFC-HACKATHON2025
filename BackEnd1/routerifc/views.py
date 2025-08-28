@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework.viewsets import ModelViewSet
+from .models import Empresa
+from .serializers import EmpresaSerializer
 
-# Create your views here.
+class EmpresaViewSet(ModelViewSet):
+    queryset = Empresa.objects.all()
+    serializer_class = EmpresaSerializer
