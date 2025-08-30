@@ -15,6 +15,7 @@ const authState = useAuthStateStore()
 onMounted(() => {
   themeManager.init()
   authState.restaurarState()
+  authState.restaurarAdminPage()
 })
 </script>
 

@@ -27,7 +27,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- Notebook -->
   <main class="notebook" :style="{ backgroundColor: themeManager.fundo }">
     <section class="equipe-header animate-on-scroll">
       <div class="header" :style="{
@@ -58,10 +57,10 @@ onMounted(async () => {
               backend de Django, auxiliando também em partes do frontend com Vue.js.
             </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
+              <li><span class="mdi mdi-github"  target="_blank"></span></li>
+              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
+              <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
           </div>
         </div>
@@ -74,10 +73,10 @@ onMounted(async () => {
               backend de Django, auxiliando também em partes do frontend com Vue.js.
             </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
+              <li><span class="mdi mdi-github"  target="_blank"></span></li>
+              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
+              <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
           </div>
           <img src="/public/src-equipe/HenriqueBorba-foto.png" alt="Henrique S. S. Borba" class="profile-img" />
@@ -89,10 +88,10 @@ onMounted(async () => {
             <p> Tenho 16 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
               backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
+              <li><span class="mdi mdi-github"  target="_blank"></span></li>
+              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
+              <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
           </div>
         </div>
@@ -102,10 +101,10 @@ onMounted(async () => {
             <p> Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
               backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
+              <li><span class="mdi mdi-github"  target="_blank"></span></li>
+              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
+              <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
           </div> <img src="/public/src-equipe/MariaTavares-foto.png" alt="Maria E. G. Tavares" class="profile-img" />
         </div>
@@ -116,10 +115,10 @@ onMounted(async () => {
             <p> Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
               backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
+              <li><span class="mdi mdi-github"  target="_blank"></span></li>
+              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
+              <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
           </div>
         </div>
@@ -127,7 +126,6 @@ onMounted(async () => {
     </section>
   </main>
 
-  <!-- Celular -->
   <main class="celular" :style="{ backgroundColor: themeManager.fundo }">
     <section class="equipe-header animate-on-scroll">
       <div class="header">
@@ -224,7 +222,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* Fade + slide padrão */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(50px);

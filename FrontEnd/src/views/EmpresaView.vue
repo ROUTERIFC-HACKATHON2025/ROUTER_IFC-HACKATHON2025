@@ -8,6 +8,8 @@ const authState = useAuthStateStore();
 const themeManager = useThemeManagerStore();
 
 onMounted(async () => {
+  themeManager.init();
+  authState.restaurarStateEmpresa();
   await nextTick();
 
   const animateElements = () => {
@@ -39,12 +41,8 @@ onMounted(async () => {
       <h1 :style="{ color: themeManager.detalheAlternativo, borderColor: themeManager.detalhe }">EMPRESAS</h1>
       <div class="descricao animate-on-scroll" :style="{ borderColor: themeManager.detalhe }">
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget ipsum elit. Duis non elementum quam.
-          Morbi id luctus elit, sed maximus nisl. Sed maximus enim at erat posuere, et pharetra elit luctus.
-          Suspendisse potenti. In luctus tellus lorem, in pellentesque neque ullamcorper hendrerit. Proin
-          porta et purus eu iaculis. Mauris dignissim, urna non venenatis rhoncus, urna massa vestibulum sapien,
-          nec luctus ante sapien at amet justo. Class aptent taciti sociosqu ad litora torquent per conubia nostra,
-          per inceptos himenaeos. Quisque non accumsan felis.
+          Nosso site busca fortalecer parcerias com empresas responsáveis e comprometidas. Mais do que estar presente na plataforma, ser parceira significa assumir o compromisso com segurança, confiança e transparência, garantindo benefícios para motoristas, passageiros e toda a comunidade. Juntos, construímos uma rede organizada, eficiente e que gera resultados melhores para todos. 
+
         </p>
         <img src="/public/src-empresa/empresa.png" alt="Ilustração empresa" />
       </div>
@@ -57,11 +55,11 @@ onMounted(async () => {
           <img class="logo" src="/public/src-home/logoindytour.png" alt="IndyTour" />
           <div class="info">
             <p><strong>IndyTour</strong></p>
-            <p><a href="https://www.instagram.com/indy_tour" style="color: #fff;">@indy_tour</a></p>
-            <p><span class="mdi mdi-phone" style="color: #fff;"></span> <a href="tel:+5547992214606" style="color: #fff;">+55 (47) 99221-4606</a></p>
-            <RouterLink to="/IndySul" @click="authState.mudarStateEmpresa('Indy')">
+            <p><a href="https://www.instagram.com/indy_tour" style="color: #fff;" target="_blank">@indy_tour</a></p>
+            <p><span class="mdi mdi-phone" style="color: #fff;"></span> <a href="tel:+5547992214606" style="color: #fff;" target="_blank">+55 (47) 99221-4606</a></p>
+            <a href="/IndySul" target="_blank" rel="noopener" @click="authState.mudarStateEmpresa('Indy')">
               <button :style="{ backgroundColor: themeManager.detalheAlternativo}">Saiba mais</button>
-            </RouterLink>
+            </a>
           </div>
         </div>
 
@@ -71,8 +69,8 @@ onMounted(async () => {
           <img class="logo" src="/public/src-home/logosul.png" alt="Sul Turismo" />
           <div class="info">
             <p><strong>Sul Turismo</strong></p>
-            <p><a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;">@sulturismotransportes</a></p>
-            <p><span class="mdi mdi-phone" style="color: #fff;"></span> <a href="tel:+5547996767651" style="color: #fff;">+55 (47) 99676-7651</a></p>
+            <p><a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;" target="_blank">@sulturismotransportes</a></p>
+            <p><span class="mdi mdi-phone" style="color: #fff;"></span> <a href="tel:+5547996767651" style="color: #fff;" target="_blank">+55 (47) 99676-7651</a></p>
             <RouterLink to="/IndySul" @click="authState.mudarStateEmpresa('Sul')">
               <button :style="{ backgroundColor: themeManager.detalheAlternativo}">Saiba mais</button>
             </RouterLink>
@@ -82,7 +80,6 @@ onMounted(async () => {
     </section>
   </main>
 
-  <!-- Layout Celular -->
   <main class="celular" :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }">
     <section class="empresas animate-on-scroll">
       <h1 :style="{ color: themeManager.detalheAlternativo, borderColor: themeManager.detalhe }">EMPRESAS</h1>
@@ -109,9 +106,9 @@ onMounted(async () => {
               <a href="tel:+5547992214606" style="color: #fff;"><span class="mdi mdi-phone"></span></a>
             </div>
           </div>
-          <RouterLink to="/IndySul" @click="authState.mudarStateEmpresa('Indy')">
+          <a href="/IndySul" target="_blank" rel="noopener" @click="authState.mudarStateEmpresa('Indy')">
             <button :style="{ backgroundColor: themeManager.detalheAlternativo }">Saiba mais</button>
-          </RouterLink>
+          </a>
         </div>
         <div class="card animate-on-scroll">
           <div class="info">
@@ -121,9 +118,9 @@ onMounted(async () => {
               <a href="tel:+5547996767651" style="color: #fff;"><span class="mdi mdi-phone"></span></a>
             </div>
           </div>
-          <RouterLink to="/IndySul" @click="authState.mudarStateEmpresa('Sul')">
+          <a href="/IndySul" target="_blank" rel="noopener" @click="authState.mudarStateEmpresa('Sul')">
             <button :style="{ backgroundColor: themeManager.detalheAlternativo }">Saiba mais</button>
-          </RouterLink>
+          </a>
         </div>
       </div>
     </section>
@@ -131,7 +128,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* Transição geral */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(50px);
@@ -143,7 +139,6 @@ onMounted(async () => {
   transform: translateY(0);
 }
 
-/* Notebook */
 .notebook {
   padding: 190px 120px 80px 120px;
 }
@@ -222,7 +217,6 @@ h1 {
   border: 0.3px solid #fff;
 }
 
-/* Celular */
 @media (max-width: 768px) {
   .celular {
     padding: 230px 0 50px 0;

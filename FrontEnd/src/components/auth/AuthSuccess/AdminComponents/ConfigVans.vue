@@ -1,32 +1,25 @@
 <script setup>
+import { computed } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import { useUserProfileStore } from '@/stores/userProfile'
+import { useAdminStore } from '@/stores/admin'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 const userProfile = useUserProfileStore()
+const admin = useAdminStore()
 
-const vanSelecionada = {
-  modelo: 'Sprinter',
-  placa: 'abc1234',
-  acentos: 18,
-  motorista: null 
+const vanSelecionada = computed(() => admin.selectedVan || { modelo: '-', placa: '-', acentos: 0, motorista: null })
+const motoristaSelecionado = computed(() => admin.selectedDriver)
+
+function removerPassageiro(id) {
+  admin.removePassenger(id)
 }
 
-const passageiros = [
-  { id: 1, nome: 'Nome usuário' },
-  { id: 2, nome: 'Nome usuário' },
-  { id: 3, nome: 'Nome usuário' },
-  { id: 4, nome: 'Nome usuário' },
-  { id: 5, nome: 'Nome usuário' },
-  { id: 6, nome: 'Nome usuário' },
-  { id: 7, nome: 'Nome usuário' }
-]
-
-const rotaIda = [...passageiros]
-const rotaVolta12 = [...passageiros.slice(0, 5)]
-const rotaVolta17 = [...passageiros.slice(0, 5)]
+const rotaIda = computed(() => admin.vanPassengers)
+const rotaVolta12 = computed(() => admin.vanPassengers.slice(0, 5))
+const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
 </script>
 
 <template>
@@ -53,19 +46,21 @@ const rotaVolta17 = [...passageiros.slice(0, 5)]
         <div class="motorista-box">
             <p><strong>Motorista:</strong></p>
             <img src="/public/Ellipse.png" alt="">
-          <button class="btn-add" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="authState.mudarAdminPage('motorista')">Adicionar Motorista</button>
+            <p v-if="motoristaSelecionado">{{ motoristaSelecionado.nome }}</p>
+            <p v-else>Selecione um motorista</p>
+            <button class="btn-add" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="authState.mudarAdminPage('motorista')">{{ motoristaSelecionado ? 'Mudar Motorista' : 'Adicionar Motorista' }}</button>
         </div>
       </div>
 
       <div class="col-passageiros">
         <div class="header-pass" :style="{ backgroundColor: themeManager.detalheAlternativo }">
           <h3>PASSAGEIROS</h3>
-          <span>{{ passageiros.length }}/{{ vanSelecionada.acentos }}</span>
+          <span>{{ admin.vanPassengers.length }}/{{ vanSelecionada.acentos }}</span>
         </div>
         <ul class="lista-passageiros">
-          <li v-for="p in passageiros" :key="p.id">
+          <li v-for="p in admin.vanPassengers" :key="p.id">
             <span class="mdi mdi-account"></span> {{ p.nome }}
-            <button class="remover">remover</button>
+            <button class="remover" @click="removerPassageiro(p.id)">remover</button>
           </li>
         </ul>
         <button class="btn-add" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="authState.mudarAdminPage('passageiro')">Adicionar Passageiro</button>

@@ -24,7 +24,6 @@ onMounted(async () => {
 
   animateElements()
 
-  // Re-observe os elementos caso a página seja rolada ou elementos sejam adicionados dinamicamente
   window.addEventListener('scroll', () => {
     animateElements()
   })
@@ -32,7 +31,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- Notebook -->
   <main class="notebook" :style="{ backgroundColor: themeManager.fundo }">
     <section class="sobre-nos animate-on-scroll">
       <div :style="{ borderBottom: '2px solid ' + themeManager.detalhe }">
@@ -90,7 +88,6 @@ onMounted(async () => {
     </section>
   </main>
 
-  <!-- Celular -->
   <main class="celular" :style="{ backgroundColor: themeManager.fundo }">
     <section class="sobre-nos animate-on-scroll">
       <div>
@@ -138,7 +135,7 @@ onMounted(async () => {
               https://araquari.ifc.edu.br/
             </a><br /><br />
             Entre em contato com a RouterIFC para mais informações:<br />
-            <a href="mailto:routerifc@gmail.com" :style="{ color: themeManager.detalheAlternativo}">routerifc@gmail.com</a><br />
+            <a href="mailto:routerifc@gmail.com" :style="{ color: themeManager.detalheAlternativo}" target="_blank">routerifc@gmail.com</a><br />
             <a href="https://www.instagram.com/routerifc" target="_blank" :style="{ color: themeManager.detalheAlternativo }">@routerifc</a>
           </p>
         </div>
@@ -166,7 +163,7 @@ onMounted(async () => {
 
 .sobre-nos div {
     padding-top: 10%;
-    min-height: 80vh;
+    min-height: 40vh;
 }
 
 .quem-somos {

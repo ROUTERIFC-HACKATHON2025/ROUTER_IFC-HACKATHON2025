@@ -64,15 +64,20 @@ export const useAuthStateStore = defineStore('authState', () => {
   }
 
   const resetAdmin = () => {
-    stateAdminPage.value = 'Empresa'
-    localStorage.setItem('AdminPage', 'Empresa')   
+    stateAdminPage.value = 'vans'
+    localStorage.setItem('AdminPage', 'vans')   
   }
 
   const restaurarAdminPage = () => {
     const salvo = localStorage.getItem('AdminPage')
-    if (['vans', 'passageiros', 'motoristas', 'configVans'].includes(salvo)) {
-      stateAdminPage.value = salvo
+    const mapa = {
+      motoristas: 'motorista',
+      passageiros: 'passageiro'
     }
+    const normalizado = mapa[salvo] || salvo
+    if (['vans', 'motorista', 'passageiro', 'configVans'].includes(normalizado)) {
+      stateAdminPage.value = normalizado
+    } 
   }
 
   return {

@@ -29,7 +29,6 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
 })
 
-// Estado do menu no celular
 const menuAberto = ref(false)
 function abrirMenu() {
   menuAberto.value = true
@@ -94,12 +93,12 @@ function fecharMenu() {
       <div class="container"
         :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
         <div class="logo-bar">
-          <div class="logo">
+          <RouterLink to="/">
             <img :src="themeManager.logo" alt="Logotipo ROUTER" />
             <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">
               Sua rota<br /><span>mais segura</span>
             </p>
-          </div>
+          </RouterLink>
           <div>
             <span class="mdi mdi-view-headline" @click="abrirMenu" :style="{ color: themeManager.text }"></span>
           </div>

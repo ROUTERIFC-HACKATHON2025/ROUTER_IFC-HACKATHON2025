@@ -3,10 +3,12 @@ import { ref, computed } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import { useUserProfileStore } from '@/stores/userProfile'
+import { useAdminStore } from '@/stores/admin'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 const userProfile = useUserProfileStore()
+const admin = useAdminStore()
 
 const busca = ref('')
 const expandidoId = ref(null)
@@ -20,6 +22,13 @@ const motoristasFiltrados = computed(() => {
 const toggleExpand = (id) => {
     expandidoId.value = expandidoId.value === id ? null : id
 }
+
+function selecionarMotorista(motorista) {
+    admin.selectDriver(motorista)
+    authState.mudarAdminPage('configVans')
+}
+
+// Removido botão inline; seleção é feita pelo botão dentro dos detalhes
 </script>
 
 <template>
@@ -78,8 +87,9 @@ const toggleExpand = (id) => {
                                 <div class="vans">
                                     <h3>Vans:
                                     </h3>
-                                    <p>Nenhuma van cadastrada a esse motorista</p>
-                                    <button class="btn-add" :style="{ backgroundColor: themeManager.detalheAlternativo}">Adicionar Motorista</button>
+                                    <p v-if="!admin.isDriverAssigned(m.id)">Nenhuma van cadastrada a esse motorista</p>
+                                    <p v-else>Motorista cadastrado em uma van</p>
+                                    <button class="btn-add" :style="{ backgroundColor: themeManager.detalheAlternativo}" @click="selecionarMotorista(m)">Adicionar Motorista</button>
                                 </div>
                             </div>
                         </div>
@@ -196,8 +206,6 @@ h2 {
 .detalhes {
     padding: 50px 80px;
     color: #fff;
-    margin: 10px;
-    border-radius: 8px;
 }
 
 .card-detalhes {

@@ -3,10 +3,17 @@ import { ref } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import { useUserProfileStore } from '@/stores/userProfile'
+import { useAdminStore } from '@/stores/admin'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 const userProfile = useUserProfileStore()
+const admin = useAdminStore()
+
+function abrirConfigVan(van) {
+  admin.selectVan(van)
+  authState.mudarAdminPage('configVans')
+}
 </script>
 
 <template>
@@ -42,7 +49,7 @@ const userProfile = useUserProfileStore()
       </div>
 
       <ul :style="{ borderColor: themeManager.detalhe }">
-        <li v-for="van in userProfile.vans" :key="van.id" class="card-van" :style="{ borderColor: themeManager.detalhe }" @click="authState.mudarAdminPage('configVans')">
+        <li v-for="van in userProfile.vans" :key="van.id" class="card-van" :style="{ borderColor: themeManager.detalhe }" @click="abrirConfigVan(van)">
           <span class="mdi mdi-van-passenger icone" :style="{ color: themeManager.detalhe }"></span>
           <h3>{{ van.nome }}</h3>
           <p>{{ van.placa }}</p>
@@ -71,6 +78,7 @@ const userProfile = useUserProfileStore()
 .gerenciar {
   margin-top: 30px;
     border: 1px solid ;
+    border-radius: 8px;
 }
 
 .header {
@@ -79,6 +87,7 @@ const userProfile = useUserProfileStore()
   align-items: center;
   margin-bottom: 30px;
   padding: 20px 50px;
+  border-radius: 8px 8px 0 0;
 }
 
 h2 {

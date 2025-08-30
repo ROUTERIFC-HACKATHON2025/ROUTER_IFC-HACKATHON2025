@@ -34,9 +34,9 @@ onMounted(themeManager.init)
         <div class="footer-section-icons">
           <h2>Redes Sociais</h2>
           <ul class="social-icons">
-            <li><a href="https://www.instagram.com/routerifc"><span class="mdi mdi-instagram"></span></a></li>
-            <li><a href="https://www.facebook.com/routerifc"><span class="mdi mdi-facebook"></span></a></li>
-            <li><a href="https://www.twitter.com/routerifc"><span class="mdi mdi-twitter"></span></a></li>
+            <li><a href="https://www.instagram.com/routerifc" target="_blank"><span class="mdi mdi-instagram"></span></a></li>
+            <li><a href="https://www.facebook.com/routerifc" target="_blank"><span class="mdi mdi-facebook"></span></a></li>
+            <li><a href="https://www.twitter.com/routerifc" target="_blank"><span class="mdi mdi-twitter"></span></a></li>
           </ul>
         </div>
       </div>

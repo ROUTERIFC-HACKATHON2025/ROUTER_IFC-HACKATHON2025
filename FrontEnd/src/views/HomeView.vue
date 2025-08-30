@@ -57,14 +57,14 @@ onMounted(async () => {
           <div class="empresa-card animate-on-scroll">
             <img src="/public/src-home/logoindytour.png" alt="Logo Indy Tour" class="logo" />
             <h3>IndyTour</h3>
-            <p><span class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/indy_tour" style="color: #fff;">@indy_tour</a><br>
-               <span class="mdi mdi-phone"></span> <a href="tel:+5547992214606" style="color: #fff;">+55 (47) 99221-4606</a></p>
+            <p><span class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/indy_tour" style="color: #fff; "  target="_blank">@indy_tour</a><br>
+               <span class="mdi mdi-phone"></span> <a href="tel:+5547992214606" style="color: #fff;"  target="_blank">+55 (47) 99221-4606</a></p>
           </div>
           <div class="empresa-card animate-on-scroll">
             <img src="/public/src-home/logosul.png" alt="Logo Sul Turismo" class="logo" />
             <h3>Sul Turismo</h3>
-            <p><span class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;">@sulturismotransportes</a><br>
-               <span class="mdi mdi-phone" style="color: #fff;"></span> <a href="tel:+5547996767651" style="color: #fff;">+55 (47) 99676-7651</a></p>
+            <p><span class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;"  target="_blank">@sulturismotransportes</a><br>
+               <span class="mdi mdi-phone" style="color: #fff;"></span> <a href="tel:+5547996767651" style="color: #fff;"  target="_blank">+55 (47) 99676-7651</a></p>
           </div>
         </div>
       </div>
@@ -100,9 +100,9 @@ onMounted(async () => {
               notificações sobre alterações de rota ou imprevistos. Além disso, prezamos pela segurança, exigindo
               documentos atualizados e treinamento básico sobre atendimento e primeiros socorros.
             </p>
-            <RouterLink to="/register" @click="authStore.mudarStateAuth('Motorista')">
+            <a href="/register" target="_blank" rel="noopener" @click="authStore.mudarStateAuth('Motorista')">
               <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre-se como Motorista</button>
-            </RouterLink>
+            </a>
           </div>
           <img src="/src-home/onibus.png" alt="Motoristas" class="animate-on-scroll" />
         </div>
@@ -124,9 +124,9 @@ onMounted(async () => {
               Para os passageiros, nosso site oferece praticidade e acompanhamento em tempo real. Os alunos contam com
               um transporte confiável e organizado, tornando o trajeto escolar mais seguro e tranquilo todos os dias.
             </p>
-            <RouterLink to="/register" @click="authStore.mudarStateAuth('Passageiro')">
+            <a href="/register" target="_blank" rel="noopener" @click="authStore.mudarStateAuth('Passageiro')">
               <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre-se como Passageiro</button>
-            </RouterLink>
+            </a>
           </div>
           <img src="/src-home/estudantes.png" alt="Passageiros" class="animate-on-scroll" />
         </div>
@@ -158,9 +158,11 @@ onMounted(async () => {
         </div>
         <div class="empresas-lista">
           <div class="empresa-card">
-            <img src="/public/src-home/logoindytour.png" alt="Logo Indy Tour" class="logo" />
+            <img src="/public/src-home/logoindytour.png" alt="Logo Indy Tour" class="logo"/>
             <div class="redes">
-              <a href="https://www.instagram.com/indy_tour" style="color: #fff;"><span class="mdi mdi-instagram" ></span></a>
+              <a  href="https://www.instagram.com/indy_tour"  style="color: #fff;" target="_blank">
+                <span class="mdi mdi-instagram" ></span>
+              </a>
               <a href="tel:+5547992214606"><span class="mdi mdi-phone" style="color: #fff;"></span></a>
             </div>
           </div>
@@ -168,7 +170,7 @@ onMounted(async () => {
           <div class="empresa-card">
             <img src="/public/src-home/logosul.png" alt="Logo Sul Turismo" class="logo" />
             <div class="redes">
-              <a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;"><span class="mdi mdi-instagram"></span></a>
+              <a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;" target="_blank"><span class="mdi mdi-instagram"></span></a>
               <a href="tel:+5547996767651"><span class="mdi mdi-phone" style="color: #fff;"></span></a>
             </div>
           </div>

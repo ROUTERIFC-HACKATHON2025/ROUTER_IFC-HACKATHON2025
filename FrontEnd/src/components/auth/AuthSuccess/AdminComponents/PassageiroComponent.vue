@@ -3,10 +3,12 @@ import { ref, computed } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import { useUserProfileStore } from '@/stores/userProfile'
+import { useAdminStore } from '@/stores/admin'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 const userProfile = useUserProfileStore()
+const admin = useAdminStore()
 
 const busca = ref('')
 const expandidoId = ref(null)
@@ -19,6 +21,15 @@ const passageirosFiltrados = computed(() => {
 
 const toggleExpand = (id) => {
     expandidoId.value = expandidoId.value === id ? null : id
+}
+
+function adicionarNaVan(passageiro) {
+    admin.addPassenger(passageiro)
+    authState.mudarAdminPage('configVans')
+}
+
+function jaAdicionado(id) {
+    return admin.isPassengerAdded(id)
 }
 </script>
 
@@ -81,7 +92,7 @@ const toggleExpand = (id) => {
                                     <ul>
                                         <li>📍 {{ m.endereco }}</li>
                                     </ul>
-                                    <button class="btn-add" :style="{ backgroundColor: themeManager.detalheAlternativo}">Adicionar passageiro</button>
+                                    <button class="btn-add" :disabled="jaAdicionado(m.id)" :style="{ backgroundColor: themeManager.detalheAlternativo, opacity: jaAdicionado(m.id) ? 0.6 : 1 }" @click="adicionarNaVan(m)">{{ jaAdicionado(m.id) ? 'Já adicionado' : 'Adicionar passageiro' }}</button>
                                 </div>
                             </div>
                         </div>
