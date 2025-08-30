@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import { useUserProfileStore } from '@/stores/userProfile'
@@ -10,10 +10,66 @@ const authState = useAuthStateStore()
 const userProfile = useUserProfileStore()
 const admin = useAdminStore()
 
+// Estado da busca
+const termoBusca = ref('')
+
+// Computed para filtrar vans
+const vansFiltradas = computed(() => {
+  if (!termoBusca.value.trim()) {
+    return userProfile.vans
+  }
+  
+  const busca = termoBusca.value.toLowerCase().trim()
+  
+  return userProfile.vans.filter(van => {
+    // Buscar por nome (case-insensitive)
+    if (van.nome.toLowerCase().includes(busca)) return true
+    
+    // Buscar por modelo (case-insensitive)
+    if (van.modelo && van.modelo.toLowerCase().includes(busca)) return true
+    
+    // Buscar por marca (case-insensitive)
+    if (van.marca && van.marca.toLowerCase().includes(busca)) return true
+    
+    // Buscar por placa (case-insensitive)
+    if (van.placa && van.placa.toLowerCase().includes(busca)) return true
+    
+    // Buscar por características (case-insensitive)
+    if (van.caracteristicas && van.caracteristicas.some(carac => 
+      carac.toLowerCase().includes(busca)
+    )) return true
+    
+    // Buscar por status (case-insensitive)
+    const status = admin.getVanStatus(van.id)
+    if (status.toLowerCase().includes(busca)) return true
+    
+    return false
+  })
+})
+
 function abrirConfigVan(van) {
+  // Aplicar o status persistido à van antes de selecioná-la
+  const statusPersistido = admin.getVanStatus(van.id)
+  van.status = statusPersistido
   admin.selectVan(van)
   authState.mudarAdminPage('configVans')
 }
+
+// Função para destacar termos de busca
+function destacarTexto(texto, termo) {
+  if (!termo || !texto) return texto
+  
+  const regex = new RegExp(`(${termo})`, 'gi')
+  return texto.replace(regex, '<mark>$1</mark>')
+}
+
+// Inicializar status das vans quando o componente é montado
+onMounted(() => {
+  userProfile.vans.forEach(van => {
+    const statusPersistido = admin.getVanStatus(van.id)
+    van.status = statusPersistido
+  })
+})
 </script>
 
 <template>
@@ -37,7 +93,8 @@ function abrirConfigVan(van) {
         <div class="search">
           <input 
             type="text" 
-            placeholder="Pesquisar..." 
+            placeholder="Pesquisar vans..." 
+            v-model="termoBusca"
             :style="{
               backgroundColor: themeManager.fundo,
               color: themeManager.text,
@@ -48,11 +105,41 @@ function abrirConfigVan(van) {
         </div>
       </div>
 
+      <!-- Indicador de resultados da busca -->
+      <div v-if="termoBusca.trim()" class="resultados-busca" :style="{ color: themeManager.text }">
+        <p>
+          {{ vansFiltradas.length }} van{{ vansFiltradas.length !== 1 ? 's' : '' }} encontrada{{ vansFiltradas.length !== 1 ? 's' : '' }}
+          {{ vansFiltradas.length !== userProfile.vans.length ? ` de ${userProfile.vans.length}` : '' }}
+          para "{{ termoBusca }}"
+        </p>
+      </div>
+
       <ul :style="{ borderColor: themeManager.detalhe }">
-        <li v-for="van in userProfile.vans" :key="van.id" class="card-van" :style="{ borderColor: themeManager.detalhe }" @click="abrirConfigVan(van)">
-          <span class="mdi mdi-van-passenger icone" :style="{ color: themeManager.detalhe }"></span>
-          <h3>{{ van.nome }}</h3>
-          <p>{{ van.placa }}</p>
+        <li v-for="van in vansFiltradas" :key="van.id" class="card-van" :style="{ borderColor: themeManager.detalhe }" @click="abrirConfigVan(van)">
+          <div class="van-header">
+            <span class="mdi mdi-van-passenger icone" :style="{ color: themeManager.detalhe }"></span>
+            <span class="status-badge" :style="{ backgroundColor: admin.getVanStatus(van.id) === 'Ativo' ? '#4CAF50' : '#FF9800' }">{{ admin.getVanStatus(van.id) }}</span>
+          </div>
+          <h3 v-html="destacarTexto(van.nome, termoBusca)"></h3>
+          <p class="modelo" v-html="destacarTexto(van.modelo, termoBusca)"></p>
+          <p class="placa" v-html="destacarTexto(van.placa, termoBusca)"></p>
+          <p class="capacidade">{{ van.acentos }} lugares</p>
+          <div class="caracteristicas-preview">
+            <span v-for="carac in van.caracteristicas.slice(0, 2)" :key="carac" class="carac-tag">{{ carac }}</span>
+            <span v-if="van.caracteristicas.length > 2" class="carac-tag">+{{ van.caracteristicas.length - 2 }}</span>
+          </div>
+        </li>
+        
+        <!-- Mensagem quando nenhuma van é encontrada -->
+        <li v-if="termoBusca.trim() && vansFiltradas.length === 0" class="nenhuma-van">
+          <div class="nenhuma-van-content">
+            <span class="mdi mdi-van-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>
+            <h3>Nenhuma van encontrada</h3>
+            <p>Tente usar termos diferentes na busca</p>
+            <button class="btn-limpar-busca" @click="termoBusca = ''" :style="{ color: themeManager.detalhe }">
+              Limpar busca
+            </button>
+          </div>
         </li>
       </ul>
     </div>
@@ -95,7 +182,6 @@ h2 {
     text-align: left;
     color: #fff;
 }
-
 
 .search {
   position: relative;
@@ -140,19 +226,142 @@ ul {
   cursor: pointer;
   border: 1px solid;
   border-radius: 8px;
-  padding: 10px;
-  text-align: center;
+  padding: 15px;
+  text-align: left;
   box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
   transition: transform 0.2s ease;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 300px;
 }
 
 .card-van:hover {
   transform: scale(1.05);
 }
 
+.van-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0px;
+  border-bottom: 2px solid;
+}
+
 .icone {
   font-size: 100px;
-  display: block;
-  margin-bottom: 2px;
+}
+
+.status-badge {
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.card-van h3 {
+  text-align: center;
+  font-weight: bold;
+  margin: 10px 0;
+  font-size: 1.2rem;
+  color: inherit;
+}
+
+.modelo {
+  font-size: 0.9rem;
+  margin: 5px 0;
+  opacity: 0.8;
+  border-bottom: 1px solid;
+}
+
+.placa {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 5px 0;
+  border-bottom: 1px solid;
+}
+
+.capacidade {
+  font-size: 0.9rem;
+  margin: 5px 0;
+  opacity: 0.7;
+  border-bottom: 1px solid;
+}
+
+.caracteristicas-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  margin-top: 10px;
+
+}
+
+.carac-tag {
+  color: inherit;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+}
+
+.resultados-busca {
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.resultados-busca p {
+  margin: 0;
+}
+
+.nenhuma-van {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.nenhuma-van-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.nenhuma-van-content h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: inherit;
+}
+
+.nenhuma-van-content p {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.btn-limpar-busca {
+  background: none;
+  border: 1px solid;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.btn-limpar-busca:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Estilo para destacar termos de busca */
+mark {
+  background-color: #FFD700;
+  color: #000;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: bold;
 }
 </style>

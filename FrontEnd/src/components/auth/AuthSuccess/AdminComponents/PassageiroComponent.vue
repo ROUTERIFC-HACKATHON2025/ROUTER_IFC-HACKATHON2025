@@ -14,9 +14,18 @@ const busca = ref('')
 const expandidoId = ref(null)
 
 const passageirosFiltrados = computed(() => {
-    return userProfile.passageiros.filter(m =>
-        m.nome.toLowerCase().includes(busca.value.toLowerCase())
-    )
+    if (!busca.value.trim()) {
+        return userProfile.passageiros
+    }
+    
+    const termoBusca = busca.value.toLowerCase().trim()
+    
+    return userProfile.passageiros.filter(m => {
+        // Buscar apenas por nome (case-insensitive)
+        if (m.nome && m.nome.toLowerCase().includes(termoBusca)) return true
+        
+        return false
+    })
 })
 
 const toggleExpand = (id) => {
@@ -31,6 +40,8 @@ function adicionarNaVan(passageiro) {
 function jaAdicionado(id) {
     return admin.isPassengerAdded(id)
 }
+
+
 </script>
 
 <template>
@@ -53,13 +64,22 @@ function jaAdicionado(id) {
             <div class="header" :style="{ backgroundColor: themeManager.detalhe }">
                 <h2>GERENCIAR<br> PASSAGEIROS</h2>
                 <div class="search">
-                    <input type="text" placeholder="Buscar passageiro..." v-model="busca" :style="{
+                    <input type="text" placeholder="Buscar por nome do passageiro..." v-model="busca" :style="{
                         backgroundColor: themeManager.fundo,
                         color: themeManager.text,
                         border: '2px solid ' + themeManager.detalhe
                     }" />
                     <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe }"></span>
                 </div>
+            </div>
+
+            <!-- Indicador de resultados da busca -->
+            <div v-if="busca.trim()" class="resultados-busca" :style="{ color: themeManager.text }">
+                <p>
+                    {{ passageirosFiltrados.length }} passageiro{{ passageirosFiltrados.length !== 1 ? 's' : '' }} encontrado{{ passageirosFiltrados.length !== 1 ? 's' : '' }}
+                    {{ passageirosFiltrados.length !== userProfile.passageiros.length ? ` de ${userProfile.passageiros.length}` : '' }}
+                    para "{{ busca }}"
+                </p>
             </div>
 
             <div class="lista-passageiros">
@@ -92,11 +112,34 @@ function jaAdicionado(id) {
                                     <ul>
                                         <li>📍 {{ m.endereco }}</li>
                                     </ul>
-                                    <button class="btn-add" :disabled="jaAdicionado(m.id)" :style="{ backgroundColor: themeManager.detalheAlternativo, opacity: jaAdicionado(m.id) ? 0.6 : 1 }" @click="adicionarNaVan(m)">{{ jaAdicionado(m.id) ? 'Já adicionado' : 'Adicionar passageiro' }}</button>
+                                    <button 
+                                        class="btn-add" 
+                                        :disabled="jaAdicionado(m.id) || (admin.selectedVan && admin.selectedVan.status === 'Manutenção')"
+                                        :style="{ 
+                                            backgroundColor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? '#666' : themeManager.detalheAlternativo, 
+                                            opacity: (jaAdicionado(m.id) || (admin.selectedVan && admin.selectedVan.status === 'Manutenção')) ? 0.6 : 1,
+                                            cursor: (jaAdicionado(m.id) || (admin.selectedVan && admin.selectedVan.status === 'Manutenção')) ? 'not-allowed' : 'pointer'
+                                        }" 
+                                        @click="(!jaAdicionado(m.id) && (!admin.selectedVan || admin.selectedVan.status !== 'Manutenção')) && adicionarNaVan(m)"
+                                    >
+                                        {{ (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'Van em Manutenção' : (jaAdicionado(m.id) ? 'Já adicionado' : 'Adicionar passageiro') }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </transition>
+                </div>
+                
+                <!-- Mensagem quando nenhum passageiro é encontrado -->
+                <div v-if="busca.trim() && passageirosFiltrados.length === 0" class="nenhum-passageiro">
+                    <div class="nenhum-passageiro-content">
+                        <span class="mdi mdi-account-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>
+                        <h3>Nenhum passageiro encontrado</h3>
+                        <p>Tente usar termos diferentes na busca</p>
+                        <button class="btn-limpar-busca" @click="busca = ''" :style="{ color: themeManager.detalhe }">
+                            Limpar busca
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -295,5 +338,54 @@ h2 {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+.resultados-busca {
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.resultados-busca p {
+    margin: 0;
+}
+
+.nenhum-passageiro {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.nenhum-passageiro-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.nenhum-passageiro-content h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: inherit;
+}
+
+.nenhum-passageiro-content p {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.btn-limpar-busca {
+    background: none;
+    border: 1px solid;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-limpar-busca:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 </style>

@@ -14,9 +14,18 @@ const busca = ref('')
 const expandidoId = ref(null)
 
 const motoristasFiltrados = computed(() => {
-    return userProfile.motoristas.filter(m =>
-        m.nome.toLowerCase().includes(busca.value.toLowerCase())
-    )
+    if (!busca.value.trim()) {
+        return userProfile.motoristas
+    }
+    
+    const termoBusca = busca.value.toLowerCase().trim()
+    
+    return userProfile.motoristas.filter(m => {
+        // Buscar apenas por nome (case-insensitive)
+        if (m.nome && m.nome.toLowerCase().includes(termoBusca)) return true
+        
+        return false
+    })
 })
 
 const toggleExpand = (id) => {
@@ -27,6 +36,8 @@ function selecionarMotorista(motorista) {
     admin.selectDriver(motorista)
     authState.mudarAdminPage('configVans')
 }
+
+
 
 // Removido botão inline; seleção é feita pelo botão dentro dos detalhes
 </script>
@@ -51,13 +62,22 @@ function selecionarMotorista(motorista) {
             <div class="header" :style="{ backgroundColor: themeManager.detalhe }">
                 <h2>GERENCIAR<br> MOTORISTAS</h2>
                 <div class="search">
-                    <input type="text" placeholder="Buscar motorista..." v-model="busca" :style="{
+                    <input type="text" placeholder="Buscar por nome do motorista..." v-model="busca" :style="{
                         backgroundColor: themeManager.fundo,
                         color: themeManager.text,
                         border: '2px solid ' + themeManager.detalhe
                     }" />
                     <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe }"></span>
                 </div>
+            </div>
+
+            <!-- Indicador de resultados da busca -->
+            <div v-if="busca.trim()" class="resultados-busca" :style="{ color: themeManager.text }">
+                <p>
+                    {{ motoristasFiltrados.length }} motorista{{ motoristasFiltrados.length !== 1 ? 's' : '' }} encontrado{{ motoristasFiltrados.length !== 1 ? 's' : '' }}
+                    {{ motoristasFiltrados.length !== userProfile.motoristas.length ? ` de ${userProfile.motoristas.length}` : '' }}
+                    para "{{ busca }}"
+                </p>
             </div>
 
             <div class="lista-motoristas">
@@ -89,11 +109,34 @@ function selecionarMotorista(motorista) {
                                     </h3>
                                     <p v-if="!admin.isDriverAssigned(m.id)">Nenhuma van cadastrada a esse motorista</p>
                                     <p v-else>Motorista cadastrado em uma van</p>
-                                    <button class="btn-add" :style="{ backgroundColor: themeManager.detalheAlternativo}" @click="selecionarMotorista(m)">Adicionar Motorista</button>
+                                    <button 
+                                        class="btn-add" 
+                                        :disabled="admin.selectedVan && admin.selectedVan.status === 'Manutenção'"
+                                        :style="{ 
+                                            backgroundColor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? '#666' : themeManager.detalheAlternativo,
+                                            opacity: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 0.6 : 1,
+                                            cursor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'not-allowed' : 'pointer'
+                                        }" 
+                                        @click="(admin.selectedVan && admin.selectedVan.status !== 'Manutenção') && selecionarMotorista(m)"
+                                    >
+                                        {{ (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'Van em Manutenção' : 'Adicionar Motorista' }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </transition>
+                </div>
+                
+                <!-- Mensagem quando nenhum motorista é encontrado -->
+                <div v-if="busca.trim() && motoristasFiltrados.length === 0" class="nenhum-motorista">
+                    <div class="nenhum-motorista-content">
+                        <span class="mdi mdi-account-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>
+                        <h3>Nenhum motorista encontrado</h3>
+                        <p>Tente usar termos diferentes na busca</p>
+                        <button class="btn-limpar-busca" @click="busca = ''" :style="{ color: themeManager.detalhe }">
+                            Limpar busca
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -279,5 +322,54 @@ h2 {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+.resultados-busca {
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.resultados-busca p {
+    margin: 0;
+}
+
+.nenhum-motorista {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.nenhum-motorista-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.nenhum-motorista-content h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: inherit;
+}
+
+.nenhum-motorista-content p {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.btn-limpar-busca {
+    background: none;
+    border: 1px solid;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-limpar-busca:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 </style>
