@@ -27,7 +27,7 @@ const motoristaSelecionado = computed(() => admin.selectedDriver)
 // Estados para controlar seções retráteis
 const infoExpandida = ref(false)
 const caracteristicasExpandida = ref(false)
-const motoristaExpandido = ref(false)
+const motoristaExpandido = ref(true) // Motorista começa expandido
 
 function toggleInfo() {
   infoExpandida.value = !infoExpandida.value
@@ -62,9 +62,19 @@ function removerPassageiro(id) {
   admin.removePassenger(id)
 }
 
-const rotaIda = computed(() => admin.vanPassengers)
-const rotaVolta12 = computed(() => admin.vanPassengers.slice(0, 5))
-const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
+const rotaIda = computed(() => admin.getRotaEditada('ida'))
+const rotaVolta12 = computed(() => admin.getRotaEditada('volta12'))
+const rotaVolta17 = computed(() => admin.getRotaEditada('volta17'))
+
+function editarRota(tipoRota, passageiros) {
+  // Usar as rotas editadas salvas ou as rotas padrão se não houver edições
+  const rotaAtual = admin.getRotaEditada(tipoRota)
+  const passageirosParaEditar = rotaAtual.length > 0 ? rotaAtual : passageiros
+  
+  // Armazenar informações da rota sendo editada
+  admin.setRotaEmEdicao({ tipo: tipoRota, passageiros: passageirosParaEditar })
+  authState.mudarAdminPage('editarRota')
+}
 </script>
 
 <template>
@@ -82,7 +92,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
       </button>
     </p>
 
-    <div class="gerenciar" :style="{ backgroundColor: themeManager.detalhe }">
+    <div class="gerenciar" :style="{ backgroundColor: themeManager.detalhe, color: '#000' }">
       <div class="col-info">
         <div class="secao-retratil" :style="{ border: `2px solid ${themeManager.detalheAlternativo}` }">
           <div class="secao-header" @click="toggleInfo" :style="{backgroundColor: themeManager.detalheAlternativo}">
@@ -195,7 +205,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
               <span>{{ i+1 }}</span> {{ p.nome }}
             </li>
           </ul>
-          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="authState.mudarAdminPage('editarRota')">Editar Rota</button>
+          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="editarRota('ida', rotaIda)">Editar Rota</button>
         </div>
 
         <div class="rota">
@@ -205,7 +215,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
               <span>{{ i+1 }}</span> {{ p.nome }}
             </li>
           </ul>
-          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="authState.mudarAdminPage('editarRota')">Editar Rota</button>
+          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="editarRota('volta12', rotaVolta12)">Editar Rota</button>
         </div>
 
         <div class="rota">
@@ -215,7 +225,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
               <span>{{ i+1 }}</span> {{ p.nome }}
             </li>
           </ul>
-          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="authState.mudarAdminPage('editarRota')">Editar Rota</button>
+          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="editarRota('volta17', rotaVolta17)">Editar Rota</button>
         </div>
       </div>
     </div>
@@ -243,6 +253,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
   grid-template-columns: 250px 300px 700px;
   gap: 20px;
   padding: 20px;
+  border-radius: 8px;
 }
 
 .col-info {
@@ -404,7 +415,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
 .btn-add, .btn-edit {
   border: none;
   padding: 10px 15px;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
   color: #fff;
@@ -421,6 +432,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
   font-weight: bold;
   color: #fff;
   padding: 10px 15px;
+  border-radius: 8px 8px 0 0;
 }
 
 .header-pass h3 {
@@ -450,6 +462,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
   width: 100%;
   border-radius: 0;
   font-size: 1.7rem;
+  border-radius: 0 0 8px 8px;
 }
 
 .remover {
@@ -479,6 +492,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
   padding: 10px 15px;
    font-size: 1.7rem;
     font-weight: 600;
+  border-radius: 8px 8px 0 0;
 }
 
 .rota ul {
@@ -502,5 +516,6 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
   width: 100%;
   border-radius: 0;
   font-size: 1.7rem;
+  border-radius: 0 0 8px 8px;
 }
 </style>

@@ -7,9 +7,14 @@ export const useAdminStore = defineStore('admin', () => {
   const assignments = ref({})
   // status das vans: { [vanId]: 'Ativo' | 'Manutenção' }
   const vanStatus = ref({})
+  // informações da rota sendo editada
+  const rotaEmEdicao = ref(null)
+  // rotas editadas por van: { [vanId]: { ida: [], volta12: [], volta17: [] } }
+  const rotasEditadas = ref({})
 
   const STORAGE_KEY = 'adminAssignments'
   const STATUS_STORAGE_KEY = 'vanStatus'
+  const ROTAS_STORAGE_KEY = 'rotasEditadas'
 
   function loadFromStorage() {
     try {
@@ -35,6 +40,18 @@ export const useAdminStore = defineStore('admin', () => {
     } catch (_) {
       // ignore
     }
+
+    try {
+      const rotasRaw = localStorage.getItem(ROTAS_STORAGE_KEY)
+      if (rotasRaw) {
+        const rotasParsed = JSON.parse(rotasRaw)
+        if (rotasParsed && typeof rotasParsed === 'object') {
+          rotasEditadas.value = rotasParsed
+        }
+      }
+    } catch (_) {
+      // ignore
+    }
   }
 
   function persist() {
@@ -48,6 +65,14 @@ export const useAdminStore = defineStore('admin', () => {
   function persistStatus() {
     try {
       localStorage.setItem(STATUS_STORAGE_KEY, JSON.stringify(vanStatus.value))
+    } catch (_) {
+      // ignore
+    }
+  }
+
+  function persistRotas() {
+    try {
+      localStorage.setItem(ROTAS_STORAGE_KEY, JSON.stringify(rotasEditadas.value))
     } catch (_) {
       // ignore
     }
@@ -186,6 +211,9 @@ export const useAdminStore = defineStore('admin', () => {
   // persiste quando vanStatus mudar profundamente
   watch(vanStatus, persistStatus, { deep: true })
 
+  // persiste quando rotasEditadas mudar profundamente
+  watch(rotasEditadas, persistRotas, { deep: true })
+
   function getDriverVanId(motoristaId) {
     for (const [vanId, assn] of Object.entries(assignments.value)) {
       if (assn.driver && assn.driver.id === motoristaId) {
@@ -212,11 +240,47 @@ export const useAdminStore = defineStore('admin', () => {
     return vanStatus.value[vanId] || 'Ativo'
   }
 
+  function setRotaEmEdicao(rota) {
+    rotaEmEdicao.value = rota
+  }
+
+  function setPassengers(passageiros) {
+    if (!selectedVan.value) return
+    const assn = currentAssignment.value
+    assignments.value[selectedVan.value.id] = { ...assn, passengers: passageiros }
+    persist()
+  }
+
+  function salvarRotaEditada(tipoRota, passageiros) {
+    if (!selectedVan.value) return
+    
+    const vanId = selectedVan.value.id
+    if (!rotasEditadas.value[vanId]) {
+      rotasEditadas.value[vanId] = { ida: [], volta12: [], volta17: [] }
+    }
+    
+    rotasEditadas.value[vanId][tipoRota] = [...passageiros]
+    persistRotas()
+  }
+
+  function getRotaEditada(tipoRota) {
+    if (!selectedVan.value) return []
+    
+    const vanId = selectedVan.value.id
+    if (!rotasEditadas.value[vanId]) {
+      rotasEditadas.value[vanId] = { ida: [], volta12: [], volta17: [] }
+    }
+    
+    return rotasEditadas.value[vanId][tipoRota] || []
+  }
+
   return {
     selectedVan,
     vanPassengers,
     selectedDriver,
     capacidadeRestante,
+    rotaEmEdicao,
+    rotasEditadas,
     selectVan,
     addPassenger,
     removePassenger,
@@ -228,6 +292,10 @@ export const useAdminStore = defineStore('admin', () => {
     isDriverAssigned,
     updateVanStatus,
     getVanStatus,
+    setRotaEmEdicao,
+    setPassengers,
+    salvarRotaEditada,
+    getRotaEditada,
   }
 })
 

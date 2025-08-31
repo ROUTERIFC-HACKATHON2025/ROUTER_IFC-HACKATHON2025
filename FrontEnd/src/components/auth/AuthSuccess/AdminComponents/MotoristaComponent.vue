@@ -161,6 +161,7 @@ function selecionarMotorista(motorista) {
 .gerenciar {
     margin-top: 30px;
     border: 1px solid;
+    border-radius: 8px;
 }
 
 .header {
@@ -168,6 +169,7 @@ function selecionarMotorista(motorista) {
     justify-content: space-between;
     align-items: center;
     padding: 20px 50px;
+    border-radius: 8px 8px 0 0;
 }
 
 h2 {
