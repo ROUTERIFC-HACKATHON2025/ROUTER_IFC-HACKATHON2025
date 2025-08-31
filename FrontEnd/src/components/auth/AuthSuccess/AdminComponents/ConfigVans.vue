@@ -84,7 +84,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
 
     <div class="gerenciar" :style="{ backgroundColor: themeManager.detalhe }">
       <div class="col-info">
-        <div class="secao-retratil">
+        <div class="secao-retratil" :style="{ border: `2px solid ${themeManager.detalheAlternativo}` }">
           <div class="secao-header" @click="toggleInfo" :style="{backgroundColor: themeManager.detalheAlternativo}">
             <h3>INFORMAÇÕES DA VAN</h3>
             <span class="mdi" :class="infoExpandida ? 'mdi-chevron-up' : 'mdi-chevron-down'" :style="{ color: '#fff' }"></span>
@@ -116,7 +116,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
             </div>
         </div>
 
-        <div class="secao-retratil">
+        <div class="secao-retratil" :style="{ border: `2px solid ${themeManager.detalheAlternativo}` }">
           <div class="secao-header" @click="toggleCaracteristicas" :style="{backgroundColor: themeManager.detalheAlternativo}">
             <h3>CARACTERÍSTICAS</h3>
             <span class="mdi" :class="caracteristicasExpandida ? 'mdi-chevron-up' : 'mdi-chevron-down'" :style="{ color: '#fff' }"></span>
@@ -129,8 +129,8 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
             </div>
           </div>
         </div>
-        
-        <div class="secao-retratil">
+
+        <div class="secao-retratil" :style="{ border: `2px solid ${themeManager.detalheAlternativo}` }">
           <div class="secao-header" @click="toggleMotorista" :style="{backgroundColor: themeManager.detalheAlternativo}">
             <h3>MOTORISTA</h3>
             <span class="mdi" :class="motoristaExpandido ? 'mdi-chevron-up' : 'mdi-chevron-down'" :style="{ color: '#fff' }"></span>
@@ -163,7 +163,6 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
           <span>{{ admin.vanPassengers.length }}/{{ vanSelecionada.acentos }}</span>
         </div>
         
-        <!-- Aviso de manutenção -->
         <div v-if="vanSelecionada.status === 'Manutenção'" class="aviso-manutencao">
           <span class="mdi mdi-wrench"></span>
           <p>Van em manutenção - Não é possível adicionar passageiros</p>
@@ -196,7 +195,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
               <span>{{ i+1 }}</span> {{ p.nome }}
             </li>
           </ul>
-          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }">Editar Rota</button>
+          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="authState.mudarAdminPage('editarRota')">Editar Rota</button>
         </div>
 
         <div class="rota">
@@ -206,7 +205,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
               <span>{{ i+1 }}</span> {{ p.nome }}
             </li>
           </ul>
-          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }">Editar Rota</button>
+          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="authState.mudarAdminPage('editarRota')">Editar Rota</button>
         </div>
 
         <div class="rota">
@@ -216,7 +215,7 @@ const rotaVolta17 = computed(() => admin.vanPassengers.slice(0, 5))
               <span>{{ i+1 }}</span> {{ p.nome }}
             </li>
           </ul>
-          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }">Editar Rota</button>
+          <button class="btn-edit" :style="{ backgroundColor: themeManager.detalheAlternativo }" @click="authState.mudarAdminPage('editarRota')">Editar Rota</button>
         </div>
       </div>
     </div>

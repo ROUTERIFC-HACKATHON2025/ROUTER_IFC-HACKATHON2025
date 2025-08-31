@@ -6,6 +6,7 @@ import VansComponent from './AdminComponents/VansComponent.vue'
 import ConfigVans from './AdminComponents/ConfigVans.vue'
 import MotoristaComponent from './AdminComponents/MotoristaComponent.vue'
 import PassageiroComponent from './AdminComponents/PassageiroComponent.vue'
+import EditarRota from './AdminComponents/EditarRota.vue'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
@@ -18,6 +19,7 @@ const authState = useAuthStateStore()
         <ConfigVans v-if="authState.stateAdminPage === 'configVans'" />
         <MotoristaComponent v-if="authState.stateAdminPage === 'motorista'" />
         <PassageiroComponent v-if="authState.stateAdminPage === 'passageiro'" />
+        <EditarRota v-if="authState.stateAdminPage === 'editarRota'" />
     </main>
 </template>
 
