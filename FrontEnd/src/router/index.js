@@ -41,6 +41,16 @@ const router = createRouter({
       component: EmpresaView,
     },
     {
+      path: '/empresas',
+      name: 'empresas-legacy',
+      component: EmpresaView,
+    },
+    {
+      path: '/empresa',
+      name: 'empresa-lower',
+      component: EmpresaView,
+    },
+    {
       path: '/IndySul',
       name: 'IndySul',
       component: IndySulView,

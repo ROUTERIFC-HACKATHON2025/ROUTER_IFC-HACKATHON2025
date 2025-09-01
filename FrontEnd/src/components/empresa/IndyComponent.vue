@@ -50,12 +50,12 @@ onMounted(async () => {
         <p><strong>Mensalidade:</strong> <span :style="{ color: themeManager.detalheAlternativo }">11x de</span> R$ 600,00 <span :style="{ color: themeManager.detalheAlternativo }">ou 12x de</span> R$ 550,00</p>
         <p><strong>Endereço:</strong> R. Faustino Busarello, 520 - Boehmerwald, Joinville - SC, 89235-330</p>
         <p><strong>Telefone:</strong> (47) 99221-4606</p>
-        <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span class="mdi mdi-instagram"></span> @indy_tour</span></p>
+        <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span class="mdi mdi-instagram"></span><a href="https://www.instagram.com/indy_tour" :style="{ color: themeManager.detalheAlternativo }">@indy_tour</a></span></p>
       </div>
     </section>
   </main>
   <main class="celular" :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }">
-    <section class="empresas">
+    <section class="empresas animate-on-scroll">
       <h1 :style="{ borderColor: themeManager.detalhe }"><span :style="{color: themeManager.detalheAlternativo}">INDY</span>TOUR</h1>
       <div class="descricao" :style="{ borderColor: themeManager.detalhe }">
         <img src="/public/src-empresa/Logoindytour.png" alt="Ilustração empresa" :style="{ borderColor: themeManager.text }" />
@@ -64,13 +64,13 @@ onMounted(async () => {
         </p>
       </div>
     </section>
-    <section class="preco">
+    <section class="preco animate-on-scroll">
       <img src="/public/src-empresa/onibusIndy.png" alt="">
       <div class="info" :style="{ borderColor: themeManager.text }">
         <p><strong>Mensalidade:</strong> <span :style="{ color: themeManager.detalheAlternativo }">11x de</span> R$ 600,00 <span :style="{ color: themeManager.detalheAlternativo }">ou 12x de</span> R$ 550,00</p>
         <p><strong>Endereço:</strong> R. Faustino Busarello, 520 - Boehmerwald, Joinville - SC, 89235-330</p>
         <p><strong>Telefone:</strong> (47) 99221-4606</p>
-        <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span class="mdi mdi-instagram"></span> @indy_tour</span></p>
+        <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/indy_tour" :style="{ color: themeManager.detalheAlternativo }">@indy_tour</a></span></p>
       </div>
     </section>
   </main>

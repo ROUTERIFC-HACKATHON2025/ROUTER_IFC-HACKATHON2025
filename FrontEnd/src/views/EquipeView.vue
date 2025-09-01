@@ -27,7 +27,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- Notebook -->
   <main class="notebook" :style="{ backgroundColor: themeManager.fundo }">
     <section class="equipe-header animate-on-scroll">
       <div class="header" :style="{
@@ -58,10 +57,10 @@ onMounted(async () => {
               backend de Django, auxiliando também em partes do frontend com Vue.js.
             </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
+              <li><span class="mdi mdi-github"  target="_blank"></span></li>
+              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
+              <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
           </div>
         </div>
@@ -74,10 +73,10 @@ onMounted(async () => {
               backend de Django, auxiliando também em partes do frontend com Vue.js.
             </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
+              <li><span class="mdi mdi-github"  target="_blank"></span></li>
+              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
+              <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
           </div>
           <img src="/public/src-equipe/HenriqueBorba-foto.png" alt="Henrique S. S. Borba" class="profile-img" />
@@ -89,10 +88,10 @@ onMounted(async () => {
             <p> Tenho 16 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
               backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
+              <li><span class="mdi mdi-github"  target="_blank"></span></li>
+              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
+              <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
           </div>
         </div>
@@ -102,10 +101,10 @@ onMounted(async () => {
             <p> Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
               backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
+              <li><span class="mdi mdi-github"  target="_blank"></span></li>
+              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
+              <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
           </div> <img src="/public/src-equipe/MariaTavares-foto.png" alt="Maria E. G. Tavares" class="profile-img" />
         </div>
@@ -116,10 +115,10 @@ onMounted(async () => {
             <p> Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
               backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
+              <li><span class="mdi mdi-github"  target="_blank"></span></li>
+              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
+              <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
           </div>
         </div>
@@ -127,7 +126,6 @@ onMounted(async () => {
     </section>
   </main>
 
-  <!-- Celular -->
   <main class="celular" :style="{ backgroundColor: themeManager.fundo }">
     <section class="equipe-header animate-on-scroll">
       <div class="header">
@@ -144,7 +142,7 @@ onMounted(async () => {
 
     <section class="equipe-cards">
       <div class="cards">
-        <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }">
+        <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }">
           <img src="/public/src-equipe/GabrielaSenderski-foto.png" alt="Gabriela Senderski" class="profile-img" />
           <div class="info">
             <h2>Gabriela Senderski</h2>
@@ -161,7 +159,7 @@ onMounted(async () => {
           </div>
         </div>
 
-        <div class="card-right animate-card-right" :style="{ backgroundColor: themeManager.detalhe }">
+        <div class="card-right animate-on-scroll" :style="{ backgroundColor: themeManager.detalhe }">
           <div class="info">
             <h2>Henrique S. S. Borba</h2>
             <p>
@@ -177,7 +175,7 @@ onMounted(async () => {
           </div>
           <img src="/public/src-equipe/HenriqueBorba-foto.png" alt="Henrique S. S. Borba" class="profile-img" />
         </div>
-        <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
+        <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
             src="/public/src-equipe/HigorBraga-foto.png" alt="Higor T. A. Braga" class="profile-img" />
           <div class="info">
             <h2>Higor T. A. Braga</h2>
@@ -191,7 +189,7 @@ onMounted(async () => {
             </ul>
           </div>
         </div>
-        <div class="card-right animate-card-right" :style="{ backgroundColor: themeManager.detalhe }">
+        <div class="card-right animate-on-scroll" :style="{ backgroundColor: themeManager.detalhe }">
           <div class="info">
             <h2>Maria E. G. Tavares</h2>
             <p> Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
@@ -204,7 +202,7 @@ onMounted(async () => {
             </ul>
           </div> <img src="/public/src-equipe/MariaTavares-foto.png" alt="Maria E. G. Tavares" class="profile-img" />
         </div>
-        <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
+        <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
             src="/public/src-equipe/PauloPereira-foto.png" alt="Paulo A. Pereira" class="profile-img" />
           <div class="info">
             <h2>Paulo A. Pereira</h2>
@@ -224,7 +222,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* Fade + slide padrão */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(50px);

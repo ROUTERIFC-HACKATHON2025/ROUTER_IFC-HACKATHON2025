@@ -57,14 +57,14 @@ onMounted(async () => {
           <div class="empresa-card animate-on-scroll">
             <img src="/public/src-home/logoindytour.png" alt="Logo Indy Tour" class="logo" />
             <h3>IndyTour</h3>
-            <p><span class="mdi mdi-instagram"></span> @indy_tour<br>
-               <span class="mdi mdi-phone"></span> +55 (47) 99221-4606</p>
+            <p><span class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/indy_tour" style="color: #fff; "  target="_blank">@indy_tour</a><br>
+               <span class="mdi mdi-phone"></span> <a href="tel:+5547992214606" style="color: #fff;"  target="_blank">+55 (47) 99221-4606</a></p>
           </div>
           <div class="empresa-card animate-on-scroll">
             <img src="/public/src-home/logosul.png" alt="Logo Sul Turismo" class="logo" />
             <h3>Sul Turismo</h3>
-            <p><span class="mdi mdi-instagram"></span> @sulturismotransportes<br>
-               <span class="mdi mdi-phone"></span> +55 (47) 99676-7651</p>
+            <p><span class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;"  target="_blank">@sulturismotransportes</a><br>
+               <span class="mdi mdi-phone" style="color: #fff;"></span> <a href="tel:+5547996767651" style="color: #fff;"  target="_blank">+55 (47) 99676-7651</a></p>
           </div>
         </div>
       </div>
@@ -91,25 +91,25 @@ onMounted(async () => {
         </button>
       </div>
 
-      <div class="tab-content" :style="{ border: '2px solid ' + themeManager.detalheAlternativo }">
+      <div class="tab-content" :style="{ border: '2px solid ' + themeManager.detalheAlternativo, backgroundColor: '#fff', color: '#000' }">
         <div v-show="abaSelecionada === 'Motoristas'" class="content-box animate-on-scroll">
           <div>
-            <p :style="{ color: themeManager.text }">
+            <p :style="{ color: '#000' }">
               Nosso site oferece aos motoristas a oportunidade de se cadastrarem e acessarem rotas disponíveis
               conforme sua região. Eles têm um painel próprio onde podem gerenciar seus horários e receber
               notificações sobre alterações de rota ou imprevistos. Além disso, prezamos pela segurança, exigindo
               documentos atualizados e treinamento básico sobre atendimento e primeiros socorros.
             </p>
-            <RouterLink to="/register" @click="authStore.mudarStateAuth('Motorista')">
+            <a href="/register" target="_blank" rel="noopener" @click="authStore.mudarStateAuth('Motorista')">
               <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre-se como Motorista</button>
-            </RouterLink>
+            </a>
           </div>
           <img src="/src-home/onibus.png" alt="Motoristas" class="animate-on-scroll" />
         </div>
 
         <div v-show="abaSelecionada === 'Empresas'" class="content-box animate-on-scroll">
           <div>
-            <p :style="{ color: themeManager.text }">
+            <p :style="{ color: '#000' }">
               As empresas de transporte escolar que se cadastram no nosso site ganham visibilidade e organização. A
               plataforma permite o gerenciamento das rotas, dos motoristas e dos veículos em tempo real. Com isso,
               garantimos mais eficiência no serviço prestado e mais confiança por parte das famílias.
@@ -120,13 +120,13 @@ onMounted(async () => {
 
         <div v-show="abaSelecionada === 'Passageiros'" class="content-box animate-on-scroll">
           <div>
-            <p :style="{ color: themeManager.text }">
+            <p :style="{ color: '#000' }">
               Para os passageiros, nosso site oferece praticidade e acompanhamento em tempo real. Os alunos contam com
               um transporte confiável e organizado, tornando o trajeto escolar mais seguro e tranquilo todos os dias.
             </p>
-            <RouterLink to="/register" @click="authStore.mudarStateAuth('Passageiro')">
+            <a href="/register" target="_blank" rel="noopener" @click="authStore.mudarStateAuth('Passageiro')">
               <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre-se como Passageiro</button>
-            </RouterLink>
+            </a>
           </div>
           <img src="/src-home/estudantes.png" alt="Passageiros" class="animate-on-scroll" />
         </div>
@@ -136,7 +136,7 @@ onMounted(async () => {
 
   <main class="celular" :style="{ backgroundColor: themeManager.fundo }">
 
-    <section class="Home-header">
+    <section class="Home-header animate-on-scroll">
       <div class="header" :style="{
       }">
         <div class="intro">
@@ -151,31 +151,33 @@ onMounted(async () => {
       </div>
     </section>
     <section class="empresa">
-      <div class="empresa-container " :style="{ backgroundColor: themeManager.detalhe }">
+      <div class="empresa-container animate-on-scroll" :style="{ backgroundColor: themeManager.detalhe }">
 
         <div class="empresa-titulo">
           <h2>EMPRESAS PARCEIRAS:</h2>
         </div>
         <div class="empresas-lista">
           <div class="empresa-card">
-            <img src="/public/src-home/logoindytour.png" alt="Logo Indy Tour" class="logo" />
+            <img src="/public/src-home/logoindytour.png" alt="Logo Indy Tour" class="logo"/>
             <div class="redes">
-              <span class="mdi mdi-instagram"></span>
-              <span class="mdi mdi-phone"></span>
+              <a  href="https://www.instagram.com/indy_tour"  style="color: #fff;" target="_blank">
+                <span class="mdi mdi-instagram" ></span>
+              </a>
+              <a href="tel:+5547992214606"><span class="mdi mdi-phone" style="color: #fff;"></span></a>
             </div>
           </div>
 
           <div class="empresa-card">
             <img src="/public/src-home/logosul.png" alt="Logo Sul Turismo" class="logo" />
             <div class="redes">
-              <span class="mdi mdi-instagram"></span>
-              <span class="mdi mdi-phone"></span>
+              <a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;" target="_blank"><span class="mdi mdi-instagram"></span></a>
+              <a href="tel:+5547996767651"><span class="mdi mdi-phone" style="color: #fff;"></span></a>
             </div>
           </div>
         </div>
       </div>
     </section>
-    <section class="tab-section">
+    <section class="tab-section animate-on-scroll">
       <h2 class="section-title" :style="{ color: themeManager.text }">NOSSOS
         <span :style="{ color: themeManager.detalheAlternativo }"> SERVIÇOS</span>
       </h2>
@@ -380,6 +382,144 @@ onMounted(async () => {
 }
 
 @media (max-width: 768px) {
+.Home-header {
+  padding: 110px 120px 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  min-height: 80vh;
+}
+
+.illustration {
+  flex: 1;
+  min-width: 400px;
+  border-radius: 12px;
+}
+
+.intro {
+  flex: 1;
+  min-width: 400px;
+  text-align: right;
+  padding-right: 70px;
+}
+
+.subtext {
+  margin-top: 10px;
+}
+
+.empresa {
+  color: white;
+  border-bottom: 2px solid;
+  margin: 0 120px;
+}
+
+.empresa h2 {
+  text-align: center;
+}
+
+.empresa-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 12px;
+  margin: 80px 0;
+  padding: 40px 160px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.empresas-lista {
+  display: flex;
+  justify-content: space-between;
+  border-left: 2px solid;
+  padding-left: 120px;
+}
+
+.empresa-card {
+  align-items: center;
+  padding-left: 80px;
+}
+
+.logo {
+  width: 120px;
+  height: 120px;
+}
+
+.empresa-card h3 {
+  font-size: 1.5em;
+}
+
+.empresa-card p {
+  font-size: 12px;
+}
+
+.icon {
+  margin-right: 4px;
+}
+
+.tab-section {
+  padding: 80px 120px;
+}
+
+.tab-section h2 {
+  margin-bottom: 60px;
+}
+
+.tab-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tab-button {
+  padding: 20px 10px;
+  font-weight: bold;
+  font-size: 1.7em;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 33%;
+}
+
+.tab-content {
+  padding: 10px 80px;
+  text-align: center;
+}
+
+.content-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+}
+
+.content-box p {
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.content-box img {
+  margin-left: 100px;
+  height: 450px;
+  width: 600px;
+}
+
+.content-box button {
+  padding: 15px 5px;
+  font-weight: bold;
+  font-size: 1.2em;
+  border: none;
+  cursor: pointer;
+  width: 33%;
+  color: #fff;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
 
   .Home-header {
     padding: 200px 0 0 0;
@@ -508,5 +648,5 @@ onMounted(async () => {
     margin-top: 5px;
   }
 }
-
+}
 </style>

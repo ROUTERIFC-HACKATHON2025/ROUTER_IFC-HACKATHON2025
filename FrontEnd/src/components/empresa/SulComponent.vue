@@ -51,12 +51,12 @@ onMounted(async () => {
           R. Ezequiel Assis Rocha, 1379 - Centro, Araquari - SC, 89245-000</p>
         <p><strong>Telefone:</strong> (47) 99676-7651</p>
         <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span
-              class="mdi mdi-instagram"></span> @sulturismotransportes</span></p>
+              class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/sulturismotransportes">@sulturismotransportes</a></span></p>
       </div>
     </section>
   </main>
   <main class="celular" :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }">
-    <section class="empresas">
+    <section class="empresas animate-on-scroll">
       <h1 :style="{ borderColor: themeManager.detalhe }"><span :style="{ color: themeManager.detalheAlternativo }">SUL
         </span>TURISMO</h1>
       <div class="descricao" :style="{ borderColor: themeManager.detalhe }">
@@ -71,7 +71,7 @@ onMounted(async () => {
         </p>
       </div>
     </section>
-    <section class="preco">
+    <section class="preco animate-on-scroll">
       <img src="/public/src-empresa/onibusSul.png" alt="">
       <div class="info" :style="{ borderColor: themeManager.text }">
         <p><strong>Mensalidade:</strong> <span :style="{ color: themeManager.detalheAlternativo }">11x de</span> R$
@@ -81,7 +81,7 @@ onMounted(async () => {
           R. Ezequiel Assis Rocha, 1379 - Centro, Araquari - SC, 89245-000</p>
         <p><strong>Telefone:</strong> (47) 99676-7651</p>
         <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span
-              class="mdi mdi-instagram"></span> @sulturismotransportes</span></p>
+              class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/sulturismotransportes" :style="{ color: themeManager.detalheAlternativo }">@sulturismotransportes</a></span></p>
       </div>
     </section>
   </main>

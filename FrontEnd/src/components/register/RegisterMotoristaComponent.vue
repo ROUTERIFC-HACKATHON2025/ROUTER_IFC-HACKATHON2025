@@ -13,7 +13,7 @@ const motorista = ref({
   senha: '',
   confirmarSenha: '',
   empresa: '',
-  cnhArquivo: null
+  cnh: '',
 })
 
 const empresas = ['SulTurismo', 'IndyTour']
@@ -37,6 +37,8 @@ function cadastrar() {
 }
 
 onMounted(async () => {
+  themeManager.init()
+    authState.restaurarStateEmpresa()
   await nextTick()
 
   const animateElements = () => {
@@ -140,23 +142,9 @@ onMounted(async () => {
           </div>
 
           <div>
-            <p>CNH (Arquivo): *</p>
-            <div
-              class="file-upload"
-              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }"
-            >
-              <label for="cnhInput" class="btn-upload" :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">
-                Selecionar arquivo
-              </label>
-              <input
-                id="cnhInput"
-                type="file"
-                accept=".pdf,.jpg,.jpeg,.png"
-                @change="handleFileChange"
-                required
-              />
-              <span class="file-name" v-if="motorista.cnhArquivo">{{ motorista.cnhArquivo.name }}</span>
-            </div>
+            <p>CNH(nº registro): *</p>
+            <input v-model="motorista.cnh" required
+              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
         </div>
       </div>
@@ -169,9 +157,8 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* Scroll animation */
 .animate-on-scroll {
-  opacity: 0;
+  opacity: 1;
   transform: translateY(50px);
   transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
 }
@@ -181,7 +168,6 @@ onMounted(async () => {
   transform: translateY(0);
 }
 
-/* Original Styles */
 .form-container {
   margin: 0 300px;
   padding: 0px 0 200px 0;
@@ -265,19 +251,6 @@ input {
   font-weight: bold;
 }
 
-.file-upload {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  border-radius: 10px;
-  min-width: 350px;
-  position: relative;
-}
-
-.file-upload input[type='file'] {
-  display: none;
-}
-
 .btn-upload {
   cursor: pointer;
   padding: 0.7rem;
@@ -329,6 +302,10 @@ button.submit:hover {
 
   .file-name {
     margin-top: 5px;
+  }
+
+  .space{
+    border: none;
   }
 }
 </style>
