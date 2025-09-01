@@ -1,43 +1,60 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
-import { useUserProfileStore } from '@/stores/userProfile'
 import { useAuthStateStore } from '@/stores/authState'
+import { useUserProfileStore } from '@/stores/userProfile'
+import { useRouter } from 'vue-router'
 
 const themeManager = useThemeManagerStore()
-const userProfile = useUserProfileStore()
 const authState = useAuthStateStore()
+const userProfile = useUserProfileStore()
 const router = useRouter()
 
-const nome = ref(userProfile.nome ?? '')
-const telefone = ref(userProfile.telefone ?? '')
-const email = ref(userProfile.email ?? '')
-const senha = ref(userProfile.senha ?? '')
-const nascimento = ref(userProfile.nascimento ?? '')
-
-const verSenha = ref(false)
 const modoEdicao = ref(false)
+const verSenha = ref(false)
 
-const ira = ref('sim')
-const voltara = ref('nao')
-const horario = ref('12')
+// Campos do passageiro
+const nome = ref('')
+const telefone = ref('')
+const email = ref('')
+const senha = ref('')
+const nascimento = ref('')
+const endereco = ref('')
+const descricao = ref('')
+
+// Campos ida e volta
+const ira = ref('')
+const voltara = ref('')
+const horario = ref('')
+
+// Preencher dados do passageiro logado
+onMounted(() => {
+  themeManager.init()
+  authState.restaurarState()
+
+  if (userProfile.usuarioAtual) {
+    const p = userProfile.usuarioAtual
+    nome.value = p.nome
+    telefone.value = p.telefone
+    email.value = p.email
+    senha.value = p.senha
+    nascimento.value = p.nascimento
+    endereco.value = p.endereco
+    descricao.value = p.descricao
+  }
+})
 
 function toggleEdicao() {
-  if (modoEdicao.value) {
+  if (modoEdicao.value && userProfile.usuarioAtual) {
     userProfile.atualizarPerfil({
       nome: nome.value,
       telefone: telefone.value,
       email: email.value,
       senha: senha.value,
-      nascimento: nascimento.value
+      nascimento: nascimento.value,
+      endereco: endereco.value,
+      descricao: descricao.value
     })
-  } else {
-    nome.value = userProfile.nome ?? ''
-    telefone.value = userProfile.telefone ?? ''
-    email.value = userProfile.email ?? ''
-    senha.value = userProfile.senha ?? ''
-    nascimento.value = userProfile.nascimento ?? ''
   }
   modoEdicao.value = !modoEdicao.value
 }
@@ -46,15 +63,11 @@ function sairDaConta() {
   authState.reset()
   router.push('/')
 }
-
-onMounted(() => {
-  themeManager.init()
-  authState.restaurarState()
-})
 </script>
 
 <template>
   <section class="container" :style="{ backgroundColor: themeManager.fundo }">
+    <!-- Perfil do passageiro -->
     <div class="perfil" :style="{ backgroundColor: themeManager.detalhe }">
       <h2>MEU PERFIL</h2>
       <div class="perfil-topo">
@@ -62,14 +75,9 @@ onMounted(() => {
         <div class="enderecos">
           <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline"></span></p>
           <ul>
-            <li>
+            <li v-if="endereco">
               <span class="mdi mdi-map-marker"></span>
-              <p>Av. Getúlio Vargas, 554</p>
-              <span class="mdi mdi-pencil"></span>
-            </li>
-            <li>
-              <span class="mdi mdi-map-marker"></span>
-              <p>Rua XV de Novembro, 65</p>
+              <p>{{ endereco }}</p>
               <span class="mdi mdi-pencil"></span>
             </li>
           </ul>
@@ -107,15 +115,21 @@ onMounted(() => {
           <span class="mdi mdi-calendar-month-outline"></span>
           <input type="date" v-model="nascimento" :readonly="!modoEdicao" class="input-text" />
         </div>
+
+        <p class="info-label">Descrição:</p>
+        <div class="input-group">
+          <textarea v-model="descricao" :readonly="!modoEdicao" class="input-text" rows="3"></textarea>
+        </div>
       </div>
 
-      <div class="editar" >
+      <div class="editar">
         <span @click="toggleEdicao">{{ modoEdicao ? 'Salvar' : 'Editar' }}</span> | Ver informação completa
       </div>
 
       <div class="sair" @click="sairDaConta">SAIR DA CONTA</div>
     </div>
 
+    <!-- Transporte e mapa -->
     <div>
       <div class="row right-side">
         <div class="transporte" :style="{ backgroundColor: themeManager.detalhe }">
@@ -124,15 +138,15 @@ onMounted(() => {
           <div class="card">
             <div class="avatar"></div>
             <div class="card-text">
-              <p>{{ nome }}</p>
-              <p>{{ telefone }}</p>
+              <p>{{ userProfile.usuarioAtual?.motorista?.nome || 'Pedro' }}</p>
+              <p>{{ userProfile.usuarioAtual?.motorista?.telefone || '(47) 99999-9999' }}</p>
             </div>
           </div>
 
           <p><strong>Veículo:</strong></p>
           <div class="card">
             <div class="card-separacao-text"></div>
-            <p>Número do veículo</p>
+            <p>{{ userProfile.usuarioAtual?.van?.nome || 'Van Executiva Premium' }}</p>
           </div>
         </div>
 
@@ -145,6 +159,7 @@ onMounted(() => {
         </div>
       </div>
 
+      <!-- Ida e volta -->
       <div class="ida-volta" :style="{ backgroundColor: themeManager.fundoAlternativo, color: themeManager.text }">
         <h2>MINHA IDA E VOLTA</h2>
         <div class="ida-grid">

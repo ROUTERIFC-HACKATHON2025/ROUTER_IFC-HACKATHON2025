@@ -91,10 +91,10 @@ onMounted(async () => {
         </button>
       </div>
 
-      <div class="tab-content" :style="{ border: '2px solid ' + themeManager.detalheAlternativo }">
+      <div class="tab-content" :style="{ border: '2px solid ' + themeManager.detalheAlternativo, backgroundColor: '#fff', color: '#000' }">
         <div v-show="abaSelecionada === 'Motoristas'" class="content-box animate-on-scroll">
           <div>
-            <p :style="{ color: themeManager.text }">
+            <p :style="{ color: '#000' }">
               Nosso site oferece aos motoristas a oportunidade de se cadastrarem e acessarem rotas disponíveis
               conforme sua região. Eles têm um painel próprio onde podem gerenciar seus horários e receber
               notificações sobre alterações de rota ou imprevistos. Além disso, prezamos pela segurança, exigindo
@@ -109,7 +109,7 @@ onMounted(async () => {
 
         <div v-show="abaSelecionada === 'Empresas'" class="content-box animate-on-scroll">
           <div>
-            <p :style="{ color: themeManager.text }">
+            <p :style="{ color: '#000' }">
               As empresas de transporte escolar que se cadastram no nosso site ganham visibilidade e organização. A
               plataforma permite o gerenciamento das rotas, dos motoristas e dos veículos em tempo real. Com isso,
               garantimos mais eficiência no serviço prestado e mais confiança por parte das famílias.
@@ -120,7 +120,7 @@ onMounted(async () => {
 
         <div v-show="abaSelecionada === 'Passageiros'" class="content-box animate-on-scroll">
           <div>
-            <p :style="{ color: themeManager.text }">
+            <p :style="{ color: '#000' }">
               Para os passageiros, nosso site oferece praticidade e acompanhamento em tempo real. Os alunos contam com
               um transporte confiável e organizado, tornando o trajeto escolar mais seguro e tranquilo todos os dias.
             </p>

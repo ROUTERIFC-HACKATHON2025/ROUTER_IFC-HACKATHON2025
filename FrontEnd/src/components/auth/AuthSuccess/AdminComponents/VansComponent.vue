@@ -96,8 +96,8 @@ onMounted(() => {
             placeholder="Pesquisar vans..." 
             v-model="termoBusca"
             :style="{
-              backgroundColor: themeManager.fundo,
-              color: themeManager.text,
+              backgroundColor: '#fff',
+              color: '#000',
               border: '2px solid ' + themeManager.detalhe
             }"
           />
@@ -114,8 +114,8 @@ onMounted(() => {
         </p>
       </div>
 
-      <ul :style="{ borderColor: themeManager.detalhe }">
-        <li v-for="van in vansFiltradas" :key="van.id" class="card-van" :style="{ borderColor: themeManager.detalhe }" @click="abrirConfigVan(van)">
+      <ul :style="{ borderColor: themeManager.detalhe, backgroundColor: '#fff', color: '#000' }">
+        <li v-for="van in vansFiltradas" :key="van.id" class="card-van" :style="{ borderColor: themeManager.detalhe, backgroundColor: '#fff', color: '#000' }" @click="abrirConfigVan(van)">
           <div class="van-header">
             <span class="mdi mdi-van-passenger icone" :style="{ color: themeManager.detalhe }"></span>
             <span class="status-badge" :style="{ backgroundColor: admin.getVanStatus(van.id) === 'Ativo' ? '#4CAF50' : '#FF9800' }">{{ admin.getVanStatus(van.id) }}</span>
@@ -172,8 +172,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding: 20px 50px;
+  padding: 20px 50px 20px 50px;
   border-radius: 8px 8px 0 0;
 }
 
@@ -219,7 +218,7 @@ ul {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 50px 100px;
   list-style: none;
-  padding: 20px 120px 50px 120px;
+  padding: 50px 120px 50px 120px;
 }
 
 .card-van {

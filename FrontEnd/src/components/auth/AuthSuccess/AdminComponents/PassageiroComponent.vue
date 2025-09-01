@@ -65,15 +65,14 @@ function jaAdicionado(id) {
                 <h2>GERENCIAR<br> PASSAGEIROS</h2>
                 <div class="search">
                     <input type="text" placeholder="Buscar por nome do passageiro..." v-model="busca" :style="{
-                        backgroundColor: themeManager.fundo,
-                        color: themeManager.text,
+                        backgroundColor: '#fff',
+                        color: '#000',
                         border: '2px solid ' + themeManager.detalhe
                     }" />
                     <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe }"></span>
                 </div>
             </div>
 
-            <!-- Indicador de resultados da busca -->
             <div v-if="busca.trim()" class="resultados-busca" :style="{ color: themeManager.text }">
                 <p>
                     {{ passageirosFiltrados.length }} passageiro{{ passageirosFiltrados.length !== 1 ? 's' : '' }} encontrado{{ passageirosFiltrados.length !== 1 ? 's' : '' }}
@@ -82,21 +81,20 @@ function jaAdicionado(id) {
                 </p>
             </div>
 
-            <div class="lista-passageiros">
+            <div class="lista-passageiros" :style="{ backgroundColor: '#fff', color: '#000' }">
                 <div v-for="m in passageirosFiltrados" :key="m.id" class="passageiro">
                     <div class="linha-passageiro" @click="toggleExpand(m.id)">
                         <div class="info-passageiro">
-                            <img src="/public/Ellipse.png" class="avatar" />
+                            <img src="/public/src-auth/passageiro.png" class="avatar" />
                             <span>{{ m.nome }}</span>
                         </div>
                         <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === m.id }"></span>
                     </div>
 
-                    <transition name="fade" :style="{ backgroundColor: themeManager.detalhe }">
-                        <div v-if="expandidoId === m.id" class="detalhes">
+                        <div v-if="expandidoId === m.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
                             <div class="card-detalhes">
                                 <div class="avatar-container">
-                                    <img src="/public/Ellipse.png" class="avatarG" />
+                                    <img src="/public/src-auth/passageiro.png" class="avatarG" />
                                     <h3>{{ m.nome }}</h3>
                                 </div>
                                 <div class="info">
@@ -104,7 +102,7 @@ function jaAdicionado(id) {
                                     <p><strong>CPF:</strong> {{ m.cpf }}</p>
                                     <p><strong>E-mail:</strong> {{ m.email }}</p>
                                     <p><strong>Telefone:</strong> {{ m.telefone }}</p>
-                                    <p class="descricao" :style="{ color: themeManager.text }">{{ m.descricao }}</p>
+                                    <p class="descricao" :style="{ color: '#000' }">{{ m.descricao }}</p>
                                 </div>
                                 <div class="enderecos">
                                     <h3>ENDEREÇOS:
@@ -127,10 +125,7 @@ function jaAdicionado(id) {
                                 </div>
                             </div>
                         </div>
-                    </transition>
                 </div>
-                
-                <!-- Mensagem quando nenhum passageiro é encontrado -->
                 <div v-if="busca.trim() && passageirosFiltrados.length === 0" class="nenhum-passageiro">
                     <div class="nenhum-passageiro-content">
                         <span class="mdi mdi-account-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>

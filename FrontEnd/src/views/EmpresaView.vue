@@ -57,9 +57,9 @@ onMounted(async () => {
             <p><strong>IndyTour</strong></p>
             <p><a href="https://www.instagram.com/indy_tour" style="color: #fff;" target="_blank">@indy_tour</a></p>
             <p><span class="mdi mdi-phone" style="color: #fff;"></span> <a href="tel:+5547992214606" style="color: #fff;" target="_blank">+55 (47) 99221-4606</a></p>
-            <a href="/IndySul" target="_blank" rel="noopener" @click="authState.mudarStateEmpresa('Indy')">
+            <RouterLink to="/IndySul" @click="authState.mudarStateEmpresa('Indy')">
               <button :style="{ backgroundColor: themeManager.detalheAlternativo}">Saiba mais</button>
-            </a>
+            </RouterLink>
           </div>
         </div>
 

@@ -63,8 +63,8 @@ function selecionarMotorista(motorista) {
                 <h2>GERENCIAR<br> MOTORISTAS</h2>
                 <div class="search">
                     <input type="text" placeholder="Buscar por nome do motorista..." v-model="busca" :style="{
-                        backgroundColor: themeManager.fundo,
-                        color: themeManager.text,
+                        backgroundColor: '#fff',
+                        color: '#000',
                         border: '2px solid ' + themeManager.detalhe
                     }" />
                     <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe }"></span>
@@ -80,21 +80,20 @@ function selecionarMotorista(motorista) {
                 </p>
             </div>
 
-            <div class="lista-motoristas">
+            <div class="lista-motoristas" :style="{ backgroundColor: '#fff', color: '#000' }">
                 <div v-for="m in motoristasFiltrados" :key="m.id" class="motorista">
                     <div class="linha-motorista" @click="toggleExpand(m.id)">
                         <div class="info-motorista">
-                            <img src="/public/Ellipse.png" class="avatar" />
+                            <img src="/public/src-auth/motorista.png" class="avatar" />
                             <span>{{ m.nome }}</span>
                         </div>
                         <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === m.id }"></span>
                     </div>
 
-                    <transition name="fade" :style="{ backgroundColor: themeManager.detalhe }">
-                        <div v-if="expandidoId === m.id" class="detalhes">
+                        <div v-if="expandidoId === m.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
                             <div class="card-detalhes">
                                 <div class="avatar-container">
-                                    <img src="/public/Ellipse.png" class="avatarG" />
+                                    <img src="/public/src-auth/motorista.png" class="avatarG" />
                                     <h3>{{ m.nome }}</h3>
                                 </div>
                                 <div class="info">
@@ -102,7 +101,6 @@ function selecionarMotorista(motorista) {
                                     <p><strong>CPF:</strong> {{ m.cpf }}</p>
                                     <p><strong>E-mail:</strong> {{ m.email }}</p>
                                     <p><strong>Telefone:</strong> {{ m.telefone }}</p>
-                                    <button class="btn-add" :style="{ backgroundColor: themeManager.detalheAlternativo}">CNH do Motorista</button>
                                 </div>
                                 <div class="vans">
                                     <h3>Vans:
@@ -124,7 +122,6 @@ function selecionarMotorista(motorista) {
                                 </div>
                             </div>
                         </div>
-                    </transition>
                 </div>
                 
                 <!-- Mensagem quando nenhum motorista é encontrado -->
@@ -251,6 +248,8 @@ h2 {
 .detalhes {
     padding: 50px 80px;
     color: #fff;
+    margin: 10px;
+    border-radius: 8px;
 }
 
 .card-detalhes {
@@ -314,16 +313,6 @@ h2 {
     cursor: pointer;
     border-radius: 5px;
     width: 100%;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
 }
 
 .resultados-busca {

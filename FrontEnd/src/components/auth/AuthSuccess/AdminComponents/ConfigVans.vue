@@ -147,7 +147,7 @@ function editarRota(tipoRota, passageiros) {
           </div>
                         <div v-show="motoristaExpandido" class="secao-conteudo">
                 <div class="motorista-box">
-                  <img src="/public/Ellipse.png" alt="">
+                  <img src="/public/src-auth/motorista.png" alt="">
                   <p v-if="motoristaSelecionado">{{ motoristaSelecionado.nome }}</p>
                   <p v-else>Selecione um motorista</p>
                   <button 
@@ -179,7 +179,7 @@ function editarRota(tipoRota, passageiros) {
         </div>
         <ul class="lista-passageiros">
           <li v-for="p in admin.vanPassengers" :key="p.id">
-            <span class="mdi mdi-account"></span> {{ p.nome }}
+            <img src="/public/src-auth/passageiro.png" alt="" class="avatarP"> {{ p.nome }}
             <button class="remover" @click="removerPassageiro(p.id)">remover</button>
           </li>
         </ul>
@@ -463,6 +463,12 @@ function editarRota(tipoRota, passageiros) {
   border-radius: 0;
   font-size: 1.7rem;
   border-radius: 0 0 8px 8px;
+}
+
+.avatarP {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 }
 
 .remover {

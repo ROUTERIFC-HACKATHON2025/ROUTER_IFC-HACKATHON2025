@@ -176,8 +176,8 @@ function voltarParaConfigVans() {
       </button>
     </p>
 
-    <div class="gerenciar" :style="{ backgroundColor: themeManager.detalhe }">
-      
+    <div class="gerenciar" :style="{ backgroundColor: themeManager.detalhe, color: '#000' }">
+
       <div class="col-passageiros">
         <div class="header-pass" :style="{ backgroundColor: themeManager.detalheAlternativo }">
           <h3>PASSAGEIROS DA VAN</h3>
@@ -185,7 +185,7 @@ function voltarParaConfigVans() {
         </div>
         <ul class="lista-passageiros">
           <li v-for="p in vanPassengers" :key="p.id">
-            <img src="/public/Ellipse.png" alt="">
+            <img src="/public/src-auth/passageiro.png" alt="" class="avatarP">
             <div class="info-passageiro">
                 <span>{{ p.nome }}</span><br></br> <span class="endereco">({{ p.endereco }})</span>
             </div>
@@ -215,8 +215,8 @@ function voltarParaConfigVans() {
               <span>{{ p.nome }}</span> / <span class="endereco">({{ p.endereco }})</span>
               </div>
               <div class="setas">
-                <button @click="moverCima(i)" :disabled="i === 0">⬆️</button>
-                <button @click="moverBaixo(i)" :disabled="i === passageirosAdicionados.length - 1">⬇️</button>
+                <button @click="moverCima(i)" :disabled="i === 0"><span class="mdi mdi-arrow-up"></span></button>
+                <button @click="moverBaixo(i)" :disabled="i === passageirosAdicionados.length - 1"><span class="mdi mdi-arrow-down"></span></button>
                 <button @click="removerPassageiro(i)" class="btn-remover">❌</button>
               </div>
             </li>
@@ -293,6 +293,12 @@ function voltarParaConfigVans() {
   align-items: center;
   padding: 4px 0;
   border-bottom: 1px solid;
+}
+
+.avatarP {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 
 .endereco{

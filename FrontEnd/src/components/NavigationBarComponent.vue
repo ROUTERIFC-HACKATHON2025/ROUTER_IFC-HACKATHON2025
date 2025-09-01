@@ -1,14 +1,38 @@
 <script setup>
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
-import { RouterLink } from 'vue-router'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 
 const themeManager = useThemeManagerStore()
+const router = useRouter()
 onMounted(themeManager.init)
 
 const showHeader = ref(true)
 let lastScroll = 0
 let headerHeight = 0
+
+// Estados da busca
+const searchQuery = ref('')
+const showSearchResults = ref(false)
+const searchResults = ref([])
+const isLoading = ref(false)
+
+// Dados para busca baseados nas páginas existentes
+const searchData = ref({
+  paginas: [
+    { id: 1, nome: 'Início', descricao: 'Página principal do site', tipo: 'pagina', rota: '/' },
+    { id: 2, nome: 'Sobre Nós', descricao: 'Conheça mais sobre o projeto', tipo: 'pagina', rota: '/SobreNos' },
+    { id: 3, nome: 'Equipe', descricao: 'Nossa equipe de desenvolvimento', tipo: 'pagina', rota: '/equipe' },
+    { id: 4, nome: 'Empresas', descricao: 'Empresas parceiras de transporte', tipo: 'pagina', rota: '/Empresa' },
+    { id: 5, nome: 'Login', descricao: 'Acesse sua conta', tipo: 'pagina', rota: '/login' },
+    { id: 6, nome: 'Cadastro Motorista', descricao: 'Crie sua conta', tipo: 'pagina', rota: '/Register', alterar: 'Motorista' },
+    { id: 7, nome: 'Cadastro Passageiro', descricao: 'Crie sua conta', tipo: 'pagina', rota: '/Register', alterar: 'Passageiro' }
+  ],
+  empresas: [
+    { id: 1, nome: 'Indy Tour', descricao: 'Empresa de transporte executivo', tipo: 'empresa', rota: '/IndySul', alterar: 'Indy' },
+    { id: 2, nome: 'Sul Turismo', descricao: 'Transporte escolar de qualidade', tipo: 'empresa', rota: '/IndySul', alterar: 'Sul' }
+  ],
+})
 
 function handleScroll() {
   const currentScroll = window.scrollY
@@ -23,10 +47,14 @@ onMounted(() => {
   const headerEl = document.querySelector(forma)
   if (headerEl) headerHeight = headerEl.offsetHeight
   window.addEventListener('scroll', handleScroll)
+  
+  // Fechar resultados ao clicar fora
+  document.addEventListener('click', handleClickOutside)
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  document.removeEventListener('click', handleClickOutside)
 })
 
 const menuAberto = ref(false)
@@ -35,6 +63,105 @@ function abrirMenu() {
 }
 function fecharMenu() {
   menuAberto.value = false
+}
+
+// Função de busca
+function performSearch() {
+  if (!searchQuery.value.trim()) {
+    searchResults.value = []
+    showSearchResults.value = false
+    return
+  }
+
+  isLoading.value = true
+  const query = searchQuery.value.toLowerCase().trim()
+  
+  // Simular delay de busca
+  setTimeout(() => {
+    const results = []
+    
+    // Buscar em páginas
+    searchData.value.paginas.forEach(pagina => {
+      if (pagina.nome.toLowerCase().includes(query) || 
+          pagina.descricao.toLowerCase().includes(query)) {
+        results.push(pagina)
+      }
+    })
+    
+    // Buscar em empresas
+    searchData.value.empresas.forEach(empresa => {
+      if (empresa.nome.toLowerCase().includes(query) || 
+          empresa.descricao.toLowerCase().includes(query)) {
+        results.push(empresa)
+      }
+    })
+    
+    // Buscar em empresas (incluindo o campo alterar)
+    searchData.value.empresas.forEach(empresa => {
+      if (empresa.nome.toLowerCase().includes(query) || 
+          empresa.descricao.toLowerCase().includes(query) ||
+          (empresa.alterar && empresa.alterar.toLowerCase().includes(query))) {
+        results.push(empresa)
+      }
+    })
+    
+    searchResults.value = results
+    showSearchResults.value = results.length > 0
+    isLoading.value = false
+  }, 300)
+}
+
+// Observar mudanças na busca
+watch(searchQuery, (newQuery) => {
+  if (newQuery.trim()) {
+    performSearch()
+  } else {
+    searchResults.value = []
+    showSearchResults.value = false
+  }
+})
+
+// Fechar resultados ao clicar fora
+function handleClickOutside(event) {
+  const searchContainer = document.querySelector('.search')
+  if (searchContainer && !searchContainer.contains(event.target)) {
+    showSearchResults.value = false
+  }
+}
+
+// Navegar para resultado
+function navigateToResult(result) {
+  showSearchResults.value = false
+  searchQuery.value = ''
+  
+  // Usar a rota específica do resultado
+  if (result.rota) {
+    // Se for empresa com alterar específico, passar como query parameter
+    if (result.tipo === 'empresa' && result.alterar) {
+      router.push({ path: result.rota, query: { empresa: result.alterar } })
+    } else {
+      router.push(result.rota)
+    }
+  } else {
+    // Fallback para tipos específicos
+    switch (result.tipo) {
+      case 'pagina':
+        router.push(result.rota)
+        break
+      case 'empresa':
+        router.push('/Empresa')
+        break
+      default:
+        break
+    }
+  }
+}
+
+// Buscar ao pressionar Enter
+function handleSearchKeydown(event) {
+  if (event.key === 'Enter') {
+    performSearch()
+  }
 }
 </script>
 
@@ -55,12 +182,47 @@ function fecharMenu() {
         </div>
 
         <div class="search">
-          <input type="text" placeholder="Pesquisar..." :style="{
-            backgroundColor: themeManager.fundo,
-            color: themeManager.text,
-            border: '2px solid ' + themeManager.detalhe
-          }" />
+          <input 
+            v-model="searchQuery"
+            @keydown="handleSearchKeydown"
+            type="text" 
+            placeholder="Pesquisar páginas, empresas..." 
+            :style="{
+              backgroundColor: themeManager.fundo,
+              color: themeManager.text,
+              border: '2px solid ' + themeManager.detalhe
+            }" 
+          />
           <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
+          
+          <!-- Loading spinner -->
+          <div v-if="isLoading" class="search-loading">
+            <div class="spinner"></div>
+          </div>
+          
+          <!-- Resultados da busca -->
+          <div v-if="showSearchResults && searchResults.length > 0" class="search-results" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+            <div 
+              v-for="result in searchResults" 
+              :key="`${result.tipo}-${result.id}`"
+              class="search-result-item"
+              @click="navigateToResult(result)"
+              :style="{ borderBottomColor: themeManager.detalhe }"
+            >
+              <div class="result-content">
+                <div class="result-title" :style="{ color: themeManager.text }">{{ result.nome }}</div>
+                <div class="result-subtitle" :style="{ color: themeManager.text }">
+                  {{ result.descricao }}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Nenhum resultado -->
+          <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+            <span class="mdi mdi-magnify-close" :style="{ color: themeManager.detalhe }"></span>
+            <p :style="{ color: themeManager.text }">Nenhum resultado encontrado</p>
+          </div>
         </div>
 
         <nav aria-label="Menu principal">
@@ -105,12 +267,55 @@ function fecharMenu() {
         </div>
 
         <div class="search">
-          <input type="text" placeholder="Pesquisar..." :style="{
-            backgroundColor: themeManager.fundo,
-            color: themeManager.text,
-            border: '2px solid ' + themeManager.detalhe
-          }" />
+          <input 
+            v-model="searchQuery"
+            @keydown="handleSearchKeydown"
+            type="text" 
+            placeholder="Pesquisar páginas, empresas..." 
+            :style="{
+              backgroundColor: themeManager.fundo,
+              color: themeManager.text,
+              border: '2px solid ' + themeManager.detalhe
+            }" 
+          />
           <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
+          
+          <!-- Loading spinner mobile -->
+          <div v-if="isLoading" class="search-loading">
+            <div class="spinner"></div>
+          </div>
+          
+          <!-- Resultados da busca mobile -->
+          <div v-if="showSearchResults && searchResults.length > 0" class="search-results mobile" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+            <div 
+              v-for="result in searchResults" 
+              :key="`${result.tipo}-${result.id}`"
+              class="search-result-item"
+              @click="navigateToResult(result)"
+              :style="{ borderBottomColor: themeManager.detalhe }"
+            >
+              <div class="result-icon">
+                <span v-if="result.tipo === 'pagina'" class="mdi mdi-page-layout-body" :style="{ color: themeManager.detalhe }"></span>
+                <span v-else-if="result.tipo === 'empresa'" class="mdi mdi-domain" :style="{ color: themeManager.detalhe }"></span>
+              </div>
+              <div class="result-content">
+                <div class="result-title" :style="{ color: themeManager.text }">{{ result.nome }}</div>
+                <div class="result-subtitle" :style="{ color: themeManager.text }">
+                  {{ result.descricao }}
+                  <span v-if="result.alterar" class="result-alterar">({{ result.alterar }})</span>
+                </div>
+              </div>
+              <div class="result-type" :style="{ color: themeManager.detalhe }">
+                {{ result.tipo.charAt(0).toUpperCase() + result.tipo.slice(1) }}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Nenhum resultado mobile -->
+          <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results mobile" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+            <span class="mdi mdi-magnify-close" :style="{ color: themeManager.detalhe }"></span>
+            <p :style="{ color: themeManager.text }">Nenhum resultado</p>
+          </div>
         </div>
       </div>
       <nav class="menu-mobile" :class="{ 'menu-aberto': menuAberto }" :style="{ backgroundColor: themeManager.fundo }">
@@ -233,6 +438,142 @@ function fecharMenu() {
 
 .search input:focus+.mdi {
   transform: translateY(-50%) scale(1.2);
+}
+
+/* Estilos para os resultados da busca */
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid;
+  border-top: none;
+  border-radius: 0 0 15px 15px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.search-results.mobile {
+  position: fixed;
+  top: 120px;
+  left: 20px;
+  right: 20px;
+  border-radius: 15px;
+  max-height: 300px;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-result-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.result-icon {
+  margin-right: 15px;
+  font-size: 1.5rem;
+  width: 30px;
+  text-align: center;
+}
+
+.result-content {
+  flex: 1;
+}
+
+.result-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.result-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.result-alterar {
+  font-weight: 600;
+  color: inherit;
+  margin-left: 8px;
+}
+
+.result-type {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Loading spinner */
+.search-loading {
+  position: absolute;
+  right: 45px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Nenhum resultado */
+.search-no-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid;
+  border-top: none;
+  border-radius: 0 0 15px 15px;
+  padding: 20px;
+  text-align: center;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.search-no-results.mobile {
+  position: fixed;
+  top: 120px;
+  left: 20px;
+  right: 20px;
+  border-radius: 15px;
+}
+
+.search-no-results .mdi {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.search-no-results p {
+  margin: 0;
+  font-size: 0.9rem;
 }
 
 nav ul {

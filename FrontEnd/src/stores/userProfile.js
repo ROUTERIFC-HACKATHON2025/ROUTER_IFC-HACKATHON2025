@@ -31,11 +31,11 @@ export const useUserProfileStore = defineStore('userProfile', () => {
   }
 
   const vans = ref([
-    { 
-      id: 0, 
-      nome: 'Van Executiva Premium', 
+    {
+      id: 0,
+      nome: 'Van Executiva Premium',
       modelo: 'Sprinter 515 CDI',
-      placa: 'ABC-1234', 
+      placa: 'ABC-1234',
       acentos: 18,
       ano: 2022,
       cor: 'Branco Perolado',
@@ -43,11 +43,11 @@ export const useUserProfileStore = defineStore('userProfile', () => {
       caracteristicas: ['Ar condicionado', 'Wi-Fi', 'USB', 'Assentos reclináveis', 'Teto solar'],
       status: 'Ativo'
     },
-    { 
-      id: 1, 
-      nome: 'Van Comfort Plus', 
+    {
+      id: 1,
+      nome: 'Van Comfort Plus',
       modelo: 'Master 2.3 dCi',
-      placa: 'DEF-5678', 
+      placa: 'DEF-5678',
       acentos: 16,
       ano: 2021,
       cor: 'Prata Metálico',
@@ -55,11 +55,11 @@ export const useUserProfileStore = defineStore('userProfile', () => {
       caracteristicas: ['Ar condicionado', 'Wi-Fi', 'USB', 'Sistema de som premium'],
       status: 'Ativo'
     },
-    { 
-      id: 2, 
-      nome: 'Van Business Class', 
+    {
+      id: 2,
+      nome: 'Van Business Class',
       modelo: 'Crafter 2.0 TDI',
-      placa: 'GHI-9012', 
+      placa: 'GHI-9012',
       acentos: 20,
       ano: 2023,
       cor: 'Preto',
@@ -67,11 +67,11 @@ export const useUserProfileStore = defineStore('userProfile', () => {
       caracteristicas: ['Ar condicionado', 'Wi-Fi', 'USB', 'Assentos executivos', 'Porta automática'],
       status: 'Ativo'
     },
-    { 
-      id: 3, 
-      nome: 'Van Express', 
+    {
+      id: 3,
+      nome: 'Van Express',
       modelo: 'Ducato 2.3 Multijet',
-      placa: 'JKL-3456', 
+      placa: 'JKL-3456',
       acentos: 14,
       ano: 2020,
       cor: 'Azul Metálico',
@@ -79,11 +79,11 @@ export const useUserProfileStore = defineStore('userProfile', () => {
       caracteristicas: ['Ar condicionado', 'USB', 'Assentos confortáveis'],
       status: 'Manutenção'
     },
-    { 
-      id: 4, 
-      nome: 'Van Corporate', 
+    {
+      id: 4,
+      nome: 'Van Corporate',
       modelo: 'Boxer 2.2 HDi',
-      placa: 'MNO-7890', 
+      placa: 'MNO-7890',
       acentos: 22,
       ano: 2023,
       cor: 'Cinza Metálico',
@@ -91,11 +91,11 @@ export const useUserProfileStore = defineStore('userProfile', () => {
       caracteristicas: ['Ar condicionado', 'Wi-Fi', 'USB', 'Assentos premium', 'Teto alto'],
       status: 'Ativo'
     },
-    { 
-      id: 5, 
-      nome: 'Van Elite', 
+    {
+      id: 5,
+      nome: 'Van Elite',
       modelo: 'Sprinter 316 CDI',
-      placa: 'PQR-1234', 
+      placa: 'PQR-1234',
       acentos: 18,
       ano: 2022,
       cor: 'Branco',
@@ -112,9 +112,10 @@ export const useUserProfileStore = defineStore('userProfile', () => {
       nascimento: '1995-03-15',
       cpf: '123.456.789-01',
       email: 'maria.santos@email.com',
+      senha: '123456',
       telefone: '(47) 98888-7777',
       endereco: 'Rua das Flores, 123 - Centro, Blumenau/SC',
-      descricao: 'Estudante de Engenharia Civil na FURB. Precisa de transporte para ir à universidade de segunda a sexta-feira. Horário de saída: 7h30 da manhã.'
+      descricao: 'Estudante de Engenharia Civil na FURB, apaixonada por sustentabilidade e inovação.'
     },
     {
       id: 1,
@@ -122,41 +123,57 @@ export const useUserProfileStore = defineStore('userProfile', () => {
       nascimento: '1988-07-22',
       cpf: '987.654.321-09',
       email: 'carlos.oliveira@empresa.com',
+      senha: '123456',
       telefone: '(47) 97777-6666',
       endereco: 'Av. Brasil, 456 - Itoupava Seca, Blumenau/SC',
-      descricao: 'Analista de Sistemas na empresa TechCorp. Trabalha no centro da cidade e precisa de transporte pontual. Horário de trabalho: 8h às 18h.'
+      descricao: 'Analista de Sistemas na empresa TechCorp. Entusiasta de tecnologia e corrida de rua.'
     },
     {
       id: 2,
-      nome: 'Ana Paula Costa',
-      nascimento: '1992-11-08',
-      cpf: '456.789.123-45',
-      email: 'ana.costa@consultoria.com',
+      nome: 'Juliana Pereira Costa',
+      nascimento: '2001-11-30',
+      cpf: '456.789.123-00',
+      email: 'juliana.costa@outlook.com',
+      senha: '123456',
       telefone: '(47) 96666-5555',
-      endereco: 'Rua XV de Novembro, 789 - Centro, Blumenau/SC',
-      descricao: 'Consultora de Marketing Digital. Trabalha em home office mas precisa ir ao escritório 3 vezes por semana. Horário flexível.'
+      endereco: 'Rua Bahia, 789 - Velha, Blumenau/SC',
+      descricao: 'Designer gráfica freelancer. Ama arte digital e fotografia.'
     },
     {
       id: 3,
-      nome: 'Roberto Silva Mendes',
-      nascimento: '1985-04-30',
-      cpf: '789.123.456-78',
-      email: 'roberto.mendes@industria.com',
+      nome: 'Rafael Lima Andrade',
+      nascimento: '1992-02-10',
+      cpf: '321.654.987-55',
+      email: 'rafael.andrade@gmail.com',
+      senha: '123456',
       telefone: '(47) 95555-4444',
-      endereco: 'Rua da Indústria, 321 - Badenfurt, Blumenau/SC',
-      descricao: 'Supervisor de Produção na Indústria Têxtil. Trabalha em turno de 6h às 14h. Precisa de transporte confiável e pontual.'
+      endereco: 'Rua São Paulo, 321 - Garcia, Blumenau/SC',
+      descricao: 'Professor de História no ensino médio. Apaixonado por leitura e viagens.'
     },
     {
       id: 4,
-      nome: 'Juliana Pereira Lima',
-      nascimento: '1990-09-12',
-      cpf: '321.654.987-32',
-      email: 'juliana.lima@saude.com',
+      nome: 'Fernanda Alves Rodrigues',
+      nascimento: '1999-09-25',
+      cpf: '789.123.456-77',
+      email: 'fernanda.rodrigues@yahoo.com',
+      senha: '123456',
       telefone: '(47) 94444-3333',
-      endereco: 'Av. Nereu Ramos, 654 - Garcia, Blumenau/SC',
-      descricao: 'Enfermeira no Hospital Santa Isabel. Trabalha em plantões de 12h. Precisa de transporte para diferentes horários conforme escala.'
+      endereco: 'Rua XV de Novembro, 654 - Centro, Blumenau/SC',
+      descricao: 'Estudante de Medicina na FURB. Interessada em saúde pública e esportes.'
     }
   ])
+
+  const usuarioAtual = ref(null)
+
+  function setUsuarioAtual(passageiro) {
+    usuarioAtual.value = passageiro
+  }
+
+  function atualizarPerfil(dados) {
+    if (usuarioAtual.value) {
+      Object.assign(usuarioAtual.value, dados)
+    }
+  }
 
   const motoristas = ref([
     {
@@ -227,5 +244,6 @@ export const useUserProfileStore = defineStore('userProfile', () => {
     vans,
     passageiros,
     motoristas,
+    usuarioAtual, setUsuarioAtual, atualizarPerfil
   }
 })
