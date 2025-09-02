@@ -68,7 +68,7 @@ async function deleteSelectedPassageiro(id) {
                 <label for="senha">Senha:</label>
                 <input type="text" id="senhas" v-model="passageiro.senha" maxlength="50" required />
             </div>
-            <button type="submit">{{ isEditing ? 'Salvar Edição' : 'Adicionar Estado' }}</button>
+            <button type="submit">{{ isEditing ? 'Salvar Edição' : 'Adicionar Passageiro' }}</button>
             <button type="button" @click="resetForm">Cancelar</button>
         </form>
 
@@ -147,21 +147,21 @@ button[type="button"]:hover {
     background-color: #545b62;
 }
 
-.estado-table {
+.passageiro-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
 }
-.estado-table th, .estado-table td {
+.passageiro-table th, .passageiro-table td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: left;
 }
-.estado-table th {
+.passageiro-table th {
   background-color: #f2f2f2;
   font-weight: bold;
 }
-.estado-table button {
+.passageiro-table button {
   margin-right: 5px;
   padding: 6px 10px;
   font-size: 0.85em;
