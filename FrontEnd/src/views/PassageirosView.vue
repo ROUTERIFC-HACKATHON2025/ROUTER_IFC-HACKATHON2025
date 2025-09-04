@@ -1,8 +1,7 @@
 <script setup>
 import { reactive, onMounted, computed } from 'vue'
-import { usePassageirosStore } from '@/stores/passageiros'
-
-const passageirosStore = usepassageirosStore();
+import { usePassageiroStore } from '@/stores/passageiros'
+const passageirosStore = usePassageiroStore()
 
 const defaultPassageiro = { id: 0, nome: '', telefone: '' };
 const passageiro = reactive({ ...defaultPassageiro });
@@ -10,18 +9,18 @@ const passageiro = reactive({ ...defaultPassageiro });
 const isEditing = computed(() => passageiro.id !== 0);
 
 onMounted(async () => {
-    await passageiroStore.Passageiros();
+    await passageirosStore.getPassageiros();
 })
 
 function resetForm() {
-    Object.assign(passageiros, { ...defaultPassageiro });
+    Object.assign(passageiro, { ...defaultPassageiro });
 }
 
 async function submitPassageiro() {
     if (isEditing.value) {
-        await passageiroStore.updatePassageiro({ ...passageiro });
+        await passageirosStore.updatePassageiro({ ...passageiro });
     } else {
-        await passageiroStore.addPassageiro({ ...passageiro });
+        await passageirosStore.addPassageiro({ ...passageiro });
     }
     resetForm();
 }
@@ -32,7 +31,7 @@ function editSelectedPassageiro(pas) {
 
 async function deleteSelectedPassageiro(id) {
     if (confirm('Tem certeza que deseja excluir este passageiro?')) {
-        await passageiroStore.deletePassageiro(id);
+        await passageirosStore.deletePassageiro(id);
     }
 }
 </script>
@@ -85,14 +84,14 @@ async function deleteSelectedPassageiro(id) {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="pas in passageiroStore.passageiros" :key="pas.id">
-                    <td>{{ pas.id }}</td>
+                <tr v-for="pas in passageirosStore.passageiros" :key="pas.idPassageiros">
+                    <td>{{ pas.idPassageiros }}</td>
                     <td>{{ pas.nome }}</td>
                     <td>{{ pas.email }}</td>
                     <td>{{ pas.telefone }}</td>
                     <td>
                         <button @click="editSelectedPassageiro(pas)">Editar</button>
-                        <button @click="deleteSelectePassageiro(pas.id)">Excluir</button>
+                        <button @click="deleteSelectedPassageiro(pas.idPassageiros)">Excluir</button>
                     </td>
                 </tr>
             </tbody>

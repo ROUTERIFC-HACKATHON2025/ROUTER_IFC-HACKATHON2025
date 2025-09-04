@@ -14,9 +14,9 @@ class VeiculoViewSet(ModelViewSet):
     queryset = Veiculo.objects.all()
     serializer_class = VeiculoSerializer
 
-class RotaViewSet(ModelViewSet):
-    queryset = Rota.objects.all()
-    serializer_class = RotaSerializer
+class RotasViewSet(ModelViewSet):
+    queryset = Rotas.objects.all()
+    serializer_class = RotasSerializer
 
 class EnderecoViewSet(ModelViewSet):
     queryset = Endereco.objects.all()

@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import PassageirosAPI from '@/api/passageiros'
+import PassageirosAPI from '../api/passageiros'
 
 const passageirosApi = new PassageirosAPI();
 

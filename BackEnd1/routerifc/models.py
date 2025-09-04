@@ -36,7 +36,7 @@ class Veiculo(models.Model):
    capacidade = models.IntegerField()
    modelo = models.CharField(max_length=45)
    motoristas = models.ManyToManyField('Motorista', related_name='veiculos')
-   passageiros = models.ManyToManyField('Passageiro', related_name='veiculos')
+   passageiros = models.ManyToManyField('Passageiro', related_name='veiculos', null=True, blank=True)
 
 
    def __str__(self):

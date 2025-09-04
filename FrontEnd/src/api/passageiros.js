@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8000/api/passageiross/";
+const API_BASE_URL = "http://localhost:8000/passageiros/";
 
 export default class PassageirosAPI {
     async getPassageirosAll() {
