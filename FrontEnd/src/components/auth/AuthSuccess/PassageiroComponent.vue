@@ -4,6 +4,8 @@ import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import { useUserProfileStore } from '@/stores/userProfile'
 import { useRouter } from 'vue-router'
+import L from "leaflet"
+import "leaflet/dist/leaflet.css"
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
@@ -27,7 +29,7 @@ const ira = ref('')
 const voltara = ref('')
 const horario = ref('')
 
-// Preencher dados do passageiro logado
+// Preencher dados do passageiro logado + inicializar mapa
 onMounted(() => {
   themeManager.init()
   authState.restaurarState()
@@ -42,6 +44,18 @@ onMounted(() => {
     endereco.value = p.endereco
     descricao.value = p.descricao
   }
+
+  // 🔹 Inicializa o mapa
+  const map = L.map("mapa").setView([-23.5505, -46.6333], 13)
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap contributors"
+  }).addTo(map)
+
+  L.marker([-23.5505, -46.6333])
+    .addTo(map)
+    .bindPopup("Aqui é São Paulo!")
+    .openPopup()
 })
 
 function toggleEdicao() {
@@ -150,13 +164,8 @@ function sairDaConta() {
           </div>
         </div>
 
-        <div class="mapa">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3558.5!2d-49.1!3d-26.9!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjbCsDU0JzI0LjAiUyA0OcKwMDYnMDAuMCJX!5e0!3m2!1spt-BR!2sbr!4v1234567890"
-            allowfullscreen
-            loading="lazy"
-          ></iframe>
-        </div>
+      <div id="mapa" class="mapa"></div>
+
       </div>
 
       <!-- Ida e volta -->
@@ -377,20 +386,12 @@ function sairDaConta() {
 }
 
 .mapa {
-  flex: 1 1 320px;
-  min-width: 320px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  width: 500px;
+  height: 400px;
+  
 }
 
-.mapa iframe {
-  width: 100%;
-  height: 100%;
-  min-height: 290px;
-  border: none;
-  border-radius: 12px;
-}
+
 
 .ida-volta {
   padding: 15px;
