@@ -22,7 +22,7 @@ export const usePassageiroStore = defineStore('passageiro', () => {
             const novoPassageiro = await passageirosApi.addPassageiro(passageiroParaAdicionar);
             passageiros.value.push(novoPassageiro);
         } catch (error) {
-            console.error("Erro no store ao adicionar empresa:", error);
+            console.error("Erro no store ao adicionar passageiro:", error);
             throw error;
         }
     }
@@ -30,7 +30,7 @@ export const usePassageiroStore = defineStore('passageiro', () => {
     async function updatePassageiro(passageiroParaAtualizar) {
         try {
             const passageiroAtualizado = await passageirosApi.updatePassageiro(passageiroParaAtualizar);
-            const index = passageiros.value.findIndex(pass => pass.id === passageiroAtualizado.id);
+            const index = passageiros.value.findIndex(pas => pas.idPassageiros === passageiroAtualizado.idPassageiros);
             if (index !== -1) {
                 passageiros.value[index] = passageiroAtualizado;
             }
@@ -43,7 +43,7 @@ export const usePassageiroStore = defineStore('passageiro', () => {
     async function deletePassageiro(idParaExcluir) {
         try {
             await passageirosApi.deletePassageiro(idParaExcluir);
-            passageiros.value = passageiros.value.filter(pass => pass.id !== idParaExcluir);
+            passageiros.value = passageiros.value.filter(pas => pas.idPassageiros !== idParaExcluir);
         } catch (error) {
             console.error("Erro no store ao excluir passageiro:", error);
             throw error;

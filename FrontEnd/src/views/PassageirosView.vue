@@ -3,17 +3,18 @@ import { reactive, onMounted, computed } from 'vue'
 import { usePassageiroStore } from '@/stores/passageiros'
 const passageirosStore = usePassageiroStore()
 
-const defaultPassageiro = { id: 0, nome: '', telefone: '' };
+const defaultPassageiro = { idPassageiros: 0, nome: '', telefone: '', email: '', cpf: '', dataNasc: '', senha: '' };
 const passageiro = reactive({ ...defaultPassageiro });
 
-const isEditing = computed(() => passageiro.id !== 0);
+const isEditing = computed(() => passageiro.idPassageiros !== 0);
+
 
 onMounted(async () => {
     await passageirosStore.getPassageiros();
 })
 
 function resetForm() {
-    Object.assign(passageiro, { ...defaultPassageiro });
+  Object.assign(passageiro, { ...defaultPassageiro });
 }
 
 async function submitPassageiro() {
@@ -25,13 +26,18 @@ async function submitPassageiro() {
     resetForm();
 }
 
-function editSelectedPassageiro(pas) {
-    Object.assign(passageiro, { ...pas });
+
+
+function editSelectedPassageiro(idPassageiros) {
+    const pas = passageirosStore.passageiros.find(p => p.idPassageiros === idPassageiros);
+    if (pas) {
+        Object.assign(passageiro, { ...pas });
+    }
 }
 
-async function deleteSelectedPassageiro(id) {
+async function deleteSelectedPassageiro(idPassageiros) {
     if (confirm('Tem certeza que deseja excluir este passageiro?')) {
-        await passageirosStore.deletePassageiro(id);
+        await passageirosStore.deletePassageiro(idPassageiros);
     }
 }
 </script>
@@ -54,18 +60,30 @@ async function deleteSelectedPassageiro(id) {
             <div>
                 <label for="telefone">Telefone:</label>
                 <input type="number" id="telefone" v-model="passageiro.telefone" maxlength="12" required />
-            </div> 
+            </div>
             <div>
                 <label for="cpf">CPF:</label>
                 <input type="number" id="cpf" v-model="passageiro.cpf" maxlength="14" required />
-            </div> 
-             <div>
+            </div>
+            <div>
                 <label for="dataNascimento">Data de Nascimento:</label>
                 <input type="date" id="dataNasc" v-model="passageiro.dataNasc" maxlength="10" required />
             </div>
             <div>
+                <label for="nomeResponsavel">Nome do Responsável:</label>
+                <input type="text" id="nomeResponsavel" v-model="passageiro.nomeResponsavel" maxlength="50" required />
+            </div>
+            <div>
+                <label for="cpfResponsavel">CPF do Responsável:</label>
+                <input type="number" id="cpfResponsavel" v-model="passageiro.cpfResponsavel" maxlength="14" required />
+            </div>
+            <div>
+                <label for="telefoneResponsavel">Telefone do Responsável:</label>
+                <input type="number" id="telefoneResponsavel" v-model="passageiro.telefoneResponsavel" maxlength="12" required />
+            </div>
+            <div>
                 <label for="senha">Senha:</label>
-                <input type="text" id="senhas" v-model="passageiro.senha" maxlength="50" required />
+                <input type="text" id="senha" v-model="passageiro.senha" maxlength="50" required />
             </div>
             <button type="submit">{{ isEditing ? 'Salvar Edição' : 'Adicionar Passageiro' }}</button>
             <button type="button" @click="resetForm">Cancelar</button>
@@ -81,6 +99,9 @@ async function deleteSelectedPassageiro(id) {
                     <th>Nome</th>
                     <th>Email</th>
                     <th>Telefone</th>
+                    <th>Nome do Responsável</th>
+                    <th>CPF do Responsável</th>
+                    <th>Telefone do Responsável</th>
                 </tr>
             </thead>
             <tbody>
@@ -89,8 +110,11 @@ async function deleteSelectedPassageiro(id) {
                     <td>{{ pas.nome }}</td>
                     <td>{{ pas.email }}</td>
                     <td>{{ pas.telefone }}</td>
+                    <td>{{ pas.nomeResponsavel }}</td>
+                    <td>{{ pas.cpfResponsavel }}</td>
+                    <td>{{ pas.telefoneResponsavel }}</td>
                     <td>
-                        <button @click="editSelectedPassageiro(pas)">Editar</button>
+                        <button @click="editSelectedPassageiro(pas.idPassageiros)">Editar</button>
                         <button @click="deleteSelectedPassageiro(pas.idPassageiros)">Excluir</button>
                     </td>
                 </tr>

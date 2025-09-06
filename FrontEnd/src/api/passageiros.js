@@ -15,32 +15,32 @@ export default class PassageirosAPI {
 
     async addPassageiro(passageiro) {
         try {
-            const response = await axios.post(API_BASE_URL, passageiros);
+            const response = await axios.post(API_BASE_URL, passageiro);
             return response.data;
         } catch (error) {
-            console.error("Erro ao adicionar passageiros:", error);
+            console.error("Erro ao adicionar passageiro:", error);
             throw error;
         }
     }
 
     async updatePassageiro(passageiro) {
         try {
-            const url = `${API_BASE_URL}${passageiros.id}/`;
-            const response = await axios.put(url, passageiros);
+            const url = `${API_BASE_URL}${passageiro.idPassageiros}/`;
+            const response = await axios.put(url, passageiro);
             return response.data;
         } catch (error) {
-            console.error("Erro ao atualizar passageiros:", error);
+            console.error("Erro ao atualizar passageiro:", error);
             throw error;
         }
     }
 
-    async deletePassageiro(id) {
+    async deletePassageiro(idPassageiro) {
         try {
-            const url = `${API_BASE_URL}${id}/`;
+            const url = `${API_BASE_URL}${idPassageiro}/`;
             const response = await axios.delete(url);
             return response;
         } catch (error) {
-            console.error("Erro ao excluir passageiros:", error);
+            console.error("Erro ao excluir passageiro:", error);
             throw error;
         }
     }
