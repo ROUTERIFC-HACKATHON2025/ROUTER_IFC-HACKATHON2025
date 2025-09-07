@@ -23,16 +23,12 @@ const vanSelecionada = computed(() => admin.selectedVan || {
   motorista: null 
 })
 
-// Lista de passageiros da van selecionada (primeira lista - esquerda) disponível
 const vanPassengers = computed(() => admin.vanPassengers)
 
-// Lista de passageiros da rota sendo editada (segunda lista - direita)
 const passageirosAdicionados = ref([])
 
-// Tipo da rota sendo editada
 const tipoRota = computed(() => admin.rotaEmEdicao?.tipo || 'ida')
 
-// Carregar rotas editadas salvas quando a página for aberta
 const carregarRotasSalvas = () => {
   if (admin.rotaEmEdicao?.tipo) {
     const rotasSalvas = admin.getRotaEditada(admin.rotaEmEdicao.tipo)
@@ -42,7 +38,6 @@ const carregarRotasSalvas = () => {
   }
 }
 
-// Carregar rotas salvas quando o componente for montado
 carregarRotasSalvas()
 
 function moverCima(index) {
@@ -66,12 +61,10 @@ function moverBaixo(index) {
 }
 
 function adicionarPassageiro(passageiro) {
-  // Verificar se o passageiro já não foi adicionado nesta rota
   if (passageirosAdicionados.value.find(p => p.id === passageiro.id)) {
     return
   }
   
-  // Verificar se o passageiro já está em duas outras rotas (máximo permitido)
   const rotasOutras = ['ida', 'volta12', 'volta17'].filter(tipo => tipo !== admin.rotaEmEdicao?.tipo)
   let rotasOcupadas = 0
   
@@ -82,7 +75,6 @@ function adicionarPassageiro(passageiro) {
     }
   }
   
-  // Se já está em duas outras rotas, não pode adicionar em mais uma
   if (rotasOcupadas >= 2) {
     const rotasAtuais = []
     for (const tipoRota of rotasOutras) {
@@ -95,12 +87,9 @@ function adicionarPassageiro(passageiro) {
     return
   }
   
-  // Se passou pelas validações, adicionar o passageiro
   passageirosAdicionados.value.push(passageiro)
   
-  // Forçar reatividade dos botões
   nextTick(() => {
-    // Isso força o Vue a re-renderizar os botões
     passageirosAdicionados.value = [...passageirosAdicionados.value]
   })
 }
@@ -110,7 +99,6 @@ function passageiroEmOutraRota(passageiro) {
   let rotasOcupadas = 0
   let rotasAtuais = []
   
-  // Verificar se o passageiro já está na rota atual
   const jaNaRotaAtual = passageirosAdicionados.value.find(p => p.id === passageiro.id)
   
   for (const tipoRota of rotasOutras) {
@@ -121,7 +109,6 @@ function passageiroEmOutraRota(passageiro) {
     }
   }
   
-  // Retorna objeto com informações sobre o status do passageiro
   return {
     rotasOcupadas,
     rotasAtuais,
@@ -135,14 +122,11 @@ function passageiroEmOutraRota(passageiro) {
 function removerPassageiro(index) {
   passageirosAdicionados.value.splice(index, 1)
   
-  // Forçar reatividade dos botões
   nextTick(() => {
-    // Isso força o Vue a re-renderizar os botões
     passageirosAdicionados.value = [...passageirosAdicionados.value]
   })
 }
 
-// Título da rota baseado no tipo
 const tituloRota = computed(() => {
   switch (tipoRota.value) {
     case 'ida': return 'Rota Ida'
@@ -153,7 +137,6 @@ const tituloRota = computed(() => {
 })
 
 function voltarParaConfigVans() {
-  // Salvar as rotas editadas antes de voltar
   if (admin.rotaEmEdicao?.tipo) {
     admin.salvarRotaEditada(admin.rotaEmEdicao.tipo, passageirosAdicionados.value)
   }
@@ -166,7 +149,7 @@ function voltarParaConfigVans() {
     <h1 class="titulo">
       PÁGINA DE 
       <span class="azul" :style="{ color: themeManager.detalheAlternativo }">
-        GERENCIAMENTO <br> (NOME DA EMPRESA)
+        GERENCIAMENTO 
       </span>
     </h1>
 
@@ -210,9 +193,9 @@ function voltarParaConfigVans() {
           <h3 :style="{ backgroundColor: themeManager.detalheAlternativo }">Ordem da {{ tituloRota }}</h3>
           <ul>
             <li v-for="(p,i) in passageirosAdicionados" :key="p.id">
-              <div>
                 <span class="num">{{ i+1 }}</span> 
-              <span>{{ p.nome }}</span> / <span class="endereco">({{ p.endereco }})</span>
+              <div>
+                <span>{{ p.nome }}</span> <br></br> <span class="endereco">({{ p.endereco }})</span>
               </div>
               <div class="setas">
                 <button @click="moverCima(i)" :disabled="i === 0"><span class="mdi mdi-arrow-up"></span></button>
@@ -232,6 +215,10 @@ function voltarParaConfigVans() {
 </template>
 
 <style scoped>
+section{
+    padding: 0px 100px 100px 100px;
+}
+
 .titulo {
   font-size: 2.5rem;
   margin: 30px 0 10px;
@@ -335,7 +322,6 @@ function voltarParaConfigVans() {
   padding: 10px;
   border-radius: 8px;
   width: 600px;
-  border-radius: 8px ;
 }
 
 .rota h3 {
@@ -425,6 +411,41 @@ function voltarParaConfigVans() {
   color: #ff9800;
   font-weight: bold;
   text-align: center;
+}
+
+
+@media (max-width: 768px) {
+  section{
+    padding: 0px 0px 50px 0px;
+  }
+  .titulo {
+  margin: 20px 0 0px;
+}
+
+.gerenciar {
+  display: block;
+  gap: 0px;
+  padding: 25px;
+  border-radius: 0;
+}
+  .col-passageiros {
+    border-right: none;
+    padding: 0;
+    margin: 0 0 10px 0;
+  }
+
+.col-rotas {
+  display: grid;
+  grid-template-columns: none;
+  
+}
+
+.rota {
+  width: 360px;
+  padding: 0;
+  text-align: left;
+}
+  
 }
 </style>
 

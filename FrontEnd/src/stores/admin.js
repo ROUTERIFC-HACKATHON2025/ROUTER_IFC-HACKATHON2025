@@ -3,13 +3,9 @@ import { ref, computed, watch } from 'vue'
 
 export const useAdminStore = defineStore('admin', () => {
   const selectedVan = ref(null)
-  // assignments por van: { [vanId]: { driver: {}, passengers: [] } }
   const assignments = ref({})
-  // status das vans: { [vanId]: 'Ativo' | 'Manutenção' }
   const vanStatus = ref({})
-  // informações da rota sendo editada
   const rotaEmEdicao = ref(null)
-  // rotas editadas por van: { [vanId]: { ida: [], volta12: [], volta17: [] } }
   const rotasEditadas = ref({})
 
   const STORAGE_KEY = 'adminAssignments'
@@ -26,7 +22,6 @@ export const useAdminStore = defineStore('admin', () => {
         }
       }
     } catch (_) {
-      // ignore
     }
     
     try {
@@ -38,7 +33,6 @@ export const useAdminStore = defineStore('admin', () => {
         }
       }
     } catch (_) {
-      // ignore
     }
 
     try {
@@ -50,7 +44,6 @@ export const useAdminStore = defineStore('admin', () => {
         }
       }
     } catch (_) {
-      // ignore
     }
   }
 
@@ -58,7 +51,6 @@ export const useAdminStore = defineStore('admin', () => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(assignments.value))
     } catch (_) {
-      // ignore
     }
   }
 
@@ -66,7 +58,6 @@ export const useAdminStore = defineStore('admin', () => {
     try {
       localStorage.setItem(STATUS_STORAGE_KEY, JSON.stringify(vanStatus.value))
     } catch (_) {
-      // ignore
     }
   }
 
@@ -74,15 +65,12 @@ export const useAdminStore = defineStore('admin', () => {
     try {
       localStorage.setItem(ROTAS_STORAGE_KEY, JSON.stringify(rotasEditadas.value))
     } catch (_) {
-      // ignore
     }
   }
 
   loadFromStorage()
 
-  // Inicializar status das vans se não existir
   function initializeVanStatus() {
-    // Importar as vans do userProfile para inicializar status
     import('@/stores/userProfile').then(({ useUserProfileStore }) => {
       const userProfile = useUserProfileStore()
       userProfile.vans.forEach(van => {
@@ -92,11 +80,9 @@ export const useAdminStore = defineStore('admin', () => {
       })
       persistStatus()
     }).catch(() => {
-      // Se não conseguir importar, não faz nada
     })
   }
 
-  // Inicializar status das vans
   initializeVanStatus()
 
   const currentAssignment = computed(() => {
@@ -118,14 +104,12 @@ export const useAdminStore = defineStore('admin', () => {
   })
 
   function selectVan(van) {
-    // Aplicar o status persistido à van
     if (van) {
       const statusPersistido = getVanStatus(van.id)
       van.status = statusPersistido
     }
     
     selectedVan.value = van
-    // garante estrutura para a van
     const id = van?.id
     if (id !== undefined && !assignments.value[id]) {
       assignments.value[id] = { driver: null, passengers: [] }
@@ -135,12 +119,10 @@ export const useAdminStore = defineStore('admin', () => {
 
   function addPassenger(passageiro) {
     if (!selectedVan.value) return
-    // Verificar se a van está em manutenção
     if (selectedVan.value.status === 'Manutenção') {
       alert('Não é possível adicionar passageiros a uma van em manutenção.')
       return
     }
-    // Remover passageiro de qualquer outra van em que esteja
     const alvoId = selectedVan.value.id
     for (const [vanId, assn] of Object.entries(assignments.value)) {
       if ((assn.passengers || []).some(p => p.id === passageiro.id)) {
@@ -150,7 +132,6 @@ export const useAdminStore = defineStore('admin', () => {
         }
       }
     }
-    // Adicionar na van atual, respeitando capacidade
     const assnAtual = currentAssignment.value
     if (capacidadeRestante.value <= 0) return
     const novaLista = [...(assnAtual.passengers || []), passageiro]
@@ -173,19 +154,16 @@ export const useAdminStore = defineStore('admin', () => {
 
   function selectDriver(motorista) {
     if (!selectedVan.value) return
-    // Verificar se a van está em manutenção
     if (selectedVan.value.status === 'Manutenção') {
       alert('Não é possível atribuir motoristas a uma van em manutenção.')
       return
     }
     const alvoId = selectedVan.value.id
-    // Remover motorista de qualquer outra van
     for (const [vanId, assn] of Object.entries(assignments.value)) {
       if (assn.driver && assn.driver.id === motorista.id) {
         assignments.value[vanId] = { ...assn, driver: null }
       }
     }
-    // Atribuir na van atual
     const assnAtual = currentAssignment.value
     assignments.value[alvoId] = { ...assnAtual, driver: motorista }
     persist()
@@ -205,13 +183,10 @@ export const useAdminStore = defineStore('admin', () => {
     persist()
   }
 
-  // persiste quando assignments mudar profundamente
   watch(assignments, persist, { deep: true })
   
-  // persiste quando vanStatus mudar profundamente
   watch(vanStatus, persistStatus, { deep: true })
 
-  // persiste quando rotasEditadas mudar profundamente
   watch(rotasEditadas, persistRotas, { deep: true })
 
   function getDriverVanId(motoristaId) {
