@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import { useUserProfileStore } from '@/stores/userProfile'
@@ -12,13 +12,13 @@ const authState = useAuthStateStore()
 const userProfile = useUserProfileStore()
 const router = useRouter()
 
+// Estados gerais
 const modoEdicao = ref(false)
 const verSenha = ref(false)
-
-
 const abrirPerfil = ref(true)
- const abrirTransportes = ref(false)
+const abrirTransportes = ref(false)
 
+// Inputs de perfil
 const nome = ref('')
 const telefone = ref('')
 const email = ref('')
@@ -27,37 +27,46 @@ const nascimento = ref('')
 const endereco = ref('Rua Principal, 100')
 const descricao = ref('')
 
+// Inputs ida e volta
 const ira = ref('')
 const voltara = ref('')
 const horario = ref('')
 
+// Inicialização do tema e autenticação
 onMounted(() => {
   themeManager.init()
   authState.restaurarState()
+  initMap()
+})
 
-  if (userProfile.usuarioAtual) {
-    const p = userProfile.usuarioAtual
-    nome.value = p.nome
-    telefone.value = p.telefone
-    email.value = p.email
-    senha.value = p.senha
-    nascimento.value = p.nascimento
-    endereco.value = p.endereco
-    descricao.value = p.descricao
-  }
+// Observa mudanças no usuário para atualizar inputs
+watch(
+  () => userProfile.usuarioAtual,
+  (novoUsuario) => {
+    if (novoUsuario) {
+      nome.value = novoUsuario.nome
+      telefone.value = novoUsuario.telefone
+      email.value = novoUsuario.email
+      senha.value = novoUsuario.senha
+      nascimento.value = novoUsuario.nascimento
+      endereco.value = novoUsuario.endereco
+      descricao.value = novoUsuario.descricao
+    }
+  },
+  { immediate: true }
+)
 
-  const map = L.map("mapa").setView([-23.5505, -46.6333], 13)
-
+// Inicialização do mapa
+function initMap() {
+  const mapId = window.innerWidth > 768 ? "mapaNotebook" : "mapaCelular"
+  const map = L.map(mapId).setView([-23.5505, -46.6333], 13)
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors"
   }).addTo(map)
+  L.marker([-23.5505, -46.6333]).addTo(map).bindPopup("Aqui é São Paulo!").openPopup()
+}
 
-  L.marker([-23.5505, -46.6333])
-    .addTo(map)
-    .bindPopup("Aqui é São Paulo!")
-    .openPopup()
-})
-
+// Toggle edição do perfil
 function toggleEdicao() {
   if (modoEdicao.value && userProfile.usuarioAtual) {
     userProfile.atualizarPerfil({
@@ -69,13 +78,21 @@ function toggleEdicao() {
       endereco: endereco.value,
       descricao: descricao.value
     })
+    alert('Perfil atualizado com sucesso!')
   }
   modoEdicao.value = !modoEdicao.value
 }
 
+// Sair da conta
 function sairDaConta() {
   authState.reset()
   router.push('/')
+}
+
+// Confirmar ida/volta
+function confirmarIdaVolta() {
+  console.log({ ira: ira.value, voltara: voltara.value, horario: horario.value })
+  alert("Informações de ida e volta salvas!")
 }
 </script>
 
@@ -99,20 +116,17 @@ function sairDaConta() {
 
       <div class="inputs">
         <p class="info-label">Nome completo:</p>
-        <div class="input-group">
-          <span class="mdi mdi-account"></span>
+        <div class="input-group"><span class="mdi mdi-account"></span>
           <input v-model="nome" :readonly="!modoEdicao" class="input-text" type="text" />
         </div>
 
         <p class="info-label">Telefone:</p>
-        <div class="input-group">
-          <span class="mdi mdi-phone"></span>
+        <div class="input-group"><span class="mdi mdi-phone"></span>
           <input v-model="telefone" :readonly="!modoEdicao" class="input-text" type="tel" />
         </div>
 
         <p class="info-label">Email:</p>
-        <div class="input-group">
-          <span class="mdi mdi-email"></span>
+        <div class="input-group"><span class="mdi mdi-email"></span>
           <input v-model="email" :readonly="!modoEdicao" class="input-text" type="email" />
         </div>
 
@@ -157,8 +171,7 @@ function sairDaConta() {
           </div>
         </div>
 
-      <div id="mapa" class="mapa"></div>
-
+        <div id="mapaNotebook" class="mapa"></div>
       </div>
 
       <div class="ida-volta" :style="{ backgroundColor: themeManager.fundoAlternativo, color: themeManager.text }">
@@ -176,79 +189,68 @@ function sairDaConta() {
           </div>
           <div class="ida-card" :style="{ backgroundColor: themeManager.fundo }">
             <p>VOLTAREI EM QUE HORÁRIO?</p>
-            <label>
-              <input type="radio" v-model="horario" value="12" :disabled="voltara !== 'sim'" /> 12:00H
-            </label>
-            <label>
-              <input type="radio" v-model="horario" value="17" :disabled="voltara !== 'sim'" /> 17:00H
-            </label>
+            <label><input type="radio" v-model="horario" value="12" :disabled="voltara !== 'sim'" /> 12:00H</label>
+            <label><input type="radio" v-model="horario" value="17" :disabled="voltara !== 'sim'" /> 17:00H</label>
           </div>
         </div>
-        <button class="confirmar" :style="{ backgroundColor: themeManager.detalhe }">CONFIRMAR</button>
+        <button @click="confirmarIdaVolta" class="confirmar"
+          :style="{ backgroundColor: themeManager.detalhe }">CONFIRMAR</button>
       </div>
     </div>
   </section>
+
   <section class="celular" :style="{ backgroundColor: themeManager.fundo }">
-     <div class="barra-retratil" :style="{ backgroundColor: themeManager.detalhe }">
+    <div class="barra-retratil" :style="{ backgroundColor: themeManager.detalhe }">
       <div class="barra-titulo" @click="abrirPerfil = !abrirPerfil">
         <h2>MEU PERFIL</h2>
         <span class="mdi" :class="abrirPerfil ? 'mdi-chevron-up' : 'mdi-chevron-down'"></span>
       </div>
-
-        <div v-show="abrirPerfil" class="conteudo-retratil">
-          <div class="perfil-topo">
-            <img src="/public/src-auth/passageiro.png" class="avatar" alt="">
-            <div class="enderecos">
-              <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline"></span></p>
-              <ul>
-                <li v-if="endereco">
-                  <span class="mdi mdi-map-marker"></span>
-                  <p>{{ endereco }}</p>
-                  <span class="mdi mdi-pencil"></span>
-                </li>
-              </ul>
-            </div>
+      <div v-show="abrirPerfil" class="conteudo-retratil">
+        <div class="perfil-topo">
+          <img src="/public/src-auth/passageiro.png" class="avatar" alt="">
+          <div class="enderecos">
+            <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline"></span></p>
+            <ul>
+              <li v-if="endereco">
+                <span class="mdi mdi-map-marker"></span>
+                <p>{{ endereco }}</p>
+                <span class="mdi mdi-pencil"></span>
+              </li>
+            </ul>
           </div>
-
-          <div class="inputs">
-        <p class="info-label">Nome completo:</p>
-        <div class="input-group">
-          <span class="mdi mdi-account"></span>
-          <input v-model="nome" :readonly="!modoEdicao" class="input-text" type="text" />
         </div>
 
-        <p class="info-label">Telefone:</p>
-        <div class="input-group">
-          <span class="mdi mdi-phone"></span>
-          <input v-model="telefone" :readonly="!modoEdicao" class="input-text" type="tel" />
+        <div class="inputs">
+          <p class="info-label">Nome completo:</p>
+          <div class="input-group"><span class="mdi mdi-account"></span>
+            <input v-model="nome" :readonly="!modoEdicao" class="input-text" type="text" />
+          </div>
+          <p class="info-label">Telefone:</p>
+          <div class="input-group"><span class="mdi mdi-phone"></span>
+            <input v-model="telefone" :readonly="!modoEdicao" class="input-text" type="tel" />
+          </div>
+          <p class="info-label">Email:</p>
+          <div class="input-group"><span class="mdi mdi-email"></span>
+            <input v-model="email" :readonly="!modoEdicao" class="input-text" type="email" />
+          </div>
+          <p class="info-label">Senha:</p>
+          <div class="input-group senha-campo">
+            <span class="mdi mdi-lock"></span>
+            <input :type="verSenha ? 'text' : 'password'" v-model="senha" :readonly="!modoEdicao" class="input-text" />
+            <span class="mdi" :class="verSenha ? 'mdi-eye-off' : 'mdi-eye'" @click="verSenha = !verSenha"></span>
+          </div>
+          <p class="info-label">Data de nascimento:</p>
+          <div class="input-group data-campo">
+            <span class="mdi mdi-calendar-month-outline"></span>
+            <input type="date" v-model="nascimento" :readonly="!modoEdicao" class="input-text" />
+          </div>
         </div>
 
-        <p class="info-label">Email:</p>
-        <div class="input-group">
-          <span class="mdi mdi-email"></span>
-          <input v-model="email" :readonly="!modoEdicao" class="input-text" type="email" />
+        <div class="editar">
+          <span @click="toggleEdicao">{{ modoEdicao ? 'Salvar' : 'Editar' }}</span> | Ver informação completa
         </div>
-
-        <p class="info-label">Senha:</p>
-        <div class="input-group senha-campo">
-          <span class="mdi mdi-lock"></span>
-          <input :type="verSenha ? 'text' : 'password'" v-model="senha" :readonly="!modoEdicao" class="input-text" />
-          <span class="mdi" :class="verSenha ? 'mdi-eye-off' : 'mdi-eye'" @click="verSenha = !verSenha"></span>
-        </div>
-
-        <p class="info-label">Data de nascimento:</p>
-        <div class="input-group data-campo">
-          <span class="mdi mdi-calendar-month-outline"></span>
-          <input type="date" v-model="nascimento" :readonly="!modoEdicao" class="input-text" />
-        </div>
+        <div class="sair" @click="sairDaConta">SAIR DA CONTA</div>
       </div>
-
-          <div class="editar">
-            <span @click="toggleEdicao">{{ modoEdicao ? 'Salvar' : 'Editar' }}</span> | Ver informação completa
-          </div>
-
-          <div class="sair" @click="sairDaConta">SAIR DA CONTA</div>
-        </div>
     </div>
 
     <div class="barra-retratil" :style="{ backgroundColor: themeManager.detalhe }">
@@ -256,67 +258,61 @@ function sairDaConta() {
         <h2>MEUS TRANSPORTES</h2>
         <span class="mdi" :class="abrirTransportes ? 'mdi-chevron-up' : 'mdi-chevron-down'"></span>
       </div>
-
-        <div v-show="abrirTransportes" class="conteudo-retratil">
-          <p><strong>Motorista:</strong></p>
-          <div class="card">
-            <img src="/public/src-auth/motorista.png" class="avatar" alt="">
-            <div class="card-text">
-              <p>{{ userProfile.usuarioAtual?.motorista?.nome || 'Pedro' }}</p>
-              <p>{{ userProfile.usuarioAtual?.motorista?.telefone || '(47) 99999-9999' }}</p>
-            </div>
-          </div>
-
-          <p><strong>Veículo:</strong></p>
-          <div class="card">
-            <div class="card-separacao-text"></div>
-            <p>{{ userProfile.usuarioAtual?.van?.nome || 'Van Executiva Premium' }}</p>
+      <div v-show="abrirTransportes" class="conteudo-retratil">
+        <p><strong>Motorista:</strong></p>
+        <div class="card">
+          <img src="/public/src-auth/motorista.png" class="avatar" alt="">
+          <div class="card-text">
+            <p>{{ userProfile.usuarioAtual?.motorista?.nome || 'Pedro' }}</p>
+            <p>{{ userProfile.usuarioAtual?.motorista?.telefone || '(47) 99999-9999' }}</p>
           </div>
         </div>
-
-        <div id="mapa" class="mapa"></div>
-      </div>
-
-      <div class="ida-volta" :style="{ backgroundColor: themeManager.fundoAlternativo, color: themeManager.text }">
-        <h2>MINHA IDA E VOLTA</h2>
-        <div class="ida-grid">
-          <div class="ida-card" :style="{ backgroundColor: themeManager.fundo }">
-            <p>IREI COM O TRANSPORTE DIA 02/07?</p>
-            <label><input type="radio" v-model="ira" value="sim" /> SIM</label>
-            <label><input type="radio" v-model="ira" value="nao" /> NÃO</label>
-          </div>
-          <div class="ida-card" :style="{ backgroundColor: themeManager.fundo }">
-            <p>VOLTAREI COM O TRANSPORTE DIA 02/07?</p>
-            <label><input type="radio" v-model="voltara" value="sim" /> SIM</label>
-            <label><input type="radio" v-model="voltara" value="nao" /> NÃO</label>
-          </div>
-          <div class="ida-card" :style="{ backgroundColor: themeManager.fundo }">
-            <p>VOLTAREI EM QUE HORÁRIO?</p>
-            <label>
-              <input type="radio" v-model="horario" value="12" :disabled="voltara !== 'sim'" /> 12:00H
-            </label>
-            <label>
-              <input type="radio" v-model="horario" value="17" :disabled="voltara !== 'sim'" /> 17:00H
-            </label>
-          </div>
+        <p><strong>Veículo:</strong></p>
+        <div class="card">
+          <div class="card-separacao-text"></div>
+          <p>{{ userProfile.usuarioAtual?.van?.nome || 'Van Executiva Premium' }}</p>
         </div>
-        <button class="confirmar" :style="{ backgroundColor: themeManager.detalhe }">CONFIRMAR</button>
       </div>
+      <div id="mapaCelular" class="mapa"></div>
+    </div>
+
+    <div class="ida-volta" :style="{ backgroundColor: themeManager.fundoAlternativo, color: themeManager.text }">
+      <h2>MINHA IDA E VOLTA</h2>
+      <div class="ida-grid">
+        <div class="ida-card" :style="{ backgroundColor: themeManager.fundo }">
+          <p>IREI COM O TRANSPORTE DIA 02/07?</p>
+          <label><input type="radio" v-model="ira" value="sim" /> SIM</label>
+          <label><input type="radio" v-model="ira" value="nao" /> NÃO</label>
+        </div>
+        <div class="ida-card" :style="{ backgroundColor: themeManager.fundo }">
+          <p>VOLTAREI COM O TRANSPORTE DIA 02/07?</p>
+          <label><input type="radio" v-model="voltara" value="sim" /> SIM</label>
+          <label><input type="radio" v-model="voltara" value="nao" /> NÃO</label>
+        </div>
+        <div class="ida-card" :style="{ backgroundColor: themeManager.fundo }">
+          <p>VOLTAREI EM QUE HORÁRIO?</p>
+          <label><input type="radio" v-model="horario" value="12" :disabled="voltara !== 'sim'" /> 12:00H</label>
+          <label><input type="radio" v-model="horario" value="17" :disabled="voltara !== 'sim'" /> 17:00H</label>
+        </div>
+      </div>
+      <button @click="confirmarIdaVolta" class="confirmar"
+        :style="{ backgroundColor: themeManager.detalhe }">CONFIRMAR</button>
+    </div>
   </section>
 </template>
 
-<style scoped>
 
-.notebook, .celular {
+<style scoped>
+.notebook,
+.celular {
   padding: 20px 130px 60px 130px;
   min-height: 80vh;
   display: flex;
   gap: 16px;
   justify-content: space-between;
-  flex-wrap: wrap;
 }
 
-.celular{
+.celular {
   display: none;
 }
 
@@ -325,6 +321,7 @@ function sairDaConta() {
   gap: 16px;
   flex-wrap: wrap;
 }
+
 .perfil {
   color: #fff;
   border-radius: 8px;
@@ -383,7 +380,7 @@ function sairDaConta() {
   color: #fff;
 }
 
-.enderecos ul li p{
+.enderecos ul li p {
   font-size: 15px;
   border: none;
   align-items: center;
@@ -577,9 +574,11 @@ function sairDaConta() {
   .notebook {
     display: none;
   }
-  .celular{
+
+  .celular {
     display: block;
   }
+
   .celular {
     padding: 60px 20px 60px 20px;
     min-height: 80vh;
@@ -653,7 +652,7 @@ function sairDaConta() {
     align-items: center;
   }
 
-  .enderecos ul li p{
+  .enderecos ul li p {
     font-size: 15px;
     border: none;
     align-items: center;
@@ -671,56 +670,56 @@ function sairDaConta() {
   }
 
   .barra-retratil {
-  border-radius: 8px;
-  margin-bottom: 12px;
-  overflow: hidden;
-  width: 100%;
-}
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    width: 100%;
+  }
 
-.barra-titulo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  padding: 14px 20px;
-  font-size: 20px;
-  width: 100%;
-  font-weight: bold;
-  color: #fff;
-  background: rgba(0,0,0,0.15);
-}
+  .barra-titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 14px 20px;
+    font-size: 20px;
+    width: 100%;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.15);
+  }
 
-.conteudo-retratil {
-  padding: 16px;
-}
+  .conteudo-retratil {
+    padding: 16px;
+  }
 
 
-.ida-volta {
-  padding: 20px 10px;
-  border-radius: 8px;
-  width: 100%;
-}
+  .ida-volta {
+    padding: 20px 10px;
+    border-radius: 8px;
+    width: 100%;
+  }
 
-.ida-volta h2 {
-  font-size: 1rem;
-  margin-bottom: 0px;
-}
+  .ida-volta h2 {
+    font-size: 1rem;
+    margin-bottom: 0px;
+  }
 
-.ida-card {
-  padding: 10px;
-  margin-top: 10px;
-}
+  .ida-card {
+    padding: 10px;
+    margin-top: 10px;
+  }
 
-.ida-grid {
-  display: block;
-}
+  .ida-grid {
+    display: block;
+  }
 
-.confirmar {
-  padding: 10px 18px;
-  width: 100%;
-  border-radius: 8px;
-  font-size: 20px;
-}
+  .confirmar {
+    padding: 10px 18px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 20px;
+  }
 
 }
 </style>

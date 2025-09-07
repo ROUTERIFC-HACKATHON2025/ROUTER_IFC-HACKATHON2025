@@ -4,7 +4,7 @@ import { ref, computed, watchEffect } from 'vue'
 const CORES_CLARAS = {
   icone: 'mdi mdi-weather-sunny',
   fundo: '#ffffff',
-  fundoAlternativo: '#f1f1f1',
+  fundoAlternativo: '#fff',
   texto: '#000',
   detalhe: '#1863A2',
   detalheAlternativo: '#59A3E2',
