@@ -11,13 +11,10 @@ const showHeader = ref(true)
 let lastScroll = 0
 let headerHeight = 0
 
-// Estados da busca
 const searchQuery = ref('')
 const showSearchResults = ref(false)
 const searchResults = ref([])
 const isLoading = ref(false)
-
-// Dados para busca baseados nas páginas existentes
 const searchData = ref({
   paginas: [
     { id: 1, nome: 'Início', descricao: 'Página principal do site', tipo: 'pagina', rota: '/' },
@@ -48,7 +45,6 @@ onMounted(() => {
   if (headerEl) headerHeight = headerEl.offsetHeight
   window.addEventListener('scroll', handleScroll)
   
-  // Fechar resultados ao clicar fora
   document.addEventListener('click', handleClickOutside)
 })
 
@@ -65,7 +61,6 @@ function fecharMenu() {
   menuAberto.value = false
 }
 
-// Função de busca
 function performSearch() {
   if (!searchQuery.value.trim()) {
     searchResults.value = []
@@ -76,11 +71,9 @@ function performSearch() {
   isLoading.value = true
   const query = searchQuery.value.toLowerCase().trim()
   
-  // Simular delay de busca
   setTimeout(() => {
     const results = []
     
-    // Buscar em páginas
     searchData.value.paginas.forEach(pagina => {
       if (pagina.nome.toLowerCase().includes(query) || 
           pagina.descricao.toLowerCase().includes(query)) {
@@ -88,7 +81,6 @@ function performSearch() {
       }
     })
     
-    // Buscar em empresas
     searchData.value.empresas.forEach(empresa => {
       if (empresa.nome.toLowerCase().includes(query) || 
           empresa.descricao.toLowerCase().includes(query)) {
@@ -96,7 +88,6 @@ function performSearch() {
       }
     })
     
-    // Buscar em empresas (incluindo o campo alterar)
     searchData.value.empresas.forEach(empresa => {
       if (empresa.nome.toLowerCase().includes(query) || 
           empresa.descricao.toLowerCase().includes(query) ||
@@ -111,7 +102,6 @@ function performSearch() {
   }, 300)
 }
 
-// Observar mudanças na busca
 watch(searchQuery, (newQuery) => {
   if (newQuery.trim()) {
     performSearch()
@@ -121,7 +111,6 @@ watch(searchQuery, (newQuery) => {
   }
 })
 
-// Fechar resultados ao clicar fora
 function handleClickOutside(event) {
   const searchContainer = document.querySelector('.search')
   if (searchContainer && !searchContainer.contains(event.target)) {
@@ -129,21 +118,17 @@ function handleClickOutside(event) {
   }
 }
 
-// Navegar para resultado
 function navigateToResult(result) {
   showSearchResults.value = false
   searchQuery.value = ''
   
-  // Usar a rota específica do resultado
   if (result.rota) {
-    // Se for empresa com alterar específico, passar como query parameter
     if (result.tipo === 'empresa' && result.alterar) {
       router.push({ path: result.rota, query: { empresa: result.alterar } })
     } else {
       router.push(result.rota)
     }
   } else {
-    // Fallback para tipos específicos
     switch (result.tipo) {
       case 'pagina':
         router.push(result.rota)
@@ -157,7 +142,6 @@ function navigateToResult(result) {
   }
 }
 
-// Buscar ao pressionar Enter
 function handleSearchKeydown(event) {
   if (event.key === 'Enter') {
     performSearch()
@@ -175,10 +159,12 @@ function handleSearchKeydown(event) {
       <div class="container"
         :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
         <div class="logo">
-          <img :src="themeManager.logo" alt="Logotipo ROUTER" />
-          <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">
-            Sua rota<br /><span>mais segura</span>
-          </p>
+          <RouterLink to="/">
+            <img :src="themeManager.logo" alt="Logotipo ROUTER" />
+            <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">
+              Sua rota<br /><span>mais segura</span>
+            </p>
+          </RouterLink>
         </div>
 
         <div class="search">
@@ -195,12 +181,10 @@ function handleSearchKeydown(event) {
           />
           <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
           
-          <!-- Loading spinner -->
           <div v-if="isLoading" class="search-loading">
             <div class="spinner"></div>
           </div>
           
-          <!-- Resultados da busca -->
           <div v-if="showSearchResults && searchResults.length > 0" class="search-results" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
             <div 
               v-for="result in searchResults" 
@@ -218,7 +202,6 @@ function handleSearchKeydown(event) {
             </div>
           </div>
           
-          <!-- Nenhum resultado -->
           <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
             <span class="mdi mdi-magnify-close" :style="{ color: themeManager.detalhe }"></span>
             <p :style="{ color: themeManager.text }">Nenhum resultado encontrado</p>
@@ -280,12 +263,9 @@ function handleSearchKeydown(event) {
           />
           <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
           
-          <!-- Loading spinner mobile -->
           <div v-if="isLoading" class="search-loading">
             <div class="spinner"></div>
           </div>
-          
-          <!-- Resultados da busca mobile -->
           <div v-if="showSearchResults && searchResults.length > 0" class="search-results mobile" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
             <div 
               v-for="result in searchResults" 
@@ -311,7 +291,6 @@ function handleSearchKeydown(event) {
             </div>
           </div>
           
-          <!-- Nenhum resultado mobile -->
           <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results mobile" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
             <span class="mdi mdi-magnify-close" :style="{ color: themeManager.detalhe }"></span>
             <p :style="{ color: themeManager.text }">Nenhum resultado</p>
@@ -390,7 +369,7 @@ function handleSearchKeydown(event) {
   margin: 0 120px;
 }
 
-.logo {
+.logo a {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -440,7 +419,6 @@ function handleSearchKeydown(event) {
   transform: translateY(-50%) scale(1.2);
 }
 
-/* Estilos para os resultados da busca */
 .search-results {
   position: absolute;
   top: 100%;
@@ -519,7 +497,6 @@ function handleSearchKeydown(event) {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Loading spinner */
 .search-loading {
   position: absolute;
   right: 45px;
@@ -541,7 +518,6 @@ function handleSearchKeydown(event) {
   100% { transform: rotate(360deg); }
 }
 
-/* Nenhum resultado */
 .search-no-results {
   position: absolute;
   top: 100%;
@@ -684,7 +660,29 @@ nav ul li a span {
 
   .logo-bar {
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    padding: 5px 0;
+    gap: 0px;
+    }
+
+  .logo-bar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-bar img {
+    width: 100px;
+    height: auto;
+  }
+
+  .logo-bar p {
+    font-size: 0.8rem;
+  margin: 0;
+  padding-left: 8px;
+  line-height: 1.2;
   }
 
   .logo-bar .mdi {

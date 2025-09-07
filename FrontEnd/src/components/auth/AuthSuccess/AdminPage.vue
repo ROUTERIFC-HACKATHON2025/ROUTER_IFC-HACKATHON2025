@@ -26,6 +26,5 @@ const authState = useAuthStateStore()
 <style scoped>
 .pagina-gerenciamento {
     text-align: center;
-    padding: 20px 100px 100px 100px;
 }
 </style>

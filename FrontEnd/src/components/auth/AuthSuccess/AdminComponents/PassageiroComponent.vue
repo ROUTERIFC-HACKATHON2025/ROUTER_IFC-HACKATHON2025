@@ -21,7 +21,6 @@ const passageirosFiltrados = computed(() => {
     const termoBusca = busca.value.toLowerCase().trim()
     
     return userProfile.passageiros.filter(m => {
-        // Buscar apenas por nome (case-insensitive)
         if (m.nome && m.nome.toLowerCase().includes(termoBusca)) return true
         
         return false
@@ -49,7 +48,7 @@ function jaAdicionado(id) {
         <h1 class="titulo" :style="{ color: themeManager.text }">
             PÁGINA DE
             <span class="azul" :style="{ color: themeManager.detalheAlternativo }">
-                GERENCIAMENTO <br> (NOME DA EMPRESA)
+                GERENCIAMENTO 
             </span>
         </h1>
 
@@ -142,6 +141,10 @@ function jaAdicionado(id) {
 </template>
 
 <style scoped>
+section{
+    padding: 0px 100px 100px 100px;
+
+}
 .titulo {
     font-size: 3rem;
     margin: 30px 0 0px 0;
@@ -385,4 +388,74 @@ h2 {
 .btn-limpar-busca:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
+</style>
+
+<style scoped>
+@media (max-width: 768px) {
+    
+  section{
+    padding: 0px 0px 50px 0px;
+    
+  }
+  .titulo {
+  font-size: 2.5rem;
+  margin: 20px 0 0px 0;
+}
+
+.link {
+  margin-bottom: 0px;
+}
+
+.gerenciar {
+  margin-top: 30px;
+    border: none;
+    border-radius: 0;
+}
+
+.header {
+  display: block;
+  padding: 20px 5px 20px 5px;
+  border-radius: 0;
+}
+
+h2 {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.detalhes {
+    padding: 50px 20px;
+    border-radius: 8px;
+}
+
+.card-detalhes {
+    display: block;
+}
+
+.avatarG{
+ width: 150px;
+    height: 150px;
+}
+
+.info {
+    border-right: none;
+    border-left: none;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 30px 0px;
+    margin: 30px 0;
+}
+
+.enderecos {
+    width: 250px;
+    margin: 0 45px;
+}
+
+.enderecos h3{
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+  
+}
+}
+
 </style>

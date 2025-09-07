@@ -24,10 +24,9 @@ const vanSelecionada = computed(() => admin.selectedVan || {
 })
 const motoristaSelecionado = computed(() => admin.selectedDriver)
 
-// Estados para controlar seções retráteis
 const infoExpandida = ref(false)
 const caracteristicasExpandida = ref(false)
-const motoristaExpandido = ref(true) // Motorista começa expandido
+const motoristaExpandido = ref(true) 
 
 function toggleInfo() {
   infoExpandida.value = !infoExpandida.value
@@ -49,7 +48,6 @@ function toggleStatusVan() {
     if (confirm(`Tem certeza que deseja ${acao} a van "${admin.selectedVan.nome}"?`)) {
       admin.updateVanStatus(novoStatus)
       
-      // Se colocando em manutenção, remover motorista e passageiros
       if (novoStatus === 'Manutenção') {
         admin.clearDriver()
         admin.clearAllPassengers()
@@ -67,11 +65,9 @@ const rotaVolta12 = computed(() => admin.getRotaEditada('volta12'))
 const rotaVolta17 = computed(() => admin.getRotaEditada('volta17'))
 
 function editarRota(tipoRota, passageiros) {
-  // Usar as rotas editadas salvas ou as rotas padrão se não houver edições
   const rotaAtual = admin.getRotaEditada(tipoRota)
   const passageirosParaEditar = rotaAtual.length > 0 ? rotaAtual : passageiros
   
-  // Armazenar informações da rota sendo editada
   admin.setRotaEmEdicao({ tipo: tipoRota, passageiros: passageirosParaEditar })
   authState.mudarAdminPage('editarRota')
 }
@@ -82,7 +78,7 @@ function editarRota(tipoRota, passageiros) {
     <h1 class="titulo">
       PÁGINA DE 
       <span class="azul" :style="{ color: themeManager.detalheAlternativo }">
-        GERENCIAMENTO <br> (NOME DA EMPRESA)
+        GERENCIAMENTO
       </span>
     </h1>
 
@@ -233,9 +229,14 @@ function editarRota(tipoRota, passageiros) {
 </template>
 
 <style scoped>
+section{
+    padding: 0px 100px 100px 100px;
+
+}
+
 .titulo {
-  font-size: 2.5rem;
-  margin: 30px 0 10px;
+  font-size: 3rem;
+  margin: 30px 0 0px 0;
   text-align: center;
 }
 
@@ -245,7 +246,7 @@ function editarRota(tipoRota, passageiros) {
   text-decoration: underline;
   font-weight: 500;
   cursor: pointer;
-  margin-bottom: 30px;
+  margin-bottom: 60px;
 }
 
 .gerenciar {
@@ -389,7 +390,6 @@ function editarRota(tipoRota, passageiros) {
   font-size: 1.2rem;
 }
 
-/* Transição suave para o conteúdo */
 .secao-conteudo {
   transition: all 0.3s ease;
 }
@@ -523,5 +523,66 @@ function editarRota(tipoRota, passageiros) {
   border-radius: 0;
   font-size: 1.7rem;
   border-radius: 0 0 8px 8px;
+}
+
+@media (max-width: 768px) {
+  section{
+    padding: 0px 0px 50px 0px;
+  }
+  .titulo {
+    font-size: 2.5rem;
+  margin: 10px 0 0px;
+}
+.secao-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #fff;
+  font-weight: bold;
+}
+
+.gerenciar {
+  display: block;
+  gap: 20px;
+  padding: 25px;
+  border-radius: 0;
+}
+.col-info {
+  border-right: none;
+  padding: 20px 10px 20px 10px;
+}
+
+.col-rotas {
+  display: grid;
+  grid-template-columns: none;
+}
+
+.rota {
+  width: 350px;
+}
+
+.rota ul {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+  height: 400px;
+  background-color: #fff;
+  overflow-y: auto;
+}
+
+.rota li {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid;
+  gap: 20px;
+}
+
+.btn-edit {
+  width: 100%;
+  border-radius: 0;
+  font-size: 1.7rem;
+  border-radius: 0 0 8px 8px;
+}
+  
 }
 </style>

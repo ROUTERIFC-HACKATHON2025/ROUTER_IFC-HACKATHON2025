@@ -10,10 +10,8 @@ const authState = useAuthStateStore()
 const userProfile = useUserProfileStore()
 const admin = useAdminStore()
 
-// Estado da busca
 const termoBusca = ref('')
 
-// Computed para filtrar vans
 const vansFiltradas = computed(() => {
   if (!termoBusca.value.trim()) {
     return userProfile.vans
@@ -22,24 +20,18 @@ const vansFiltradas = computed(() => {
   const busca = termoBusca.value.toLowerCase().trim()
   
   return userProfile.vans.filter(van => {
-    // Buscar por nome (case-insensitive)
     if (van.nome.toLowerCase().includes(busca)) return true
     
-    // Buscar por modelo (case-insensitive)
     if (van.modelo && van.modelo.toLowerCase().includes(busca)) return true
     
-    // Buscar por marca (case-insensitive)
     if (van.marca && van.marca.toLowerCase().includes(busca)) return true
     
-    // Buscar por placa (case-insensitive)
     if (van.placa && van.placa.toLowerCase().includes(busca)) return true
     
-    // Buscar por características (case-insensitive)
     if (van.caracteristicas && van.caracteristicas.some(carac => 
       carac.toLowerCase().includes(busca)
     )) return true
     
-    // Buscar por status (case-insensitive)
     const status = admin.getVanStatus(van.id)
     if (status.toLowerCase().includes(busca)) return true
     
@@ -48,14 +40,12 @@ const vansFiltradas = computed(() => {
 })
 
 function abrirConfigVan(van) {
-  // Aplicar o status persistido à van antes de selecioná-la
   const statusPersistido = admin.getVanStatus(van.id)
   van.status = statusPersistido
   admin.selectVan(van)
   authState.mudarAdminPage('configVans')
 }
 
-// Função para destacar termos de busca
 function destacarTexto(texto, termo) {
   if (!termo || !texto) return texto
   
@@ -63,7 +53,6 @@ function destacarTexto(texto, termo) {
   return texto.replace(regex, '<mark>$1</mark>')
 }
 
-// Inicializar status das vans quando o componente é montado
 onMounted(() => {
   userProfile.vans.forEach(van => {
     const statusPersistido = admin.getVanStatus(van.id)
@@ -77,13 +66,13 @@ onMounted(() => {
     <h1 class="titulo" :style="{ color: themeManager.text }">
       PÁGINA DE 
       <span class="azul" :style="{ color: themeManager.detalheAlternativo }">
-        GERENCIAMENTO <br> (NOME DA EMPRESA)
+        GERENCIAMENTO
       </span>
     </h1>
 
     <p class="footer" :style="{ color: themeManager.text }">
       <button class="link" @click="authState.mudarState('inicio')" :style="{ color: themeManager.detalhe }">
-        &larr; Voltar
+        &larr; Sair
       </button>
     </p>
 
@@ -105,7 +94,6 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- Indicador de resultados da busca -->
       <div v-if="termoBusca.trim()" class="resultados-busca" :style="{ color: themeManager.text }">
         <p>
           {{ vansFiltradas.length }} van{{ vansFiltradas.length !== 1 ? 's' : '' }} encontrada{{ vansFiltradas.length !== 1 ? 's' : '' }}
@@ -130,7 +118,6 @@ onMounted(() => {
           </div>
         </li>
         
-        <!-- Mensagem quando nenhuma van é encontrada -->
         <li v-if="termoBusca.trim() && vansFiltradas.length === 0" class="nenhuma-van">
           <div class="nenhuma-van-content">
             <span class="mdi mdi-van-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>
@@ -147,6 +134,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+section{
+    padding: 0px 100px 100px 100px;
+
+}
 
 .titulo {
   font-size: 3rem;
@@ -355,12 +346,57 @@ ul {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Estilo para destacar termos de busca */
 mark {
   background-color: #FFD700;
   color: #000;
   padding: 1px 3px;
   border-radius: 3px;
   font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  section{
+    padding: 0px 0px 50px 0px;
+  }
+  .titulo {
+  font-size: 2.5rem;
+  margin: 10px 0 0px 0;
+}
+
+.link {
+  margin-bottom: 0px;
+}
+
+.gerenciar {
+  margin-top: 30px;
+    border: none;
+    border-radius: 0;
+}
+
+.header {
+  display: block;
+  padding: 20px 5px 20px 5px;
+  border-radius: 0;
+}
+
+h2 {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.search input{
+  width: 100%;
+}
+
+ul {
+  display: block;
+  gap: 0;
+  padding: 0 0 0 50px;
+}
+
+.card-van {
+  margin-top: 20px;
+}
+  
 }
 </style>
