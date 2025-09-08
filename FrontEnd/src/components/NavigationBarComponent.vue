@@ -163,13 +163,27 @@ function handleClickOutside(event) {
   }
 }
 
+function handleResize() {
+  isMobile.value = window.innerWidth < 768
+  const headerEl = document.querySelector(isMobile.value ? '.celular' : '.notebook')
+  if (headerEl) headerHeight = headerEl.offsetHeight
+
+  // Forçar animação na mudança de tela
+  showHeader.value = false
+  setTimeout(() => showHeader.value = true, 50)
+}
+
+watch(isMobile, () => {
+  showHeader.value = false
+  setTimeout(() => showHeader.value = true, 50)
+})
+
 onMounted(() => {
-  const forma = window.innerWidth < 768 ? '.celular' : '.notebook'
-  const headerEl = document.querySelector(forma)
+  const headerEl = document.querySelector(isMobile.value ? '.celular' : '.notebook')
   if (headerEl) headerHeight = headerEl.offsetHeight
 
   window.addEventListener('scroll', handleScroll)
-  window.addEventListener('resize', () => isMobile.value = window.innerWidth < 768)
+  window.addEventListener('resize', handleResize)
   document.addEventListener('click', handleClickOutside)
 
   window.addEventListener('touchstart', handleTouchStart)
@@ -179,7 +193,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
-  window.removeEventListener('resize', () => isMobile.value = window.innerWidth < 768)
+  window.removeEventListener('resize', handleResize)
   document.removeEventListener('click', handleClickOutside)
 
   window.removeEventListener('touchstart', handleTouchStart)
@@ -350,10 +364,12 @@ onUnmounted(() => {
 .notebook,
 .celular {
   position: fixed;
-  top: 0%;
+  top: 0;
   left: 0;
   width: 100%;
   z-index: 999;
+  transition: all 0.5s ease;
+  opacity: 1;
 }
 
 .top-bar {
@@ -608,7 +624,6 @@ nav ul li a {
   font-size: 1.1em;
   text-decoration: none;
   padding: 5px 8px;
-  transition: all 0.3s ease;
   border-radius: 5px;
   font-weight: 500;
 }
