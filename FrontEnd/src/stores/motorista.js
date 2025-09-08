@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-
-import MotoristaAPI from '@/api/motorista'
+import MotoristaAPI from '../api/motorista'
 
 const motoristaApi = new MotoristaAPI();
 
@@ -31,7 +30,7 @@ export const useMotoristaStore = defineStore('motorista', () => {
     async function updateMotorista(motoristaParaAtualizar) {
         try {
             const motoristaAtualizada = await motoristaApi.updateMotorista(motoristaParaAtualizar);
-            const index = motoristas.value.findIndex(cid => cid.id === motoristaAtualizada.id);
+            const index = motoristas.value.findIndex(mot => mot.idMotorista === motoristaAtualizada.idMotorista);
             if (index !== -1) {
                 motoristas.value[index] = motoristaAtualizada;
             }
@@ -44,7 +43,7 @@ export const useMotoristaStore = defineStore('motorista', () => {
     async function deleteMotorista(idParaExcluir) {
         try {
             await motoristaApi.deleteMotorista(idParaExcluir);
-            motoristas.value = motoristas.value.filter(cid => cid.id !== idParaExcluir);
+            motoristas.value = motoristas.value.filter(mot => mot.idMotorista !== idParaExcluir);
         } catch (error) {
             console.error("Erro no store ao excluir motorista:", error);
             throw error;

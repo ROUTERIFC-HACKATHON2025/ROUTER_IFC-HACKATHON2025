@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8000/api/motoristas/";
+const API_BASE_URL = "http://localhost:8000/motoristas/";
 
 export default class MotoristaAPI {
     async getMotoristasAll() {
@@ -25,7 +25,7 @@ export default class MotoristaAPI {
 
     async updateMotorista(motorista) {
         try {
-            const url = `${API_BASE_URL}${motorista.id}/`;
+            const url = `${API_BASE_URL}${motorista.idMotorista}/`;
             const response = await axios.put(url, motorista);
             return response.data;
         } catch (error) {
@@ -34,9 +34,9 @@ export default class MotoristaAPI {
         }
     }
 
-    async deleteMotorista(id) {
+    async deleteMotorista(idMotorista) {
         try {
-            const url = `${API_BASE_URL}${id}/`;
+            const url = `${API_BASE_URL}${idMotorista}/`;
             const response = await axios.delete(url);
             return response;
         } catch (error) {

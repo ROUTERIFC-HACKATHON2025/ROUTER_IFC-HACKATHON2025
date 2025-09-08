@@ -21,7 +21,7 @@ class Motorista(models.Model):
    email = models.CharField(max_length=50, unique=True)
    senha = models.CharField(max_length=45)
    codigoCnh = models.CharField(max_length=45)
-   empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, null=True, blank=True) 
+   empresa = models.ForeignKey(Empresa, on_delete=models.PROTECT, null=True, blank=True) 
 
 
   
@@ -46,8 +46,8 @@ class Veiculo(models.Model):
 class Rotas(models.Model):
    idRotas = models.AutoField(primary_key=True) 
    horarios = models.TimeField()
-   motorista = models.ForeignKey(Motorista, on_delete=models.CASCADE, related_name='rotas')
-   veiculos = models.ForeignKey(Veiculo, on_delete=models.CASCADE, related_name='rotas')
+   motorista = models.ForeignKey(Motorista, on_delete=models.PROTECT, related_name='rotas')
+   veiculos = models.ForeignKey(Veiculo, on_delete=models.PROTECT, related_name='rotas')
 
 
    def __str__(self):
@@ -61,7 +61,7 @@ class Endereco(models.Model):
    rua = models.CharField(max_length=30)
    numero = models.IntegerField()
    cep = models.IntegerField(default="0000000000")
-   rotas = models.ForeignKey(Rotas, on_delete=models.CASCADE, related_name='endereco')
+   rotas = models.ForeignKey(Rotas, on_delete=models.PROTECT, related_name='endereco')
 
 
    def __str__(self):
@@ -79,7 +79,7 @@ class Passageiro(models.Model):
    nomeResponsavel = models.CharField(max_length=30)
    cpfResponsavel = models.IntegerField()
    telefoneResponsavel = models.IntegerField()
-   endereco = models.ManyToManyField('Endereco', related_name='passageiros')
+   endereco = models.ManyToManyField('Endereco', related_name='passageiros', blank=True, null=True)
 
 
    def __str__(self):

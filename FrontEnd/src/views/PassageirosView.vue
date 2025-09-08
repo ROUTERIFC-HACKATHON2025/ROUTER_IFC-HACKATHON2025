@@ -3,7 +3,7 @@ import { reactive, onMounted, computed } from 'vue'
 import { usePassageiroStore } from '@/stores/passageiros'
 const passageirosStore = usePassageiroStore()
 
-const defaultPassageiro = { idPassageiros: 0, nome: '', telefone: '', email: '', cpf: '', dataNasc: '', senha: '' };
+const defaultPassageiro = { idPassageiros: 0, nome: '', telefone: '', email: '', cpf: '', dataNascimento: '', nomeResponsavel: '', cpfResponsavel: '', telefoneResponsavel: '', senha: '' };
 const passageiro = reactive({ ...defaultPassageiro });
 
 const isEditing = computed(() => passageiro.idPassageiros !== 0);
@@ -59,15 +59,15 @@ async function deleteSelectedPassageiro(idPassageiros) {
             </div>
             <div>
                 <label for="telefone">Telefone:</label>
-                <input type="number" id="telefone" v-model="passageiro.telefone" maxlength="12" required />
+                <input type="text" id="telefone" v-model="passageiro.telefone" maxlength="12" required />
             </div>
             <div>
                 <label for="cpf">CPF:</label>
-                <input type="number" id="cpf" v-model="passageiro.cpf" maxlength="14" required />
+                <input type="text" id="cpf" v-model="passageiro.cpf" maxlength="14" required />
             </div>
             <div>
                 <label for="dataNascimento">Data de Nascimento:</label>
-                <input type="date" id="dataNasc" v-model="passageiro.dataNasc" maxlength="10" required />
+                <input type="date" id="dataNasc" v-model="passageiro.dataNascimento" maxlength="10" required />
             </div>
             <div>
                 <label for="nomeResponsavel">Nome do Responsável:</label>
@@ -75,11 +75,11 @@ async function deleteSelectedPassageiro(idPassageiros) {
             </div>
             <div>
                 <label for="cpfResponsavel">CPF do Responsável:</label>
-                <input type="number" id="cpfResponsavel" v-model="passageiro.cpfResponsavel" maxlength="14" required />
+                <input type="text" id="cpfResponsavel" v-model="passageiro.cpfResponsavel" maxlength="14" required />
             </div>
             <div>
                 <label for="telefoneResponsavel">Telefone do Responsável:</label>
-                <input type="number" id="telefoneResponsavel" v-model="passageiro.telefoneResponsavel" maxlength="12" required />
+                <input type="text" id="telefoneResponsavel" v-model="passageiro.telefoneResponsavel" maxlength="12" required />
             </div>
             <div>
                 <label for="senha">Senha:</label>
@@ -99,6 +99,8 @@ async function deleteSelectedPassageiro(idPassageiros) {
                     <th>Nome</th>
                     <th>Email</th>
                     <th>Telefone</th>
+                    <th>CPF</th>
+                    <th>Data de Nascimento</th>
                     <th>Nome do Responsável</th>
                     <th>CPF do Responsável</th>
                     <th>Telefone do Responsável</th>
@@ -110,6 +112,8 @@ async function deleteSelectedPassageiro(idPassageiros) {
                     <td>{{ pas.nome }}</td>
                     <td>{{ pas.email }}</td>
                     <td>{{ pas.telefone }}</td>
+                    <td>{{ pas.cpf }}</td>
+                    <td>{{ pas.dataNascimento }}</td>
                     <td>{{ pas.nomeResponsavel }}</td>
                     <td>{{ pas.cpfResponsavel }}</td>
                     <td>{{ pas.telefoneResponsavel }}</td>

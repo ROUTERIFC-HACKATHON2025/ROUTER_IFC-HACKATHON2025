@@ -4,10 +4,10 @@ import { useMotoristaStore } from '@/stores/motorista'
 
 const motoristaStore = useMotoristaStore();
 
-const defaultMotorista = { id: 0, nome: '', sigla: '' };
+const defaultMotorista = { idMotorista: 0, nome: '', email: '', telefone: '', cpf: '', codigoCnh: '', senha: '' };
 const motorista = reactive({ ...defaultMotorista });
 
-const isEditing = computed(() => motorista.id !== 0);
+const isEditing = computed(() => motorista.idMotorista !== 0);
 
 onMounted(async () => {
     await motoristaStore.getMotoristas();
@@ -26,13 +26,16 @@ async function submitMotorista() {
     resetForm();
 }
 
-function editSelectedMotorista(est) {
-    Object.assign(motorista, { ...est });
+function editSelectedMotorista(idMotorista) {
+    const mot = motoristaStore.motoristas.find(m => m.idMotorista === idMotorista);
+    if (mot) {
+        Object.assign(motorista, { ...mot });
+    }
 }
 
-async function deleteSelectedMotorista(id) {
+async function deleteSelectedMotorista(idMotorista) {
     if (confirm('Tem certeza que deseja excluir este motorista?')) {
-        await motoristaStore.deleteMotorista(id);
+        await motoristaStore.deleteMotorista(idMotorista);
     }
 }
 </script>
@@ -49,8 +52,24 @@ async function deleteSelectedMotorista(id) {
                 <input type="text" id="nome" v-model="motorista.nome" required />
             </div>
             <div>
-                <label for="sigla">Sigla (UF):</label>
-                <input type="text" id="sigla" v-model="motorista.sigla" maxlength="2" required />
+                <label for="email">Email:</label>
+                <input type="text" id="email" v-model="motorista.email" maxlength="50" required />
+            </div>
+            <div>
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" v-model="motorista.telefone" maxlength="12" required />
+            </div>
+            <div>
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" v-model="motorista.cpf" maxlength="14" required />
+            </div>
+            <div>
+                <label for="cnh">Codigo da CNH:</label>
+                <input type="text" id="cnh" v-model="motorista.codigoCnh" maxlength="14" required />
+            </div>
+            <div>
+                <label for="senha">Senha:</label>
+                <input type="text" id="senha" v-model="motorista.senha" maxlength="50" required />
             </div>
             <button type="submit">{{ isEditing ? 'Salvar Edição' : 'Adicionar Motorista' }}</button>
             <button type="button" @click="resetForm">Cancelar</button>
@@ -64,18 +83,23 @@ async function deleteSelectedMotorista(id) {
                 <tr>
                     <th>ID</th>
                     <th>Nome</th>
-                    <th>Sigla</th>
-                    <th>Ações</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>CPF</th>
+                    <th>CNH</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="est in motoristaStore.motoristas" :key="est.id">
-                    <td>{{ est.id }}</td>
-                    <td>{{ est.nome }}</td>
-                    <td>{{ est.sigla }}</td>
+                <tr v-for="mot in motoristaStore.motoristas" :key="mot.idMotorista">
+                    <td>{{ mot.idMotorista }}</td>
+                    <td>{{ mot.nome }}</td>
+                    <td>{{ mot.email }}</td>
+                    <td>{{ mot.telefone }}</td>
+                    <td>{{ mot.cpf }}</td>
+                    <td>{{ mot.codigoCnh }}</td>
                     <td>
-                        <button @click="editSelectedMotorista(est)">Editar</button>
-                        <button @click="deleteSelectedMotorista(est.id)">Excluir</button>
+                        <button @click="editSelectedMotorista(mot.idMotorista)">Editar</button>
+                        <button @click="deleteSelectedMotorista(mot.idMotorista)">Excluir</button>
                     </td>
                 </tr>
             </tbody>
