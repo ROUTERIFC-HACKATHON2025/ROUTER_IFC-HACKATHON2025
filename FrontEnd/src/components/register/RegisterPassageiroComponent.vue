@@ -1,8 +1,10 @@
 <script setup>
 import { ref, reactive, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
+import { useAuthStateStore } from '@/stores/authState'
 
 const themeManager = useThemeManagerStore()
+const authState = useAuthStateStore()
 import { usePassageiroStore } from '@/stores/passageiros'
 const passageirosStore = usePassageiroStore()
 
@@ -24,7 +26,6 @@ const isEditing = ref(false);
 
 const responsavel = ref({
   nome: '',
-  parentesco: '',
   cpf: '',
   telefone: ''
 })
