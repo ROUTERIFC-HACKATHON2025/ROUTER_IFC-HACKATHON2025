@@ -46,7 +46,7 @@ onMounted(async () => {
         </p>
         <img src="/public/src-empresa/empresa.png" alt="Ilustração empresa" />
       </div>
-    </section>
+
 
     <section class="parcerias animate-on-scroll">
       <h2 :style="{ color: themeManager.detalheAlternativo }">PARCERIAS ATUAIS</h2>

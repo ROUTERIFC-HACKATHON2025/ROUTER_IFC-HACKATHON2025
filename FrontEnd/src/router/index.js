@@ -6,12 +6,18 @@ import SobreNosView from '@/views/SobreNosView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import EmpresaView from '@/views/EmpresaView.vue'
 import IndySulView from '@/views/IndySulView.vue'
+import PassageirosView from '../views/PassageirosView.vue'
+import MotoristaView from '@/views/MotoristaView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      redirect: '/home'
+    },
+    {
+      path: '/home',
       name: 'home',
       component: HomeView,
     },
@@ -54,7 +60,17 @@ const router = createRouter({
       path: '/IndySul',
       name: 'IndySul',
       component: IndySulView,
-    }
+    },
+    {
+      path: '/passageiros',
+      name: 'passageiros',
+      component: PassageirosView,
+    },
+    {
+      path: '/motorista',
+      name: 'motorista',
+      component: MotoristaView,
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
