@@ -1,4 +1,5 @@
 <script setup>
+import { onMounted } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import RegisterPassageiroComponent from '@/components/register/RegisterPassageiroComponent.vue';
@@ -7,17 +8,22 @@ import RegisterMotoristaComponent from '@/components/register/RegisterMotoristaC
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 
+onMounted(() => {
+  themeManager.init()
+  authState.restaurarStateAuth()
+})
+
 </script>
 
 <template>
   <main :style="{ backgroundColor: themeManager.fundo }">
-    <register-passageiro-component v-if="authState.state === 'Passageiro'"/>
-    <register-motorista-component v-else/>
+    <register-passageiro-component v-if="authState.stateAuth === 'Passageiro'"/>
+    <register-motorista-component v-else-if="authState.stateAuth === 'Motorista'"/>
   </main>
 </template>
 
 <style scoped>
 main {
-  padding-top: 110px;
+  padding-top: 50px;
 }
 </style>

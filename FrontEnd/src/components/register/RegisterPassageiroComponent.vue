@@ -38,6 +38,8 @@ const endereco = ref({
 })
 
 onMounted(async () => {
+  themeManager.init()
+  authState.restaurarStateEmpresa()
   await nextTick()
 
   const animateElements = () => {
@@ -190,9 +192,8 @@ async function cadastrar() {
 </template>
 
 <style scoped>
-/* Scroll animation */
 .animate-on-scroll {
-  opacity: 0;
+  opacity: 1;
   transform: translateY(50px);
   transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
 }
