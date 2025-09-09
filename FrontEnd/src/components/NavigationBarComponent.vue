@@ -70,13 +70,13 @@ function fecharMenu() {
               <RouterLink to="/" :style="{ color: themeManager.text }">Início</RouterLink>
             </li>
             <li>
-              <RouterLink to="/SobreNos" :style="{ color: themeManager.text }">Sobre</RouterLink>
+              <RouterLink to="/sobreNos" :style="{ color: themeManager.text }">Sobre</RouterLink>
             </li>
             <li>
               <RouterLink to="/equipe" :style="{ color: themeManager.text }">Equipe</RouterLink>
             </li>
             <li>
-              <RouterLink to="/Empresa" :style="{ color: themeManager.text }">Empresas</RouterLink>
+              <RouterLink to="/empresa" :style="{ color: themeManager.text }">Empresas</RouterLink>
             </li>
             <li>
               <RouterLink to="/login">
