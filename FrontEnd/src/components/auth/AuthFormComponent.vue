@@ -1,4 +1,5 @@
 <script setup>
+import axios from 'axios'
 import { ref, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
@@ -7,6 +8,11 @@ import { useUserProfileStore } from '@/stores/userProfile'
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 const userProfile = useUserProfileStore()
+
+const usuario = ref({
+  username: '',
+  password: ''
+})
 
 const email = ref('')
 const senha = ref('')
@@ -44,38 +50,64 @@ function toggleShowPassword() {
   showPassword.value = !showPassword.value
 }
 
-function handleLogin() {
-  const emailVal = email.value.trim()
-  const senhaVal = senha.value.trim()
-
-  // ✅ Usando for...of corretamente
-  for (const passageiro of userProfile.passageiros) {
-    if (passageiro.email === emailVal && passageiro.senha === senhaVal) {
-      erro.value = ''
-      authState.mudarState('passageiro')
-      return
+async function handleLogin() {
+  const { data } = await axios.post('http://localhost:8000/api/token/', {...usuario.value })
+    .catch(err => {
+      console.error('Erro ao obter token:', err)
+      erro.value = 'E-mail ou senha incorretos.'
+    })
+  const response = await axios.get('http://localhost:8000/api/usuarios/me/', {
+    headers: {
+      Authorization: `Bearer ${data.access}`
     }
+  }).catch(err => {
+    console.error('Erro ao obter informações do usuário:', err)
+    erro.value = 'Erro ao obter informações do usuário.'
+  })
+  if (response.data.is_passageiro) {
+    authState.mudarState('passageiro')
   }
+  else if (response.data.is_motorista) {
+    authState.mudarState('motorista')
+  }
+  else if (response.data.is_admin) {
+    authState.mudarState('admin')
+  }
+  else {
+    erro.value = 'Tipo de usuário desconhecido.'
+    return
+  }
+  // const emailVal = email.value.trim()
+  // const senhaVal = senha.value.trim()
 
-  // ✅ Alternativa: poderia ser userProfile.passageiros.some(...)
-  // if (userProfile.passageiros.some(p => p.email === emailVal && p.senha === senhaVal)) {
-  //   erro.value = ''
-  //   authState.mudarState('passageiro')
-  //   return
+  // // ✅ Usando for...of corretamente
+  // for (const passageiro of userProfile.passageiros) {
+  //   if (passageiro.email === emailVal && passageiro.senha === senhaVal) {
+  //     erro.value = ''
+  //     authState.mudarState('passageiro')
+  //     return
+  //   }
   // }
 
-  if (emailVal === 'p@p' && senhaVal === 'p') {
-    erro.value = ''
-    authState.mudarState('passageiro')
-  } else if (emailVal === 'm@m' && senhaVal === 'm') {
-    erro.value = ''
-    authState.mudarState('motorista')
-  } else if (emailVal === 'admin@admin' && senhaVal === 'admin') {
-    erro.value = ''
-    authState.mudarState('admin')
-  } else {
-    erro.value = 'E-mail ou senha incorretos.'
-  }
+  // // ✅ Alternativa: poderia ser userProfile.passageiros.some(...)
+  // // if (userProfile.passageiros.some(p => p.email === emailVal && p.senha === senhaVal)) {
+  // //   erro.value = ''
+  // //   authState.mudarState('passageiro')
+  // //   return
+  // // }
+
+  // if (emailVal === 'p@p' && senhaVal === 'p') {
+  //   erro.value = ''
+  //   authState.mudarState('passageiro')
+  // } else if (emailVal === 'm@m' && senhaVal === 'm') {
+  //   erro.value = ''
+  //   authState.mudarState('motorista')
+  // } else if (emailVal === 'admin@admin' && senhaVal === 'admin') {
+  //   erro.value = ''
+  //   authState.mudarState('admin')
+  // } else {
+  //   erro.value = 'E-mail ou senha incorretos.'
+  // }
 }
 </script>
 
@@ -97,11 +129,10 @@ function handleLogin() {
           <div class="input-group">
             <span class="mdi mdi-email icon" :style="{ color: themeManager.text }"></span>
             <input
-              v-model="email"
-              type="email"
-              placeholder="E-mail"
+              v-model="usuario.username"
+              type="text"
+              placeholder="Usuario"
               class="input"
-              autocomplete="email"
               :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }"
               @keydown.enter.prevent="handleLogin" />
           </div>
@@ -109,7 +140,7 @@ function handleLogin() {
           <div class="input-group">
             <span class="mdi mdi-lock icon" :style="{ color: themeManager.text }"></span>
             <input
-              v-model="senha"
+              v-model="usuario.password"
               :type="showPassword ? 'text' : 'password'"
               placeholder="Senha"
               autocomplete="current-password"

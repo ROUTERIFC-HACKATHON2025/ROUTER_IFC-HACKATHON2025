@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User  
 
 class Empresa(models.Model):
    idEmpresa = models.AutoField(primary_key=True)
@@ -21,8 +22,8 @@ class Motorista(models.Model):
    email = models.CharField(max_length=50, unique=True)
    senha = models.CharField(max_length=45)
    codigoCnh = models.CharField(max_length=45)
-   empresa = models.ForeignKey(Empresa, on_delete=models.PROTECT, null=True, blank=True) 
-
+   empresa = models.ForeignKey(Empresa, on_delete=models.PROTECT, null=True, blank=True)
+   usuario = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True, related_name='motorista')
 
   
    def __str__(self):
@@ -80,6 +81,7 @@ class Passageiro(models.Model):
    cpfResponsavel = models.IntegerField()
    telefoneResponsavel = models.IntegerField()
    endereco = models.ManyToManyField('Endereco', related_name='passageiros', blank=True, null=True)
+   usuario = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True, related_name='passageiro')
 
 
    def __str__(self):
