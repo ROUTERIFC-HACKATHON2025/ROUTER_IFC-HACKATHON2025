@@ -2,10 +2,11 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
+import { useAuthStateStore } from '@/stores/authState'
 
 const themeManager = useThemeManagerStore()
+const authState = useAuthStateStore()
 const router = useRouter()
-onMounted(themeManager.init)
 
 const showHeader = ref(true)
 let lastScroll = 0
@@ -45,9 +46,8 @@ function handleTouchMove(event) {
 function handleTouchEnd() {
   if (!dragging.value) return
   dragging.value = false
-  if (dragOffset.value > 50) {
-    fecharMenu()
-  } else {
+  if (dragOffset.value > 50) fecharMenu()
+  else {
     dragOffset.value = 0
     overlayOpacity.value = 1
   }
@@ -62,25 +62,19 @@ const isMobile = ref(window.innerWidth < 768)
 
 const searchData = ref({
   paginas: [
-    { id: 1, nome: 'Início', descricao: 'Página principal do site', tipo: 'pagina', rota: '/' },
-    { id: 2, nome: 'Sobre Nós', descricao: 'Conheça mais sobre o projeto', tipo: 'pagina', rota: '/SobreNos' },
-    { id: 3, nome: 'Equipe', descricao: 'Nossa equipe de desenvolvimento', tipo: 'pagina', rota: '/equipe' },
-    { id: 4, nome: 'Empresas', descricao: 'Empresas parceiras de transporte', tipo: 'pagina', rota: '/Empresa' },
+    { id: 1, nome: 'Início', descricao: 'Página principal', tipo: 'pagina', rota: '/' },
+    { id: 2, nome: 'Sobre Nós', descricao: 'Conheça o projeto', tipo: 'pagina', rota: '/SobreNos' },
+    { id: 3, nome: 'Equipe', descricao: 'Nossa equipe', tipo: 'pagina', rota: '/equipe' },
+    { id: 4, nome: 'Empresas', descricao: 'Parceiros de transporte', tipo: 'pagina', rota: '/Empresa' },
     { id: 5, nome: 'Login', descricao: 'Acesse sua conta', tipo: 'pagina', rota: '/login' },
     { id: 6, nome: 'Cadastro Motorista', descricao: 'Crie sua conta', tipo: 'pagina', rota: '/Register', alterar: 'Motorista' },
     { id: 7, nome: 'Cadastro Passageiro', descricao: 'Crie sua conta', tipo: 'pagina', rota: '/Register', alterar: 'Passageiro' }
   ],
   empresas: [
-    { id: 1, nome: 'Indy Tour', descricao: 'Empresa de transporte executivo', tipo: 'empresa', rota: '/IndySul', alterar: 'Indy' },
+    { id: 1, nome: 'Indy Tour', descricao: 'Transporte executivo', tipo: 'empresa', rota: '/IndySul', alterar: 'Indy' },
     { id: 2, nome: 'Sul Turismo', descricao: 'Transporte escolar de qualidade', tipo: 'empresa', rota: '/IndySul', alterar: 'Sul' }
   ]
 })
-
-function handleScroll() {
-  const currentScroll = window.scrollY
-  showHeader.value = currentScroll < lastScroll || currentScroll < headerHeight
-  lastScroll = currentScroll
-}
 
 function performSearch() {
   const query = searchQuery.value.toLowerCase().trim()
@@ -126,9 +120,7 @@ function handleSearchKeydown(event) {
       if (selectedIndex.value >= 0) {
         navigateToResult(searchResults.value[selectedIndex.value])
         selectedIndex.value = -1
-      } else {
-        performSearch()
-      }
+      } else performSearch()
       break
     case 'Escape':
       showSearchResults.value = false
@@ -148,10 +140,19 @@ function navigateToResult(result) {
   showSearchResults.value = false
   searchQuery.value = ''
   selectedIndex.value = -1
+
   if (result.rota) {
     if (result.tipo === 'empresa' && result.alterar) {
-      router.push({ path: result.rota, query: { empresa: result.alterar } })
-    } else router.push(result.rota)
+      authState.mudarStateEmpresa(result.alterar)  
+      router.push(result.rota)
+    } 
+    else if (result.tipo === 'pagina' && result.alterar) {
+      authState.mudarStateAuth(result.alterar)  
+      router.push(result.rota)
+    } 
+    else {
+      router.push(result.rota)
+    }
   }
 }
 
@@ -163,12 +164,16 @@ function handleClickOutside(event) {
   }
 }
 
+function handleScroll() {
+  const currentScroll = window.scrollY
+  showHeader.value = currentScroll < lastScroll || currentScroll < headerHeight
+  lastScroll = currentScroll
+}
+
 function handleResize() {
   isMobile.value = window.innerWidth < 768
   const headerEl = document.querySelector(isMobile.value ? '.celular' : '.notebook')
   if (headerEl) headerHeight = headerEl.offsetHeight
-
-  // Forçar animação na mudança de tela
   showHeader.value = false
   setTimeout(() => showHeader.value = true, 50)
 }
@@ -179,6 +184,7 @@ watch(isMobile, () => {
 })
 
 onMounted(() => {
+  themeManager.init()
   const headerEl = document.querySelector(isMobile.value ? '.celular' : '.notebook')
   if (headerEl) headerHeight = headerEl.offsetHeight
 
@@ -189,6 +195,8 @@ onMounted(() => {
   window.addEventListener('touchstart', handleTouchStart)
   window.addEventListener('touchmove', handleTouchMove)
   window.addEventListener('touchend', handleTouchEnd)
+
+  authState.restaurarState()
 })
 
 onUnmounted(() => {
@@ -201,6 +209,7 @@ onUnmounted(() => {
   window.removeEventListener('touchend', handleTouchEnd)
 })
 </script>
+
 
 <template>
   <div v-if="menuAberto"

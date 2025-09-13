@@ -1,8 +1,10 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
+import { useAuthStateStore } from '@/stores/authState'
 
 const themeManager = useThemeManagerStore()
+const authState = useAuthStateStore()
 
 const motorista = ref({
   nome: '',
@@ -25,6 +27,7 @@ function toggleSelect() {
 
 function selecionarEmpresa(nome) {
   motorista.value.empresa = nome
+  authState.mudarStateEmpresa(nome) // 🔥 atualiza no store
   aberto.value = false
 }
 
@@ -36,28 +39,22 @@ function cadastrar() {
   console.log('Dados enviados:', motorista.value)
 }
 
-onMounted(async () => {
+onMounted(() => {
   themeManager.init()
-    authState.restaurarStateEmpresa()
-  await nextTick()
+  authState.restaurarStateEmpresa()
 
-  const animateElements = () => {
-    const elements = document.querySelectorAll('.animate-on-scroll')
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view')
-        } else {
-          entry.target.classList.remove('in-view')
-        }
-      })
-    }, { threshold: 0.1 })
+  const elements = document.querySelectorAll('.animate-on-scroll')
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view')
+      } else {
+        entry.target.classList.remove('in-view')
+      }
+    })
+  }, { threshold: 0.1 })
 
-    elements.forEach(el => observer.observe(el))
-  }
-
-  animateElements()
-  window.addEventListener('scroll', animateElements)
+  elements.forEach(el => observer.observe(el))
 })
 </script>
 
@@ -158,7 +155,7 @@ onMounted(async () => {
 
 <style scoped>
 .animate-on-scroll {
-  opacity: 1;
+  opacity: 0;
   transform: translateY(50px);
   transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
 }
@@ -249,18 +246,6 @@ input {
 
 .selecionada {
   font-weight: bold;
-}
-
-.btn-upload {
-  cursor: pointer;
-  padding: 0.7rem;
-  border-radius: 10px;
-  font-weight: 600;
-}
-
-.file-name {
-  font-size: 0.8rem;
-  font-style: italic;
 }
 
 button.submit {

@@ -51,7 +51,7 @@ onMounted(async () => {
           R. Ezequiel Assis Rocha, 1379 - Centro, Araquari - SC, 89245-000</p>
         <p><strong>Telefone:</strong> (47) 99676-7651</p>
         <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span
-              class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/sulturismotransportes">@sulturismotransportes</a></span></p>
+              class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/sulturismotransportes" target="_blank" :style="{ color: themeManager.detalheAlternativo}">@sulturismotransportes</a></span></p>
       </div>
     </section>
   </main>
@@ -81,7 +81,7 @@ onMounted(async () => {
           R. Ezequiel Assis Rocha, 1379 - Centro, Araquari - SC, 89245-000</p>
         <p><strong>Telefone:</strong> (47) 99676-7651</p>
         <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span
-              class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/sulturismotransportes" :style="{ color: themeManager.detalheAlternativo }">@sulturismotransportes</a></span></p>
+              class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/sulturismotransportes" target="_blank" :style="{ color: themeManager.detalheAlternativo }">@sulturismotransportes</a></span></p>
       </div>
     </section>
   </main>

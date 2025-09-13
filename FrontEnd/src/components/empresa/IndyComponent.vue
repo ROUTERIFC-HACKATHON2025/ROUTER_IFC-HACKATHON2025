@@ -50,7 +50,7 @@ onMounted(async () => {
         <p><strong>Mensalidade:</strong> <span :style="{ color: themeManager.detalheAlternativo }">11x de</span> R$ 600,00 <span :style="{ color: themeManager.detalheAlternativo }">ou 12x de</span> R$ 550,00</p>
         <p><strong>Endereço:</strong> R. Faustino Busarello, 520 - Boehmerwald, Joinville - SC, 89235-330</p>
         <p><strong>Telefone:</strong> (47) 99221-4606</p>
-        <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span class="mdi mdi-instagram"></span><a href="https://www.instagram.com/indy_tour" :style="{ color: themeManager.detalheAlternativo }">@indy_tour</a></span></p>
+        <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span class="mdi mdi-instagram"></span><a href="https://www.instagram.com/indy_tour" target="_blank" :style="{ color: themeManager.detalheAlternativo }">@indy_tour</a></span></p>
       </div>
     </section>
   </main>
@@ -70,7 +70,7 @@ onMounted(async () => {
         <p><strong>Mensalidade:</strong> <span :style="{ color: themeManager.detalheAlternativo }">11x de</span> R$ 600,00 <span :style="{ color: themeManager.detalheAlternativo }">ou 12x de</span> R$ 550,00</p>
         <p><strong>Endereço:</strong> R. Faustino Busarello, 520 - Boehmerwald, Joinville - SC, 89235-330</p>
         <p><strong>Telefone:</strong> (47) 99221-4606</p>
-        <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/indy_tour" :style="{ color: themeManager.detalheAlternativo }">@indy_tour</a></span></p>
+        <p><strong>Redes Sociais:</strong> <span :style="{ color: themeManager.detalheAlternativo }"><span class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/indy_tour" target="_blank" :style="{ color: themeManager.detalheAlternativo }">@indy_tour</a></span></p>
       </div>
     </section>
   </main>
