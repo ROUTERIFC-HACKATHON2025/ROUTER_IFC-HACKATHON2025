@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Empresa, Motorista, Veiculo, Rotas, Endereco, Passageiro
+from .models import Empresa, Motorista, Veiculo, Rotas, Endereco, Passageiro, Admin
+from django.contrib.auth.models import User
 
 class EmpresaSerializer(ModelSerializer):
     class Meta:
@@ -29,4 +30,9 @@ class EnderecoSerializer(ModelSerializer):
 class PassageiroSerializer(ModelSerializer):
     class Meta:
         model = Passageiro
+        fields = '__all__'
+
+class AdminSerializer(ModelSerializer):
+    class Meta:
+        model = Admin
         fields = '__all__'

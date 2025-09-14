@@ -3,19 +3,19 @@ import axios from 'axios'
 import { ref, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
-import { useUserProfileStore } from '@/stores/userProfile'
+// import { useUserProfileStore } from '@/stores/userProfile'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
-const userProfile = useUserProfileStore()
+// const userProfile = useUserProfileStore()
 
 const usuario = ref({
   username: '',
   password: ''
 })
 
-const email = ref('')
-const senha = ref('')
+// const email = ref('')
+// const senha = ref('')
 const erro = ref('')
 const showPassword = ref(false)
 

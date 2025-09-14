@@ -26,19 +26,19 @@ const passageiro = reactive({ ...defaultPassageiro });
 const isEditing = ref(false);
 
 
-const responsavel = ref({
-  nome: '',
-  cpf: '',
-  telefone: ''
-})
+// const responsavel = ref({
+//   nome: '',
+//   cpf: '',
+//   telefone: ''
+// })
 
-const endereco = ref({
-  cep: '',
-  rua: '',
-  numero: '',
-  cidade: '',
-  bairro: '',
-})
+// const endereco = ref({
+//   cep: '',
+//   rua: '',
+//   numero: '',
+//   cidade: '',
+//   bairro: '',
+// })
 
 onMounted(async () => {
   themeManager.init()
@@ -143,7 +143,7 @@ async function cadastrar() {
             <p>Nome Completo do Responsável: *</p>
             <input v-model="passageiro.nomeResponsavel"
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
-          </div>
+          </div>s
           <!-- <div>
             <p>Parentesco: *</p>
             <input v-model="passageiro.parentesco" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}"/>

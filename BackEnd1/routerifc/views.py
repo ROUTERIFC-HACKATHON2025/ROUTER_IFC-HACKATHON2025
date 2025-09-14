@@ -3,7 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Empresa, Motorista, Veiculo, Rotas, Endereco, Passageiro
-from .serializers import EmpresaSerializer, MotoristaSerializer, VeiculoSerializer, RotasSerializer, EnderecoSerializer, PassageiroSerializer
+from .serializers import EmpresaSerializer, MotoristaSerializer, VeiculoSerializer, RotasSerializer, EnderecoSerializer, PassageiroSerializer, AdminSerializer
 
 class EmpresaViewSet(ModelViewSet):
     queryset = Empresa.objects.all()
@@ -28,6 +28,10 @@ class EnderecoViewSet(ModelViewSet):
 class PassageiroViewSet(ModelViewSet):
     queryset = Passageiro.objects.all()
     serializer_class = PassageiroSerializer
+
+class AdminViewSet(ModelViewSet):
+    queryset = User.objects.filter(is_superuser=True)
+    serializer_class = AdminSerializer
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()

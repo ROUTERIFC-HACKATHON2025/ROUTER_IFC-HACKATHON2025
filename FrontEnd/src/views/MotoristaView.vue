@@ -13,17 +13,10 @@ onMounted(async () => {
     await motoristaStore.getMotoristas();
 })
 
-function resetForm() {
-    Object.assign(motorista, { ...defaultMotorista });
-}
+
 
 async function submitMotorista() {
-    if (isEditing.value) {
-        await motoristaStore.updateMotorista({ ...motorista });
-    } else {
-        await motoristaStore.addMotorista({ ...motorista });
-    }
-    resetForm();
+    
 }
 
 function editSelectedMotorista(idMotorista) {

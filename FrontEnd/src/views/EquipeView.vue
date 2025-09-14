@@ -53,8 +53,7 @@ onMounted(async () => {
           <div class="info">
             <h2>Gabriela Senderski</h2>
             <p>
-              Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
-              backend de Django, auxiliando também em partes do frontend com Vue.js.
+              Desenvolveu o BackEnd do RouterIFC utilizando Django e auxiliou na prototipagem das telas no Figma.
             </p>
             <ul class="social-icons">
               <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
@@ -69,8 +68,7 @@ onMounted(async () => {
           <div class="info">
             <h2>Henrique S. S. Borba</h2>
             <p>
-              Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
-              backend de Django, auxiliando também em partes do frontend com Vue.js.
+              Desenvolveu a modelagem do database com MySQL workbench e contribuiu para o BackEnd com Django.
             </p>
             <ul class="social-icons">
               <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
@@ -84,9 +82,8 @@ onMounted(async () => {
         <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
             src="/public/src-equipe/HigorBraga-foto.png" alt="Higor T. A. Braga" class="profile-img" />
           <div class="info">
-            <h2>Higor T. A. Braga</h2>
-            <p> Tenho 16 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
-              backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
+            <h2>Higor T. A. de Braga</h2>
+            <p>Trabalhou na prototipagem das telas com Figma e integração de APIGeolocation </p>
             <ul class="social-icons">
               <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
               <li><span class="mdi mdi-github"  target="_blank"></span></li>
@@ -98,8 +95,7 @@ onMounted(async () => {
         <div class="card-right animate-card-right" :style="{ backgroundColor: themeManager.detalhe }">
           <div class="info">
             <h2>Maria E. G. Tavares</h2>
-            <p> Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
-              backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
+            <p>Projetou os requisitos de software e integração de APIGeolocation.</p>
             <ul class="social-icons">
               <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
               <li><span class="mdi mdi-github"  target="_blank"></span></li>
@@ -112,8 +108,7 @@ onMounted(async () => {
             src="/public/src-equipe/PauloPereira-foto.png" alt="Paulo A. Pereira" class="profile-img" />
           <div class="info">
             <h2>Paulo A. Pereira</h2>
-            <p> Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
-              backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
+            <p>Desenvolveu integralmente o FrontEnd e responsividade, utilizando Vue.js.</p>
             <ul class="social-icons">
               <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
               <li><span class="mdi mdi-github"  target="_blank"></span></li>

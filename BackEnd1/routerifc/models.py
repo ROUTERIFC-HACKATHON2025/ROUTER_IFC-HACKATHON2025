@@ -87,5 +87,16 @@ class Passageiro(models.Model):
    def __str__(self):
        return self.nome
 
+class Admin(models.Model):
+   idAdmin = models.AutoField(primary_key=True)
+   nome = models.CharField(max_length=30)
+   email = models.CharField(max_length=50, unique=True)
+   senha = models.CharField(max_length=45)
+   usuario = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True, related_name='admin')
+
+
+   def __str__(self):
+       return self.nome
+
 
 

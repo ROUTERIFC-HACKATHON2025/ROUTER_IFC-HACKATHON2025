@@ -85,12 +85,7 @@ onMounted(async () => {
       <h1 :style="{ color: themeManager.detalheAlternativo, borderColor: themeManager.detalhe }">EMPRESAS</h1>
       <div class="descricao animate-on-scroll" :style="{ borderColor: themeManager.detalhe }">
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget ipsum elit. Duis non elementum quam.
-          Morbi id luctus elit, sed maximus nisl. Sed maximus enim at erat posuere, et pharetra elit luctus.
-          Suspendisse potenti. In luctus tellus lorem, in pellentesque neque ullamcorper hendrerit. Proin
-          porta et purus eu iaculis. Mauris dignissim, urna non venenatis rhoncus, urna massa vestibulum sapien,
-          nec luctus ante sapien at amet justo. Class aptent taciti sociosqu ad litora torquent per conubia nostra,
-          per inceptos himenaeos. Quisque non accumsan felis.
+          Nosso site busca fortalecer parcerias com empresas responsáveis e comprometidas. Mais do que estar presente na plataforma, ser parceira significa assumir o compromisso com segurança, confiança e transparência, garantindo benefícios para motoristas, passageiros e toda a comunidade. Juntos, construímos uma rede organizada, eficiente e que gera resultados melhores para todos. 
         </p>
       </div>
     </section>
