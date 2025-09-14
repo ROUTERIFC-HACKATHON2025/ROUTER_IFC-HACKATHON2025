@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8000/motoristas/";
+const API_BASE_URL = "http://localhost:8000/api/motoristas/";
 
 export default class MotoristaAPI {
     async getMotoristasAll() {

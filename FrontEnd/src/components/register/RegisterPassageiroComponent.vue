@@ -18,25 +18,27 @@ const defaultPassageiro = {
   nomeResponsavel: '',
   cpfResponsavel: '',
   telefoneResponsavel: '',
-  senha: ''
+  senha: '',
+  confirmarSenha: '',
+  informacoesAdicionais: ''
 };
 const passageiro = reactive({ ...defaultPassageiro });
 const isEditing = ref(false);
 
 
-const responsavel = ref({
-  nome: '',
-  cpf: '',
-  telefone: ''
-})
+// const responsavel = ref({
+//   nome: '',
+//   cpf: '',
+//   telefone: ''
+// })
 
-const endereco = ref({
-  cep: '',
-  rua: '',
-  numero: '',
-  cidade: '',
-  bairro: '',
-})
+// const endereco = ref({
+//   cep: '',
+//   rua: '',
+//   numero: '',
+//   cidade: '',
+//   bairro: '',
+// })
 
 onMounted(async () => {
   themeManager.init()
@@ -62,6 +64,10 @@ onMounted(async () => {
   window.addEventListener('scroll', animateElements)
 })
 
+function resetForm() {
+  Object.assign(passageiro, { ...defaultPassageiro });
+}
+
 async function cadastrar() {
   if (isEditing.value) {
     await passageirosStore.updatePassageiro({ ...passageiro });
@@ -73,7 +79,7 @@ async function cadastrar() {
     delete passageiro.confirmarSenha;
     await passageirosStore.addPassageiro({ ...passageiro });
   }
-  // resetForm();
+  resetForm();
 }
 </script>
 
@@ -137,7 +143,7 @@ async function cadastrar() {
             <p>Nome Completo do Responsável: *</p>
             <input v-model="passageiro.nomeResponsavel"
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
-          </div>
+          </div>s
           <!-- <div>
             <p>Parentesco: *</p>
             <input v-model="passageiro.parentesco" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}"/>
@@ -155,7 +161,7 @@ async function cadastrar() {
         </div>
       </div>
 
-      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
+      <!-- <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
         <h2><span class="mdi mdi-map-marker" :style="{ color: themeManager.detalheAlternativo }"></span> Endereço
           Residencial</h2>
         <div class="grid">
@@ -185,9 +191,11 @@ async function cadastrar() {
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
         </div>
-      </div>
-
+      </div> -->
+      <div class="buttons">
       <button type="submit" class="submit" :style="{ backgroundColor: themeManager.detalhe }">Cadastrar-se</button>
+      <button type="button" @click="resetForm" :style="{ backgroundColor: themeManager.detalheAlternativo }">Cancelar</button>
+      </div>
     </form>
   </section>
 </template>
@@ -289,21 +297,42 @@ input {
   height: 100px;
 }
 
+.buttons{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+}
+
 button.submit {
   margin-top: 20px;
-  width: 50%;
+  width: 30%;
   padding: 14px;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
   border: none;
   border-radius: 12px;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s ease;
-  margin-left: 25%;
+
 }
 
-button.submit:hover {
+button {
+  margin-top: 20px;
+  width: 30%;
+  padding: 14px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s ease;
+  width: 30%;
+}
+
+button:hover {
   transform: scale(1.05);
 }
 
