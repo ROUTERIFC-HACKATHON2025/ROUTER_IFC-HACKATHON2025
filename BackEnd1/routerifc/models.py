@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User  
 
 class Empresa(models.Model):
    idEmpresa = models.AutoField(primary_key=True)
@@ -21,8 +22,8 @@ class Motorista(models.Model):
    email = models.CharField(max_length=50, unique=True)
    senha = models.CharField(max_length=45)
    codigoCnh = models.CharField(max_length=45)
-   empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, null=True, blank=True) 
-
+   empresa = models.ForeignKey(Empresa, on_delete=models.PROTECT, null=True, blank=True)
+   usuario = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True, related_name='motorista')
 
   
    def __str__(self):
@@ -36,7 +37,7 @@ class Veiculo(models.Model):
    capacidade = models.IntegerField()
    modelo = models.CharField(max_length=45)
    motoristas = models.ManyToManyField('Motorista', related_name='veiculos')
-   passageiros = models.ManyToManyField('Passageiro', related_name='veiculos')
+   passageiros = models.ManyToManyField('Passageiro', related_name='veiculos', null=True, blank=True)
 
 
    def __str__(self):
@@ -46,8 +47,8 @@ class Veiculo(models.Model):
 class Rotas(models.Model):
    idRotas = models.AutoField(primary_key=True) 
    horarios = models.TimeField()
-   motorista = models.ForeignKey(Motorista, on_delete=models.CASCADE, related_name='rotas')
-   veiculos = models.ForeignKey(Veiculo, on_delete=models.CASCADE, related_name='rotas')
+   motorista = models.ForeignKey(Motorista, on_delete=models.PROTECT, related_name='rotas')
+   veiculos = models.ForeignKey(Veiculo, on_delete=models.PROTECT, related_name='rotas')
 
 
    def __str__(self):
@@ -61,7 +62,7 @@ class Endereco(models.Model):
    rua = models.CharField(max_length=30)
    numero = models.IntegerField()
    cep = models.IntegerField(default="0000000000")
-   rotas = models.ForeignKey(Rotas, on_delete=models.CASCADE, related_name='endereco')
+   rotas = models.ForeignKey(Rotas, on_delete=models.PROTECT, related_name='endereco')
 
 
    def __str__(self):
@@ -79,7 +80,19 @@ class Passageiro(models.Model):
    nomeResponsavel = models.CharField(max_length=30)
    cpfResponsavel = models.IntegerField()
    telefoneResponsavel = models.IntegerField()
-   endereco = models.ManyToManyField('Endereco', related_name='passageiros')
+   endereco = models.ManyToManyField('Endereco', related_name='passageiros', blank=True, null=True)
+   usuario = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True, related_name='passageiro')
+
+
+   def __str__(self):
+       return self.nome
+
+class Admin(models.Model):
+   idAdmin = models.AutoField(primary_key=True)
+   nome = models.CharField(max_length=30)
+   email = models.CharField(max_length=50, unique=True)
+   senha = models.CharField(max_length=45)
+   usuario = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True, related_name='admin')
 
 
    def __str__(self):

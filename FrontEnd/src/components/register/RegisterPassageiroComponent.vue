@@ -1,36 +1,44 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
+import { usePassageiroStore } from '@/stores/passageiros'
+const passageirosStore = usePassageiroStore()
 
-const aluno = ref({
+const defaultPassageiro = {
+  idPassageiros: 0,
   nome: '',
+  telefone: '',
   email: '',
   cpf: '',
-  telefone: '',
-  nascimento: '',
+  dataNascimento: '',
+  nomeResponsavel: '',
+  cpfResponsavel: '',
+  telefoneResponsavel: '',
   senha: '',
   confirmarSenha: '',
   informacoesAdicionais: ''
-})
+};
+const passageiro = reactive({ ...defaultPassageiro });
+const isEditing = ref(false);
 
-const responsavel = ref({
-  nome: '',
-  parentesco: '',
-  cpf: '',
-  telefone: ''
-})
 
-const endereco = ref({
-  cep: '',
-  rua: '',
-  numero: '',
-  cidade: '',
-  bairro: '',
-})
+// const responsavel = ref({
+//   nome: '',
+//   cpf: '',
+//   telefone: ''
+// })
+
+// const endereco = ref({
+//   cep: '',
+//   rua: '',
+//   numero: '',
+//   cidade: '',
+//   bairro: '',
+// })
 
 function cadastrar() {
   alert('Cadastro enviado! (a lógica real deve ser implementada)')
@@ -52,132 +60,144 @@ onMounted(() => {
 
   elements.forEach(el => observer.observe(el))
 })
+
+function resetForm() {
+  Object.assign(passageiro, { ...defaultPassageiro });
+}
+
+async function cadastrar() {
+  if (isEditing.value) {
+    await passageirosStore.updatePassageiro({ ...passageiro });
+  } else {
+    if (passageiro.senha !== passageiro.confirmarSenha) {
+      alert('As senhas não coincidem!');
+      return;
+    }
+    delete passageiro.confirmarSenha;
+    await passageirosStore.addPassageiro({ ...passageiro });
+  }
+  resetForm();
+}
 </script>
 
 <template>
-  <section class="form-container animate-on-scroll" :style="{color: themeManager.text}">
-    <h1>CADASTRO <span :style="{color: themeManager.detalheAlternativo}">PASSAGEIRO</span></h1>
+  <section class="form-container animate-on-scroll" :style="{ color: themeManager.text }">
+    <h1>CADASTRO <span :style="{ color: themeManager.detalheAlternativo }">PASSAGEIRO</span></h1>
+    <form @submit.prevent="cadastrar" :style="{ borderColor: themeManager.detalheAlternativo }">
 
-    <form @submit.prevent="cadastrar" :style="{borderColor: themeManager.detalheAlternativo}">
-
-      <!-- Informações Pessoais -->
-      <div class="space " :style="{borderColor: themeManager.detalheAlternativo}">
-        <h2>
-          <span class="mdi mdi-account" :style="{color: themeManager.detalheAlternativo}"></span>
-          Informações Pessoais
+      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
+        <h2><span class="mdi mdi-account" :style="{ color: themeManager.detalheAlternativo }"></span> Informações Pessoais
         </h2>
-
         <div class="grid">
           <div>
             <p>Nome Completo: *</p>
-            <input v-model="aluno.nome" required
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="passageiro.nome" required
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>E-mail: *</p>
-            <input v-model="aluno.email" type="email" required
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="passageiro.email" type="email" required
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>CPF do Aluno: *</p>
-            <input v-model="aluno.cpf" placeholder="000.000.000-00" required
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="passageiro.cpf" placeholder="000.000.000-00" required
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Telefone: *</p>
-            <input v-model="aluno.telefone" class="input-field-mid" required
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="passageiro.telefone" class="input-field-mid" required
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Data de Nascimento: *</p>
-            <input v-model="aluno.nascimento" type="date" class="input-field-mid" required
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="passageiro.dataNascimento" type="date" class="input-field-mid" required
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Senha: *</p>
-            <input v-model="aluno.senha" type="password" required
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="passageiro.senha" type="password" required
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Confirme sua Senha: *</p>
-            <input v-model="aluno.confirmarSenha" type="password" required
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="passageiro.confirmarSenha" type="password" required
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Informações adicionais:</p>
-            <input v-model="aluno.informacoesAdicionais" type="text" class="input-field-add"
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input type="text" class="input-field-add" v-model="passageiro.informacoesAdicionais"
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
         </div>
       </div>
-
-      <!-- Informações dos Responsáveis -->
-      <div class="space " :style="{borderColor: themeManager.detalheAlternativo}">
-        <h2 class="responsaveis">
-          <span class="mdi mdi-human-male-male-child" :style="{color: themeManager.detalheAlternativo}"></span>
-          Informações dos Responsáveis
-        </h2>
-        <p class="sub">(Apenas se for menor de 18 anos)</p>
-
+      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
+        <h2 class="responsaveis"><span class="mdi mdi-human-male-male-child"
+            :style="{ color: themeManager.detalheAlternativo }"></span> Informações dos Responsáveis</h2>
         <div class="grid">
           <div>
             <p>Nome Completo do Responsável: *</p>
-            <input v-model="responsavel.nome" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
-          </div>
-          <div>
+            <input v-model="passageiro.nomeResponsavel"
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+          </div>s
+          <!-- <div>
             <p>Parentesco: *</p>
-            <input v-model="responsavel.parentesco" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
-          </div>
+            <input v-model="passageiro.parentesco" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}"/>
+          </div> -->
           <div>
             <p>CPF do Responsável: *</p>
-            <input v-model="responsavel.cpf" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="passageiro.cpfResponsavel"
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
           <div>
             <p>Telefone: *</p>
-            <input v-model="responsavel.telefone" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="passageiro.telefoneResponsavel"
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
         </div>
       </div>
-
-      <!-- Endereço -->
-      <div class="space " :style="{borderColor: themeManager.detalheAlternativo}">
-        <h2>
-          <span class="mdi mdi-map-marker" :style="{color: themeManager.detalheAlternativo}"></span>
-          Endereço Residencial
-        </h2>
-
+      <!-- <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
+        <h2><span class="mdi mdi-map-marker" :style="{ color: themeManager.detalheAlternativo }"></span> Endereço
+          Residencial</h2>
         <div class="grid">
           <div>
             <p>CEP: *</p>
-            <input v-model="endereco.cep" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="endereco.cep"
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
           <div>
             <p>Rua: *</p>
-            <input v-model="endereco.rua" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="endereco.rua"
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
           <div>
             <p>Número: *</p>
-            <input v-model="endereco.numero" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="endereco.numero"
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
           <div>
             <p>Cidade: *</p>
-            <input v-model="endereco.cidade" class="input-field-mid" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="endereco.cidade" class="input-field-mid"
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
           <div>
             <p>Bairro: *</p>
-            <input v-model="endereco.bairro" class="input-field-mid" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+            <input v-model="endereco.bairro" class="input-field-mid"
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
         </div>
+      </div> -->
+      <div class="buttons">
+      <button type="submit" class="submit" :style="{ backgroundColor: themeManager.detalhe }">Cadastrar-se</button>
+      <button type="button" @click="resetForm" :style="{ backgroundColor: themeManager.detalheAlternativo }">Cancelar</button>
       </div>
-
-      <button type="submit" class="submit" :style="{backgroundColor: themeManager.detalhe}">Cadastrar-se</button>
     </form>
   </section>
 </template>
@@ -224,6 +244,16 @@ h2 {
   font-size: 1.5rem;
   margin-bottom: 20px;
   text-align: center;
+  align-items: center;
+}
+
+h2.responsaveis {
+  margin-bottom: 0;
+}
+
+h2 span {
+  font-size: 1.7em;
+  align-items: center;
 }
 
 .sub {
@@ -242,7 +272,7 @@ h2 {
   margin-bottom: 10px;
 }
 
-.grid div p{
+.grid div p {
   font-size: 0.8rem;
 }
 
@@ -262,21 +292,42 @@ input {
   height: 100px;
 }
 
+.buttons{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+}
+
 button.submit {
   margin-top: 20px;
-  width: 50%;
+  width: 30%;
   padding: 14px;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
   border: none;
   border-radius: 12px;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s ease;
-  margin-left: 25%;
+
 }
 
-button.submit:hover {
+button {
+  margin-top: 20px;
+  width: 30%;
+  padding: 14px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s ease;
+  width: 30%;
+}
+
+button:hover {
   transform: scale(1.05);
 }
 

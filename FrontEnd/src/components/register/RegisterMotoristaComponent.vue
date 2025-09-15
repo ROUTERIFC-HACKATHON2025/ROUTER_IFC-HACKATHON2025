@@ -1,22 +1,26 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
+import { useMotoristaStore } from '@/stores/motorista'
 import { useAuthStateStore } from '@/stores/authState'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 
-const motorista = ref({
-  nome: '',
-  email: '',
-  cpf: '',
-  telefone: '',
-  nascimento: '',
-  senha: '',
-  confirmarSenha: '',
-  empresa: '',
-  cnh: '',
-})
+
+const motoristaStore = useMotoristaStore();
+
+const defaultMotorista = { idMotorista: 0, 
+nome: '', 
+email: '', 
+telefone: '', 
+cpf: '', 
+codigoCnh: '', 
+senha: '',
+confirmarSenha: '',};
+
+const motorista = reactive({ ...defaultMotorista });
+const isEditing = ref(false);
 
 const empresas = ['SulTurismo', 'IndyTour']
 const aberto = ref(false)
@@ -31,13 +35,10 @@ function selecionarEmpresa(nome) {
   aberto.value = false
 }
 
-function handleFileChange(e) {
+/*function handleFileChange(e) {
   motorista.value.cnhArquivo = e.target.files[0]
-}
+}*/
 
-function cadastrar() {
-  console.log('Dados enviados:', motorista.value)
-}
 
 onMounted(() => {
   themeManager.init()
@@ -56,6 +57,25 @@ onMounted(() => {
 
   elements.forEach(el => observer.observe(el))
 })
+
+function resetForm() {
+    Object.assign(motorista, { ...defaultMotorista });
+}
+
+async function cadastrar() {
+  if (isEditing.value) {
+        await motoristaStore.updateMotorista({ ...motorista });
+    } else {
+    if (motorista.senha !== motorista.confirmarSenha) {
+      alert('As senhas não coincidem!');
+      return;
+    }
+    delete motorista.confirmarSenha;
+      await motoristaStore.addMotorista({ ...motorista });
+    }
+    resetForm();
+}
+
 </script>
 
 <template>
@@ -91,19 +111,14 @@ onMounted(() => {
               :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
-            <p>Data de nascimento: *</p>
-            <input v-model="motorista.nascimento" type="date" class="input-field-mid" required
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
-          </div>
-          <div>
             <p>Crie uma senha: *</p>
             <input v-model="motorista.senha" type="password" required
               :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
-            <p>Confirme sua senha: *</p>
+            <p>Confirme sua Senha: *</p>
             <input v-model="motorista.confirmarSenha" type="password" required
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
@@ -140,15 +155,16 @@ onMounted(() => {
 
           <div>
             <p>CNH(nº registro): *</p>
-            <input v-model="motorista.cnh" required
+            <input v-model="motorista.codigoCnh" required
               :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
         </div>
       </div>
 
-      <button type="submit" class="submit" :style="{ backgroundColor: themeManager.detalhe }">
-        Cadastrar-se
-      </button>
+      <div class="buttons">
+      <button type="submit" class="submit" :style="{ backgroundColor: themeManager.detalhe }">Cadastrar-se</button>
+      <button type="button" @click="resetForm" :style="{ backgroundColor: themeManager.detalheAlternativo }">Cancelar</button>
+      </div>
     </form>
   </section>
 </template>
@@ -252,21 +268,54 @@ input {
   font-weight: bold;
 }
 
+.btn-upload {
+  cursor: pointer;
+  padding: 0.7rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.file-name {
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.buttons{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+}
+
 button.submit {
   margin-top: 20px;
-  width: 50%;
+  width: 30%;
   padding: 14px;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
   border: none;
   border-radius: 12px;
   color: white;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s ease;
-  margin-left: 25%;
+
 }
 
-button.submit:hover {
+button {
+  margin-top: 20px;
+  width: 30%;
+  padding: 14px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s ease;
+  width: 30%;
+}
+
+button:hover {
   transform: scale(1.05);
 }
 
