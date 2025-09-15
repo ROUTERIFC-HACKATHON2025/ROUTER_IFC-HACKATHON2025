@@ -49,7 +49,7 @@ onMounted(async () => {
     <section class="equipe-cards">
       <div class="cards">
         <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }">
-          <img src="/public/src-equipe/GabrielaSenderski-foto.png" alt="Gabriela Senderski" class="profile-img" />
+          <img src="/public/src-equipe/GabrielaS.jpeg" alt="Gabriela Senderski" class="profile-img" />
           <div class="info">
             <h2>Gabriela Senderski</h2>
             <p>
@@ -77,10 +77,10 @@ onMounted(async () => {
               <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
           </div>
-          <img src="/public/src-equipe/HenriqueBorba-foto.png" alt="Henrique S. S. Borba" class="profile-img" />
+          <img src="/public/src-equipe/HenriqueS.jpeg" alt="Henrique S. S. Borba" class="profile-img" />
         </div>
         <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
-            src="/public/src-equipe/HigorBraga-foto.png" alt="Higor T. A. Braga" class="profile-img" />
+            src="/public/src-equipe/HigorB.jpeg" alt="Higor T. A. Braga" class="profile-img" />
           <div class="info">
             <h2>Higor T. A. de Braga</h2>
             <p>Trabalhou na prototipagem das telas com Figma e integração de APIGeolocation </p>
@@ -102,10 +102,10 @@ onMounted(async () => {
               <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
               <li><span class="mdi mdi-email"  target="_blank"></span></li>
             </ul>
-          </div> <img src="/public/src-equipe/MariaTavares-foto.png" alt="Maria E. G. Tavares" class="profile-img" />
+          </div> <img src="/public/src-equipe/MariaT.jpeg" alt="Maria E. G. Tavares" class="profile-img" />
         </div>
         <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
-            src="/public/src-equipe/PauloPereira-foto.png" alt="Paulo A. Pereira" class="profile-img" />
+            src="/public/src-equipe/PauloA.jpeg" alt="Paulo A. Pereira" class="profile-img" />
           <div class="info">
             <h2>Paulo A. Pereira</h2>
             <p>Desenvolveu integralmente o FrontEnd e responsividade, utilizando Vue.js.</p>
@@ -138,7 +138,7 @@ onMounted(async () => {
     <section class="equipe-cards">
       <div class="cards">
         <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }">
-          <img src="/public/src-equipe/GabrielaSenderski-foto.png" alt="Gabriela Senderski" class="profile-img" />
+          <img src="/public/src-equipe/GabrielaS.jpeg" alt="Gabriela Senderski" class="profile-img" />
           <div class="info">
             <h2>Gabriela Senderski</h2>
             <p>
@@ -168,10 +168,10 @@ onMounted(async () => {
               <li><span class="mdi mdi-email"></span></li>
             </ul>
           </div>
-          <img src="/public/src-equipe/HenriqueBorba-foto.png" alt="Henrique S. S. Borba" class="profile-img" />
+          <img src="/public/src-equipe/HenriqueS.jpeg" alt="Henrique S. S. Borba" class="profile-img" />
         </div>
         <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
-            src="/public/src-equipe/HigorBraga-foto.png" alt="Higor T. A. Braga" class="profile-img" />
+            src="/public/src-equipe/HigorB.jpeg" alt="Higor T. A. Braga" class="profile-img" />
           <div class="info">
             <h2>Higor T. A. Braga</h2>
             <p> Tenho 16 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
@@ -195,10 +195,10 @@ onMounted(async () => {
               <li><span class="mdi mdi-linkedin"></span></li>
               <li><span class="mdi mdi-email"></span></li>
             </ul>
-          </div> <img src="/public/src-equipe/MariaTavares-foto.png" alt="Maria E. G. Tavares" class="profile-img" />
+          </div> <img src="/public/src-equipe/MariaT.jpeg" alt="Maria E. G. Tavares" class="profile-img" />
         </div>
         <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
-            src="/public/src-equipe/PauloPereira-foto.png" alt="Paulo A. Pereira" class="profile-img" />
+            src="/public/src-equipe/PauloA.jpeg" alt="Paulo A. Pereira" class="profile-img" />
           <div class="info">
             <h2>Paulo A. Pereira</h2>
             <p> Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no

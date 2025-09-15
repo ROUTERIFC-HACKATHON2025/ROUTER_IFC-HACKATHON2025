@@ -1,13 +1,14 @@
 <script setup>
-import { ref, reactive, onMounted, nextTick } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
+import { usePassageiroStore } from '@/stores/passageiros'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
-import { usePassageiroStore } from '@/stores/passageiros'
 const passageirosStore = usePassageiroStore()
 
+// Modelo padrão de passageiro
 const defaultPassageiro = {
   idPassageiros: 0,
   nome: '',
@@ -21,34 +22,42 @@ const defaultPassageiro = {
   senha: '',
   confirmarSenha: '',
   informacoesAdicionais: ''
-};
-const passageiro = reactive({ ...defaultPassageiro });
-const isEditing = ref(false);
-
-
-// const responsavel = ref({
-//   nome: '',
-//   cpf: '',
-//   telefone: ''
-// })
-
-// const endereco = ref({
-//   cep: '',
-//   rua: '',
-//   numero: '',
-//   cidade: '',
-//   bairro: '',
-// })
-
-function cadastrar() {
-  alert('Cadastro enviado! (a lógica real deve ser implementada)')
 }
 
+const passageiro = reactive({ ...defaultPassageiro })
+const isEditing = ref(false)
+
+// Função para resetar formulário
+function resetForm() {
+  Object.assign(passageiro, { ...defaultPassageiro })
+}
+
+// Função para cadastrar/atualizar passageiro
+async function cadastrar() {
+  if (!passageiro.nome || !passageiro.email || !passageiro.cpf) {
+    alert('Preencha todos os campos obrigatórios!')
+    return
+  }
+
+  if (passageiro.senha !== passageiro.confirmarSenha) {
+    alert('As senhas não coincidem!')
+    return
+  }
+
+  if (isEditing.value) {
+    await passageirosStore.updatePassageiro({ ...passageiro })
+  } else {
+    await passageirosStore.addPassageiro({ ...passageiro })
+  }
+
+  resetForm()
+}
+
+// Animações + inicialização
 onMounted(() => {
   themeManager.init()
   authState.restaurarStateEmpresa()
 
-  // animação ao scroll
   const elements = document.querySelectorAll('.animate-on-scroll')
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -60,25 +69,8 @@ onMounted(() => {
 
   elements.forEach(el => observer.observe(el))
 })
-
-function resetForm() {
-  Object.assign(passageiro, { ...defaultPassageiro });
-}
-
-async function cadastrar() {
-  if (isEditing.value) {
-    await passageirosStore.updatePassageiro({ ...passageiro });
-  } else {
-    if (passageiro.senha !== passageiro.confirmarSenha) {
-      alert('As senhas não coincidem!');
-      return;
-    }
-    delete passageiro.confirmarSenha;
-    await passageirosStore.addPassageiro({ ...passageiro });
-  }
-  resetForm();
-}
 </script>
+
 
 <template>
   <section class="form-container animate-on-scroll" :style="{ color: themeManager.text }">
@@ -146,7 +138,7 @@ async function cadastrar() {
             <p>Nome Completo do Responsável: *</p>
             <input v-model="passageiro.nomeResponsavel"
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
-          </div>s
+          </div>
           <!-- <div>
             <p>Parentesco: *</p>
             <input v-model="passageiro.parentesco" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}"/>
@@ -245,10 +237,6 @@ h2 {
   margin-bottom: 20px;
   text-align: center;
   align-items: center;
-}
-
-h2.responsaveis {
-  margin-bottom: 0;
 }
 
 h2 span {

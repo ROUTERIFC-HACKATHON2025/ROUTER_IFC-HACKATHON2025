@@ -3,19 +3,15 @@ import axios from 'axios'
 import { ref, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
-// import { useUserProfileStore } from '@/stores/userProfile'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
-// const userProfile = useUserProfileStore()
 
 const usuario = ref({
   username: '',
   password: ''
 })
 
-// const email = ref('')
-// const senha = ref('')
 const erro = ref('')
 const showPassword = ref(false)
 
@@ -77,37 +73,6 @@ async function handleLogin() {
     erro.value = 'Tipo de usuário desconhecido.'
     return
   }
-  // const emailVal = email.value.trim()
-  // const senhaVal = senha.value.trim()
-
-  // // ✅ Usando for...of corretamente
-  // for (const passageiro of userProfile.passageiros) {
-  //   if (passageiro.email === emailVal && passageiro.senha === senhaVal) {
-  //     erro.value = ''
-  //     authState.mudarState('passageiro')
-  //     return
-  //   }
-  // }
-
-  // // ✅ Alternativa: poderia ser userProfile.passageiros.some(...)
-  // // if (userProfile.passageiros.some(p => p.email === emailVal && p.senha === senhaVal)) {
-  // //   erro.value = ''
-  // //   authState.mudarState('passageiro')
-  // //   return
-  // // }
-
-  // if (emailVal === 'p@p' && senhaVal === 'p') {
-  //   erro.value = ''
-  //   authState.mudarState('passageiro')
-  // } else if (emailVal === 'm@m' && senhaVal === 'm') {
-  //   erro.value = ''
-  //   authState.mudarState('motorista')
-  // } else if (emailVal === 'admin@admin' && senhaVal === 'admin') {
-  //   erro.value = ''
-  //   authState.mudarState('admin')
-  // } else {
-  //   erro.value = 'E-mail ou senha incorretos.'
-  // }
 }
 </script>
 
