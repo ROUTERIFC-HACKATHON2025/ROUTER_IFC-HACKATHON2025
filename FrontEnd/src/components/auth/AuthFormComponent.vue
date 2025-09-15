@@ -96,38 +96,23 @@ function handleLogin() {
 
           <div class="input-group">
             <span class="mdi mdi-email icon" :style="{ color: themeManager.text }"></span>
-            <input
-              v-model="email"
-              type="email"
-              placeholder="E-mail"
-              class="input"
-              autocomplete="email"
+            <input v-model="email" type="email" placeholder="E-mail" class="input" autocomplete="email"
               :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }"
               @keydown.enter.prevent="handleLogin" />
           </div>
 
           <div class="input-group">
             <span class="mdi mdi-lock icon" :style="{ color: themeManager.text }"></span>
-            <input
-              v-model="senha"
-              :type="showPassword ? 'text' : 'password'"
-              placeholder="Senha"
-              autocomplete="current-password"
-              class="input"
+            <input v-model="senha" :type="showPassword ? 'text' : 'password'" placeholder="Senha"
+              autocomplete="current-password" class="input"
               :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, borderColor: themeManager.text }"
               @keydown.enter.prevent="handleLogin" />
-            <span
-              class="mdi toggle-eye"
-              :class="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-              @click="toggleShowPassword"
+            <span class="mdi toggle-eye" :class="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click="toggleShowPassword"
               :style="{ color: themeManager.text }"></span>
           </div>
 
           <!-- IMPORTANTÍSSIMO: não deixar virar submit -->
-          <button
-            type="button"
-            class="recover-link"
-            @click="authState.mudarState('autentificacao')"
+          <button type="button" class="recover-link" @click="authState.mudarState('autentificacao')"
             :style="{ color: themeManager.text }">
             Esqueceu a senha?
           </button>
@@ -148,9 +133,12 @@ function handleLogin() {
         <div class="social-login">
           <p :style="{ color: themeManager.text }">Fazer login por outra plataforma?</p>
           <ul>
-            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }" class="mdi mdi-google" ></span></button></li>
-            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }" class="mdi mdi-facebook"></span></button></li>
-            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }" class="mdi mdi-twitter"></span></button></li>
+            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }"
+                  class="mdi mdi-google"></span></button></li>
+            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }"
+                  class="mdi mdi-facebook"></span></button></li>
+            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }"
+                  class="mdi mdi-twitter"></span></button></li>
           </ul>
         </div>
       </div>
@@ -172,24 +160,72 @@ function handleLogin() {
 }
 
 /* Fade lateral */
-.fade-in-left { transform: translateY(50px); }
-.fade-in-left.in-view { transform: translateY(0); }
+.fade-in-left {
+  transform: translateY(50px);
+}
 
-.fade-in-right { transform: translateY(50px); }
-.fade-in-right.in-view { transform: translateY(0); }
+.fade-in-left.in-view {
+  transform: translateY(0);
+}
+
+.fade-in-right {
+  transform: translateY(50px);
+}
+
+.fade-in-right.in-view {
+  transform: translateY(0);
+}
 
 /* Original Styles */
-.login-container { display: flex; height: 80vh; }
-.left-panel { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
-.left-panel img { max-width: 70%; }
-.right-panel { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px; }
+.login-container {
+  display: flex;
+  height: 80vh;
+}
 
-.form-box { max-width: 400px; width: 100%; text-align: center; }
-.title { font-size: 2.5rem; margin-bottom: 0.5rem; }
-.subtitle { margin-bottom: 1rem; }
+.left-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
 
-.form { display: flex; flex-direction: column; gap: 0.5rem; }
-.input-group { position: relative; }
+.left-panel img {
+  max-width: 70%;
+}
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.form-box {
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  margin-bottom: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group {
+  position: relative;
+}
 
 .input {
   width: 100%;
@@ -227,11 +263,21 @@ function handleLogin() {
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s ease;
 }
-.submit-btn:hover { transform: scale(1.05); }
 
-.footer { margin-top: 1.5rem; }
+.submit-btn:hover {
+  transform: scale(1.05);
+}
 
-.register-text { font-size: 0.8rem; text-align: center; margin-top: 10px; }
+.footer {
+  margin-top: 1.5rem;
+}
+
+.register-text {
+  font-size: 0.8rem;
+  text-align: center;
+  margin-top: 10px;
+}
+
 .register-link {
   background: none;
   font-size: 0.8rem;
@@ -249,23 +295,61 @@ function handleLogin() {
   margin: 0 0 0 70%;
 }
 
-.social-login { margin-top: 1rem; }
-.social-login p { font-size: 1.2rem; margin-bottom: 0.5rem; }
-.social-login ul {
-  list-style: none; padding: 0; display: flex; justify-content: center; gap: 1rem;
+.social-login {
+  margin-top: 1rem;
 }
-.social-login li button {
-  background: none; border: 2px solid; padding: 2px 4px;
-  border-radius: 30px; cursor: pointer; font-size: 1.5rem; transition: transform 0.3s ease;
-}
-.social-login li button:hover { transform: scale(1.1); }
 
-.erro-msg { color: red; font-size: 0.8rem; margin-top: 0.5rem; }
+.social-login p {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.social-login ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.social-login li button {
+  background: none;
+  border: 2px solid;
+  padding: 2px 4px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.social-login li button:hover {
+  transform: scale(1.1);
+}
+
+.erro-msg {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
 
 @media (max-width: 768px) {
-  .login-container { margin-top: 20px; flex-direction: column; height: 70vh; }
-  .left-panel { display: none; }
-  .right-panel { width: 100%; padding: 20px; }
-  .form-box { width: 100%; }
+  .login-container {
+    margin-top: 20px;
+    flex-direction: column;
+    height: 70vh;
+  }
+
+  .left-panel {
+    display: none;
+  }
+
+  .right-panel {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .form-box {
+    width: 100%;
+  }
 }
 </style>

@@ -183,7 +183,11 @@ h1 {
   font-size: 2.5rem;
   padding: 100px 0 60px 0;
 }
-
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
 .space {
   margin-bottom: 15px;
   padding-bottom: 40px;
