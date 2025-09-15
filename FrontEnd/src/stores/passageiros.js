@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import PassageirosAPI from '../api/passageiros'
+import axios from 'axios'
 
 const passageirosApi = new PassageirosAPI();
 
@@ -21,6 +22,15 @@ export const usePassageiroStore = defineStore('passageiro', () => {
         try {
             const novoPassageiro = await passageirosApi.addPassageiro(passageiroParaAdicionar);
             passageiros.value.push(novoPassageiro);
+            // Auto login usando JWT com email como username e senha informada
+            const { email, senha } = passageiroParaAdicionar;
+            if (email && senha) {
+                const tokenResp = await axios.post('http://localhost:8000/api/token/', { username: email, password: senha });
+                const access = tokenResp.data?.access;
+                if (access) {
+                    localStorage.setItem('accessToken', access);
+                }
+            }
         } catch (error) {
             console.error("Erro no store ao adicionar passageiro:", error);
             throw error;

@@ -48,6 +48,25 @@ async function cadastrar() {
     await passageirosStore.updatePassageiro({ ...passageiro })
   } else {
     await passageirosStore.addPassageiro({ ...passageiro })
+    // Após auto-login, muda estado de auth conforme papel
+    try {
+      const access = localStorage.getItem('accessToken')
+      if (access) {
+        const response = await fetch('http://localhost:8000/api/usuarios/me/', {
+          headers: { Authorization: `Bearer ${access}` }
+        })
+        const data = await response.json()
+        if (data.is_passageiro) {
+          authState.mudarState('passageiro')
+        } else if (data.is_motorista) {
+          authState.mudarState('motorista')
+        } else if (data.is_admin) {
+          authState.mudarState('admin')
+        }
+      }
+    } catch (e) {
+      // noop
+    }
   }
 
   resetForm()

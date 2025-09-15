@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import MotoristaAPI from '../api/motorista'
+import axios from 'axios'
 
 const motoristaApi = new MotoristaAPI();
 
@@ -21,6 +22,14 @@ export const useMotoristaStore = defineStore('motorista', () => {
         try {
             const novaMotorista = await motoristaApi.addMotorista(motoristaParaAdicionar);
             motoristas.value.push(novaMotorista);
+            const { email, senha } = motoristaParaAdicionar;
+            if (email && senha) {
+                const tokenResp = await axios.post('http://localhost:8000/api/token/', { username: email, password: senha });
+                const access = tokenResp.data?.access;
+                if (access) {
+                    localStorage.setItem('accessToken', access);
+                }
+            }
         } catch (error) {
             console.error("Erro no store ao adicionar motorista:", error);
             throw error;

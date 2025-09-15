@@ -47,11 +47,13 @@ function toggleShowPassword() {
 }
 
 async function handleLogin() {
-  const { data } = await axios.post('http://localhost:8000/api/token/', {...usuario.value })
+  const { data } = await axios.post('http://localhost:8000/api/token/', { ...usuario.value })
     .catch(err => {
       console.error('Erro ao obter token:', err)
       erro.value = 'E-mail ou senha incorretos.'
     })
+  if (!data?.access) return
+  localStorage.setItem('accessToken', data.access)
   const response = await axios.get('http://localhost:8000/api/usuarios/me/', {
     headers: {
       Authorization: `Bearer ${data.access}`
@@ -96,7 +98,7 @@ async function handleLogin() {
             <input
               v-model="usuario.username"
               type="text"
-              placeholder="Usuario"
+              placeholder="E-mail"
               class="input"
               :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }"
               @keydown.enter.prevent="handleLogin" />
