@@ -461,7 +461,7 @@ section{
 .col-passageiros .btn-add {
   width: 100%;
   border-radius: 0;
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   border-radius: 0 0 8px 8px;
 }
 

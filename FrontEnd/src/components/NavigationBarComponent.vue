@@ -1,163 +1,231 @@
 <script setup>
-import { useThemeManagerStore } from '@/stores/theme/themeManager'
-import { RouterLink, useRouter } from 'vue-router'
 import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { useRouter, RouterLink } from 'vue-router'
+import { useThemeManagerStore } from '@/stores/theme/themeManager'
+import { useAuthStateStore } from '@/stores/authState'
 
 const themeManager = useThemeManagerStore()
+const authState = useAuthStateStore()
 const router = useRouter()
-onMounted(themeManager.init)
 
 const showHeader = ref(true)
 let lastScroll = 0
 let headerHeight = 0
 
+const menuAberto = ref(false)
+const dragging = ref(false)
+const dragOffset = ref(0)
+const overlayOpacity = ref(1)
+
+function abrirMenu() {
+  menuAberto.value = true
+  dragOffset.value = 0
+  overlayOpacity.value = 1
+}
+function fecharMenu() {
+  menuAberto.value = false
+  dragOffset.value = 0
+  overlayOpacity.value = 0
+}
+
+let startX = 0
+function handleTouchStart(event) {
+  if (!menuAberto.value) return
+  startX = event.touches[0].clientX
+  dragging.value = true
+}
+function handleTouchMove(event) {
+  if (!dragging.value) return
+  const currentX = event.touches[0].clientX
+  const diffX = startX - currentX
+  if (diffX > 0) {
+    dragOffset.value = Math.min(diffX, window.innerWidth * 0.75)
+    overlayOpacity.value = 1 - (dragOffset.value / (window.innerWidth * 0.75))
+  }
+}
+function handleTouchEnd() {
+  if (!dragging.value) return
+  dragging.value = false
+  if (dragOffset.value > 50) fecharMenu()
+  else {
+    dragOffset.value = 0
+    overlayOpacity.value = 1
+  }
+}
+
 const searchQuery = ref('')
 const showSearchResults = ref(false)
 const searchResults = ref([])
 const isLoading = ref(false)
+const selectedIndex = ref(-1)
+const isMobile = ref(window.innerWidth < 768)
+
 const searchData = ref({
   paginas: [
-    { id: 1, nome: 'Início', descricao: 'Página principal do site', tipo: 'pagina', rota: '/' },
-    { id: 2, nome: 'Sobre Nós', descricao: 'Conheça mais sobre o projeto', tipo: 'pagina', rota: '/SobreNos' },
-    { id: 3, nome: 'Equipe', descricao: 'Nossa equipe de desenvolvimento', tipo: 'pagina', rota: '/equipe' },
-    { id: 4, nome: 'Empresas', descricao: 'Empresas parceiras de transporte', tipo: 'pagina', rota: '/Empresa' },
+    { id: 1, nome: 'Início', descricao: 'Página principal', tipo: 'pagina', rota: '/' },
+    { id: 2, nome: 'Sobre Nós', descricao: 'Conheça o projeto', tipo: 'pagina', rota: '/SobreNos' },
+    { id: 3, nome: 'Equipe', descricao: 'Nossa equipe', tipo: 'pagina', rota: '/equipe' },
+    { id: 4, nome: 'Empresas', descricao: 'Parceiros de transporte', tipo: 'pagina', rota: '/Empresa' },
     { id: 5, nome: 'Login', descricao: 'Acesse sua conta', tipo: 'pagina', rota: '/login' },
     { id: 6, nome: 'Cadastro Motorista', descricao: 'Crie sua conta', tipo: 'pagina', rota: '/Register', alterar: 'Motorista' },
     { id: 7, nome: 'Cadastro Passageiro', descricao: 'Crie sua conta', tipo: 'pagina', rota: '/Register', alterar: 'Passageiro' }
   ],
   empresas: [
-    { id: 1, nome: 'Indy Tour', descricao: 'Empresa de transporte executivo', tipo: 'empresa', rota: '/IndySul', alterar: 'Indy' },
+    { id: 1, nome: 'Indy Tour', descricao: 'Transporte executivo', tipo: 'empresa', rota: '/IndySul', alterar: 'Indy' },
     { id: 2, nome: 'Sul Turismo', descricao: 'Transporte escolar de qualidade', tipo: 'empresa', rota: '/IndySul', alterar: 'Sul' }
-  ],
+  ]
 })
-
-function handleScroll() {
-  const currentScroll = window.scrollY
-  if (currentScroll > headerHeight) {
-    showHeader.value = currentScroll < lastScroll
-  }
-  lastScroll = currentScroll
-}
-
-onMounted(() => {
-  const forma = window.innerWidth < 768 ? '.celular' : '.notebook'
-  const headerEl = document.querySelector(forma)
-  if (headerEl) headerHeight = headerEl.offsetHeight
-  window.addEventListener('scroll', handleScroll)
-  
-  document.addEventListener('click', handleClickOutside)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-  document.removeEventListener('click', handleClickOutside)
-})
-
-const menuAberto = ref(false)
-function abrirMenu() {
-  menuAberto.value = true
-}
-function fecharMenu() {
-  menuAberto.value = false
-}
 
 function performSearch() {
-  if (!searchQuery.value.trim()) {
+  const query = searchQuery.value.toLowerCase().trim()
+  if (!query) {
     searchResults.value = []
     showSearchResults.value = false
     return
   }
-
   isLoading.value = true
-  const query = searchQuery.value.toLowerCase().trim()
-  
   setTimeout(() => {
-    const results = []
-    
-    searchData.value.paginas.forEach(pagina => {
-      if (pagina.nome.toLowerCase().includes(query) || 
-          pagina.descricao.toLowerCase().includes(query)) {
-        results.push(pagina)
-      }
-    })
-    
-    searchData.value.empresas.forEach(empresa => {
-      if (empresa.nome.toLowerCase().includes(query) || 
-          empresa.descricao.toLowerCase().includes(query)) {
-        results.push(empresa)
-      }
-    })
-    
-    searchData.value.empresas.forEach(empresa => {
-      if (empresa.nome.toLowerCase().includes(query) || 
-          empresa.descricao.toLowerCase().includes(query) ||
-          (empresa.alterar && empresa.alterar.toLowerCase().includes(query))) {
-        results.push(empresa)
-      }
-    })
-    
+    const results = [...searchData.value.paginas, ...searchData.value.empresas]
+      .filter(item => item.nome.toLowerCase().includes(query))
     searchResults.value = results
-    showSearchResults.value = results.length > 0
+    showSearchResults.value = true
     isLoading.value = false
-  }, 300)
+    selectedIndex.value = -1
+  }, 200)
 }
 
 watch(searchQuery, (newQuery) => {
-  if (newQuery.trim()) {
-    performSearch()
-  } else {
+  if (newQuery.trim()) performSearch()
+  else {
     searchResults.value = []
     showSearchResults.value = false
+    selectedIndex.value = -1
   }
 })
 
-function handleClickOutside(event) {
-  const searchContainer = document.querySelector('.search')
-  if (searchContainer && !searchContainer.contains(event.target)) {
-    showSearchResults.value = false
+function handleSearchKeydown(event) {
+  if (!showSearchResults.value || searchResults.value.length === 0) return
+  switch (event.key) {
+    case 'ArrowDown':
+      event.preventDefault()
+      selectedIndex.value = (selectedIndex.value + 1) % searchResults.value.length
+      scrollToSelected()
+      break
+    case 'ArrowUp':
+      event.preventDefault()
+      selectedIndex.value = (selectedIndex.value - 1 + searchResults.value.length) % searchResults.value.length
+      scrollToSelected()
+      break
+    case 'Enter':
+      if (selectedIndex.value >= 0) {
+        navigateToResult(searchResults.value[selectedIndex.value])
+        selectedIndex.value = -1
+      } else performSearch()
+      break
+    case 'Escape':
+      showSearchResults.value = false
+      selectedIndex.value = -1
+      break
   }
+}
+
+function scrollToSelected() {
+  const container = document.querySelector('.search-results')
+  if (!container || selectedIndex.value < 0) return
+  const item = container.children[selectedIndex.value]
+  if (item) item.scrollIntoView({ block: 'nearest' })
 }
 
 function navigateToResult(result) {
   showSearchResults.value = false
   searchQuery.value = ''
-  
+  selectedIndex.value = -1
+
   if (result.rota) {
     if (result.tipo === 'empresa' && result.alterar) {
-      router.push({ path: result.rota, query: { empresa: result.alterar } })
-    } else {
+      authState.mudarStateEmpresa(result.alterar)  
+      router.push(result.rota)
+    } 
+    else if (result.tipo === 'pagina' && result.alterar) {
+      authState.mudarStateAuth(result.alterar)  
+      router.push(result.rota)
+    } 
+    else {
       router.push(result.rota)
     }
-  } else {
-    switch (result.tipo) {
-      case 'pagina':
-        router.push(result.rota)
-        break
-      case 'empresa':
-        router.push('/Empresa')
-        break
-      default:
-        break
-    }
   }
 }
 
-function handleSearchKeydown(event) {
-  if (event.key === 'Enter') {
-    performSearch()
+function handleClickOutside(event) {
+  const searchContainer = document.querySelector('.search')
+  if (searchContainer && !searchContainer.contains(event.target)) {
+    showSearchResults.value = false
+    selectedIndex.value = -1
   }
 }
+
+function handleScroll() {
+  const currentScroll = window.scrollY
+  showHeader.value = currentScroll < lastScroll || currentScroll < headerHeight
+  lastScroll = currentScroll
+}
+
+function handleResize() {
+  isMobile.value = window.innerWidth < 768
+  const headerEl = document.querySelector(isMobile.value ? '.celular' : '.notebook')
+  if (headerEl) headerHeight = headerEl.offsetHeight
+  showHeader.value = false
+  setTimeout(() => showHeader.value = true, 50)
+}
+
+watch(isMobile, () => {
+  showHeader.value = false
+  setTimeout(() => showHeader.value = true, 50)
+})
+
+onMounted(() => {
+  themeManager.init()
+  const headerEl = document.querySelector(isMobile.value ? '.celular' : '.notebook')
+  if (headerEl) headerHeight = headerEl.offsetHeight
+
+  window.addEventListener('scroll', handleScroll)
+  window.addEventListener('resize', handleResize)
+  document.addEventListener('click', handleClickOutside)
+
+  window.addEventListener('touchstart', handleTouchStart)
+  window.addEventListener('touchmove', handleTouchMove)
+  window.addEventListener('touchend', handleTouchEnd)
+
+  authState.restaurarState()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('resize', handleResize)
+  document.removeEventListener('click', handleClickOutside)
+
+  window.removeEventListener('touchstart', handleTouchStart)
+  window.removeEventListener('touchmove', handleTouchMove)
+  window.removeEventListener('touchend', handleTouchEnd)
+})
 </script>
 
+
 <template>
+  <div v-if="menuAberto"
+       class="menu-overlay"
+       @click="fecharMenu"
+       :style="{ opacity: overlayOpacity }"></div>
+
   <div class="notebook" :class="showHeader ? 'animate-slideDown' : 'animate-slideUp'">
     <div class="top-bar" :style="{ backgroundColor: themeManager.detalhe }">
       <p>Transporte escolar para o IFC de forma segura e fácil.</p>
-      <span :class="themeManager.icone" @click="themeManager.toggleTheme" aria-label="Alternar tema"></span>
+      <span :class="themeManager.icone" @click="themeManager.toggleTheme"></span>
     </div>
+
     <header :style="{ backgroundColor: themeManager.fundo }">
       <div class="container"
-        :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
+           :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
         <div class="logo">
           <RouterLink to="/">
             <img :src="themeManager.logo" alt="Logotipo ROUTER" />
@@ -167,42 +235,30 @@ function handleSearchKeydown(event) {
           </RouterLink>
         </div>
 
-        <div class="search">
-          <input 
-            v-model="searchQuery"
-            @keydown="handleSearchKeydown"
-            type="text" 
-            placeholder="Pesquisar páginas, empresas..." 
-            :style="{
-              backgroundColor: themeManager.fundo,
-              color: themeManager.text,
-              border: '2px solid ' + themeManager.detalhe
-            }" 
-          />
-          <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
-          
-          <div v-if="isLoading" class="search-loading">
-            <div class="spinner"></div>
-          </div>
-          
-          <div v-if="showSearchResults && searchResults.length > 0" class="search-results" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
-            <div 
-              v-for="result in searchResults" 
-              :key="`${result.tipo}-${result.id}`"
-              class="search-result-item"
-              @click="navigateToResult(result)"
-              :style="{ borderBottomColor: themeManager.detalhe }"
-            >
+        <div class="search" :style="{ color: themeManager.text }">
+          <input v-model="searchQuery"
+                 @keydown="handleSearchKeydown"
+                 type="text"
+                 placeholder="Pesquisar páginas, empresas..."
+                 :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, border: '2px solid ' + themeManager.detalhe }" />
+          <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe }"></span>
+          <div v-if="isLoading" class="search-loading"><div class="spinner"></div></div>
+          <div v-if="showSearchResults && searchResults.length > 0" class="search-results"
+               :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+            <div v-for="(result, index) in searchResults"
+                 :key="`${result.tipo}-${result.id}`"
+                 class="search-result-item"
+                 :class="{ 'selected': index === selectedIndex }"
+                 @click="navigateToResult(result)"
+                 @mouseenter="selectedIndex = index">
               <div class="result-content">
-                <div class="result-title" :style="{ color: themeManager.text }">{{ result.nome }}</div>
-                <div class="result-subtitle" :style="{ color: themeManager.text }">
-                  {{ result.descricao }}
-                </div>
+                <div class="result-title">{{ result.nome }}</div>
+                <div class="result-subtitle">{{ result.descricao }} <span v-if="result.alterar" class="result-alterar">({{ result.alterar }})</span></div>
               </div>
             </div>
           </div>
-          
-          <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+          <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results"
+               :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
             <span class="mdi mdi-magnify-close" :style="{ color: themeManager.detalhe }"></span>
             <p :style="{ color: themeManager.text }">Nenhum resultado encontrado</p>
           </div>
@@ -236,103 +292,105 @@ function handleSearchKeydown(event) {
   <div class="celular" :class="showHeader ? 'animate-slideDown' : 'animate-slideUp'">
     <header :style="{ backgroundColor: themeManager.fundo }">
       <div class="container"
-        :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
+           :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
         <div class="logo-bar">
           <RouterLink to="/">
             <img :src="themeManager.logo" alt="Logotipo ROUTER" />
-            <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">
-              Sua rota<br /><span>mais segura</span>
-            </p>
+            <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">Sua rota<br /><span>mais segura</span></p>
           </RouterLink>
-          <div>
-            <span class="mdi mdi-view-headline" @click="abrirMenu" :style="{ color: themeManager.text }"></span>
-          </div>
+          <div><span class="mdi mdi-view-headline" @click="abrirMenu" :style="{ color: themeManager.text }"></span></div>
         </div>
 
-        <div class="search">
-          <input 
-            v-model="searchQuery"
-            @keydown="handleSearchKeydown"
-            type="text" 
-            placeholder="Pesquisar páginas, empresas..." 
-            :style="{
-              backgroundColor: themeManager.fundo,
-              color: themeManager.text,
-              border: '2px solid ' + themeManager.detalhe
-            }" 
-          />
-          <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
-          
-          <div v-if="isLoading" class="search-loading">
-            <div class="spinner"></div>
-          </div>
-          <div v-if="showSearchResults && searchResults.length > 0" class="search-results mobile" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
-            <div 
-              v-for="result in searchResults" 
-              :key="`${result.tipo}-${result.id}`"
-              class="search-result-item"
-              @click="navigateToResult(result)"
-              :style="{ borderBottomColor: themeManager.detalhe }"
-            >
-              <div class="result-icon">
-                <span v-if="result.tipo === 'pagina'" class="mdi mdi-page-layout-body" :style="{ color: themeManager.detalhe }"></span>
-                <span v-else-if="result.tipo === 'empresa'" class="mdi mdi-domain" :style="{ color: themeManager.detalhe }"></span>
-              </div>
+        <div class="search" :style="{ color: themeManager.text }">
+          <input v-model="searchQuery"
+                 @keydown="handleSearchKeydown"
+                 type="text"
+                 placeholder="Pesquisar páginas, empresas..."
+                 :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, border: '2px solid ' + themeManager.detalhe }" />
+          <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe }"></span>
+          <div v-if="isLoading" class="search-loading"><div class="spinner"></div></div>
+          <div v-if="showSearchResults && searchResults.length > 0" class="search-results mobile"
+               :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+            <div v-for="(result, index) in searchResults"
+                 :key="`${result.tipo}-${result.id}`"
+                 class="search-result-item"
+                 :class="{ 'selected': index === selectedIndex }"
+                 @click="navigateToResult(result)"
+                 @mouseenter="selectedIndex = index">
               <div class="result-content">
-                <div class="result-title" :style="{ color: themeManager.text }">{{ result.nome }}</div>
-                <div class="result-subtitle" :style="{ color: themeManager.text }">
-                  {{ result.descricao }}
-                  <span v-if="result.alterar" class="result-alterar">({{ result.alterar }})</span>
-                </div>
-              </div>
-              <div class="result-type" :style="{ color: themeManager.detalhe }">
-                {{ result.tipo.charAt(0).toUpperCase() + result.tipo.slice(1) }}
+                <div class="result-title">{{ result.nome }}</div>
+                <div class="result-subtitle">{{ result.descricao }} <span v-if="result.alterar" class="result-alterar">({{ result.alterar }})</span></div>
               </div>
             </div>
           </div>
-          
-          <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results mobile" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+          <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results mobile"
+               :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
             <span class="mdi mdi-magnify-close" :style="{ color: themeManager.detalhe }"></span>
             <p :style="{ color: themeManager.text }">Nenhum resultado</p>
           </div>
         </div>
       </div>
-      <nav class="menu-mobile" :class="{ 'menu-aberto': menuAberto }" :style="{ backgroundColor: themeManager.fundo }">
+
+      <nav class="menu-mobile"
+           :class="{ 'menu-aberto': menuAberto, dragging: dragging }"
+           :style="{ right: menuAberto ? `-${dragOffset}px` : '-100%', backgroundColor: themeManager.fundo }">
         <div class="menu-top">
-          <RouterLink to="/login" @click="fecharMenu">
-            <span class="mdi mdi-account" :style="{ color: themeManager.text }"></span>
-          </RouterLink>
-          <span class="mdi mdi-close-outline" @click="fecharMenu" :style="{color: themeManager.text}"></span>
+          <RouterLink to="/login" @click="fecharMenu"><span class="mdi mdi-account" :style="{ color: themeManager.text }"></span></RouterLink>
+          <span class="mdi mdi-close-outline" @click="fecharMenu" :style="{ color: themeManager.text }"></span>
         </div>
         <ul>
-          <li>
-            <RouterLink to="/" :style="{ color: themeManager.text }" @click="fecharMenu">Início</RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/SobreNos" :style="{ color: themeManager.text }" @click="fecharMenu">Sobre</RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/equipe" :style="{ color: themeManager.text }" @click="fecharMenu">Equipe</RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/Empresa" :style="{ color: themeManager.text }" @click="fecharMenu">Empresas</RouterLink>
-          </li>
+          <li><RouterLink to="/" :style="{ color: themeManager.text }" @click="fecharMenu">Início</RouterLink></li>
+          <li><RouterLink to="/SobreNos" :style="{ color: themeManager.text }" @click="fecharMenu">Sobre</RouterLink></li>
+          <li><RouterLink to="/equipe" :style="{ color: themeManager.text }" @click="fecharMenu">Equipe</RouterLink></li>
+          <li><RouterLink to="/Empresa" :style="{ color: themeManager.text }" @click="fecharMenu">Empresas</RouterLink></li>
         </ul>
-        <span :class="themeManager.icone" :style="{ color: themeManager.text }"
-          @click="themeManager.toggleTheme"></span>
+        <span :class="themeManager.icone"
+              :style="{ color: themeManager.text }"
+              @click="themeManager.toggleTheme"></span>
       </nav>
     </header>
   </div>
 </template>
 
 <style scoped>
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  transition: opacity 0.2s ease;
+}
+
+.menu-mobile {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 75%;
+  height: 100%;
+  z-index: 1000;
+  padding: 20px;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease-in-out;
+}
+.menu-aberto { right: 0; min-height: 100vh; }
+.menu-mobile.dragging { transition: none !important; }
+
+.search-result-item.selected {
+  background-color: rgba(78, 70, 229, 0.082);
+  color: #1863A2;
+}
+
 .notebook,
 .celular {
   position: fixed;
-  top: 0%;
+  top: 0;
   left: 0;
   width: 100%;
   z-index: 999;
+  transition: all 0.5s ease;
+  opacity: 1;
 }
 
 .top-bar {
@@ -436,10 +494,10 @@ function handleSearchKeydown(event) {
 
 .search-results.mobile {
   position: fixed;
-  top: 120px;
+  top: 130px;
   left: 20px;
   right: 20px;
-  border-radius: 15px;
+  border-radius: 0 0 15px 15px;
   max-height: 300px;
 }
 
@@ -453,7 +511,7 @@ function handleSearchKeydown(event) {
 }
 
 .search-result-item:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(78, 70, 229, 0.082);
 }
 
 .search-result-item:last-child {
@@ -510,12 +568,25 @@ function handleSearchKeydown(event) {
   border: 2px solid transparent;
   border-top: 2px solid currentColor;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 200ms linear infinite; 
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(90deg); 
+  }
+  50% {
+    transform: rotate(180deg); 
+  }
+  75% {
+    transform: rotate(270deg); 
+  }
+  100% {
+    transform: rotate(360deg); 
+  }
 }
 
 .search-no-results {
@@ -535,10 +606,10 @@ function handleSearchKeydown(event) {
 
 .search-no-results.mobile {
   position: fixed;
-  top: 120px;
+  top: 130px;
   left: 20px;
   right: 20px;
-  border-radius: 15px;
+  border-radius: 0 0 15px 15px;
 }
 
 .search-no-results .mdi {
@@ -562,18 +633,24 @@ nav ul {
   flex-wrap: wrap;
 }
 
+nav ul li {
+  transition: all 0.3s ease;
+}
+
+nav ul li:hover {
+  transform: scale(1.05);
+}
+
 nav ul li a {
   font-size: 1.1em;
   text-decoration: none;
   padding: 5px 8px;
   border-radius: 5px;
-  transition: all 0.3s ease;
   font-weight: 500;
 }
 
 nav ul li a:hover {
   text-decoration: underline;
-  font-weight: bold;
 }
 
 nav ul li a span {
@@ -626,7 +703,7 @@ nav ul li a span {
 
 .menu-aberto {
   right: 0;
- min-height: 100vh;
+  min-height: 100vh;
 }
 
 .menu-top {
@@ -664,7 +741,7 @@ nav ul li a span {
     justify-content: space-between;
     padding: 5px 0;
     gap: 0px;
-    }
+  }
 
   .logo-bar a {
     display: flex;
@@ -680,9 +757,9 @@ nav ul li a span {
 
   .logo-bar p {
     font-size: 0.8rem;
-  margin: 0;
-  padding-left: 8px;
-  line-height: 1.2;
+    margin: 0;
+    padding-left: 8px;
+    line-height: 1.2;
   }
 
   .logo-bar .mdi {

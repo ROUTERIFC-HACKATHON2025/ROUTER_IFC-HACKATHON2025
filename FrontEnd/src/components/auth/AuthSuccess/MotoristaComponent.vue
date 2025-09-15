@@ -19,6 +19,7 @@ const verSenha = ref(false)
 const modoEdicao = ref(false)
 
 const endereco = ref('Rua Principal, 100')
+const editarEndereco = ref(false)
 
 const abrirPerfil = ref(true)
 const abrirTransportes = ref(false)
@@ -91,7 +92,7 @@ const passageirosVolta17 = ref([
   { nome: 'Sofia Almeida', endereco: 'Travessa Aurora, 50', pego: false }
 ])
 
-const rotaAtiva = ref(0) 
+const rotaAtiva = ref(0)
 function mudarRota(direcao) {
   if (direcao === 'next' && rotaAtiva.value < 2) rotaAtiva.value++
   if (direcao === 'prev' && rotaAtiva.value > 0) rotaAtiva.value--
@@ -104,22 +105,29 @@ function marcarPegou(p) {
 
 <template>
   <section class="notebook" :style="{ backgroundColor: themeManager.fundo }">
+    <!-- PERFIL -->
     <div class="perfil" :style="{ backgroundColor: themeManager.detalhe }">
       <h2>MEU PERFIL</h2>
       <div class="perfil-topo">
-        <img src="/public/src-auth/motorista.png" class="avatar" alt="">
+        <img src="/public/src-auth/motorista.png" class="avatar" alt="Avatar Motorista" />
         <div class="enderecos">
-          <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline"></span></p>
+          <p>MEUS ENDEREÇOS</p>
           <ul>
-            <li v-if="endereco">
+            <li>
               <span class="mdi mdi-map-marker"></span>
-              <p>{{ endereco }}</p>
-              <span class="mdi mdi-pencil"></span>
+              <div v-if="!editarEndereco">
+                <p>{{ endereco }}</p>
+              </div>
+              <div v-else>
+                <input v-model="endereco" class="input-endereco" type="text" />
+              </div>
+              <span class="mdi mdi-pencil" @click="editarEndereco = !editarEndereco"></span>
             </li>
           </ul>
         </div>
       </div>
 
+      <!-- Campos do Perfil -->
       <div class="inputs">
         <p class="info-label">Nome completo:</p>
         <div class="input-group">
@@ -154,12 +162,13 @@ function marcarPegou(p) {
       </div>
 
       <div class="editar">
-        <span @click="toggleEdicao">{{ modoEdicao ? 'Salvar' : 'Editar' }}</span> | Ver informação completa
+        <span @click="toggleEdicao">{{ modoEdicao ? 'Salvar' : 'Editar' }}</span>
       </div>
 
       <div class="sair" @click="sairDaConta">SAIR DA CONTA</div>
     </div>
 
+    <!-- TRANSPORTE -->
     <div class="transporte" :style="{ backgroundColor: themeManager.detalhe }">
       <h2>SEU TRANSPORTE PARA HOJE</h2>
       <div class="card">
@@ -170,75 +179,17 @@ function marcarPegou(p) {
         </div>
       </div>
     </div>
-    <div class="rota-container" v-show="rotaAtiva === 0">
+
+    <!-- ROTAS (IDA E VOLTA) -->
+    <div v-for="(passageiros, index) in [passageirosIda, passageirosVolta12, passageirosVolta17]" :key="index" class="rota-container" v-show="rotaAtiva === index">
       <div class="rota-header" :style="{ backgroundColor: themeManager.detalhe }">
         <button @click="mudarRota('prev')" class="seta">‹</button>
-        <h2>ROTA IDA</h2>
+        <h2>{{ index === 0 ? 'ROTA IDA' : index === 1 ? 'ROTA VOLTA 12h' : 'ROTA VOLTA 17h' }}</h2>
         <button @click="mudarRota('next')" class="seta">›</button>
       </div>
 
       <div class="rota-lista">
-        <div v-for="(p, i) in passageirosIda" :key="'ida-' + i" class="rota-item">
-          <div class="passageiro">
-            <img src="/public/src-auth/passageiro.png" alt="" class="avatar" />
-            <div>
-              <p>{{ p.nome }}</p>
-              <p class="endereco">{{ p.endereco }}</p>
-            </div>
-          </div>
-          <button
-            class="ok-btn"
-            :class="{ pego: p.pego }"
-            @click="marcarPegou(p)"
-            :style="{ backgroundColor: p.pego ? '#2e7d32' : themeManager.detalhe }"
-          >
-            {{ p.pego ? '✓' : 'OK' }}
-          </button>
-        </div>
-      </div>
-
-      <button class="iniciar-rota" :style="{ backgroundColor: themeManager.detalhe }">Iniciar Rota</button>
-    </div>
-
-    <div class="rota-container" v-show="rotaAtiva === 1">
-      <div class="rota-header" :style="{ backgroundColor: themeManager.detalhe }">
-        <button @click="mudarRota('prev')" class="seta">‹</button>
-        <h2>ROTA VOLTA 12h</h2>
-        <button @click="mudarRota('next')" class="seta">›</button>
-      </div>
-
-      <div class="rota-lista">
-        <div v-for="(p, i) in passageirosVolta12" :key="'v12-' + i" class="rota-item">
-          <div class="passageiro">
-            <img src="/public/src-auth/passageiro.png" alt="" class="avatar" />
-            <div>
-              <p>{{ p.nome }}</p>
-              <p class="endereco">{{ p.endereco }}</p>
-            </div>
-          </div>
-          <button
-            class="ok-btn"
-            :class="{ pego: p.pego }"
-            @click="marcarPegou(p)"
-            :style="{ backgroundColor: p.pego ? '#2e7d32' : themeManager.detalhe }"
-          >
-            {{ p.pego ? '✓' : 'OK' }}
-          </button>
-        </div>
-      </div>
-
-      <button class="iniciar-rota" :style="{ backgroundColor: themeManager.detalhe }">Iniciar Rota</button>
-    </div>
-
-    <div class="rota-container" v-show="rotaAtiva === 2">
-      <div class="rota-header" :style="{ backgroundColor: themeManager.detalhe }">
-        <button @click="mudarRota('prev')" class="seta">‹</button>
-        <h2>ROTA VOLTA 17h</h2>
-        <button @click="mudarRota('next')" class="seta">›</button>
-      </div>
-
-      <div class="rota-lista">
-        <div v-for="(p, i) in passageirosVolta17" :key="'v17-' + i" class="rota-item">
+        <div v-for="(p, i) in passageiros" :key="p.nome + '-' + i" class="rota-item">
           <div class="passageiro">
             <img src="/public/src-auth/passageiro.png" alt="" class="avatar" />
             <div>
@@ -433,7 +384,7 @@ function marcarPegou(p) {
 </template>
 
 <style scoped>
-.notebol, .celular {
+.notebook, .celular {
   padding: 20px 130px 60px 130px;
   min-height: 80vh;
   display: flex;
@@ -509,6 +460,20 @@ function marcarPegou(p) {
   border: none;
   align-items: center;
   margin-top: 5px;
+}
+
+.enderecos ul li .mdi {
+  font-size: 15px;
+}
+
+.input-endereco {
+  border: 1px solid #fff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  width: 100%;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  outline: none;
 }
 
 .inputs p {

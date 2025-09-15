@@ -40,28 +40,25 @@ const isEditing = ref(false);
 //   bairro: '',
 // })
 
-onMounted(async () => {
+function cadastrar() {
+  alert('Cadastro enviado! (a lógica real deve ser implementada)')
+}
+
+onMounted(() => {
   themeManager.init()
   authState.restaurarStateEmpresa()
-  await nextTick()
 
-  const animateElements = () => {
-    const elements = document.querySelectorAll('.animate-on-scroll')
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view')
-        } else {
-          entry.target.classList.remove('in-view')
-        }
-      })
-    }, { threshold: 0.1 })
+  // animação ao scroll
+  const elements = document.querySelectorAll('.animate-on-scroll')
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view')
+      }
+    })
+  }, { threshold: 0.1 })
 
-    elements.forEach(el => observer.observe(el))
-  }
-
-  animateElements()
-  window.addEventListener('scroll', animateElements)
+  elements.forEach(el => observer.observe(el))
 })
 
 function resetForm() {
@@ -97,36 +94,43 @@ async function cadastrar() {
             <input v-model="passageiro.nome" required
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
+
           <div>
             <p>E-mail: *</p>
             <input v-model="passageiro.email" type="email" required
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
+
           <div>
             <p>CPF do Aluno: *</p>
             <input v-model="passageiro.cpf" placeholder="000.000.000-00" required
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
-          <div id="telefone">
+
+          <div>
             <p>Telefone: *</p>
             <input v-model="passageiro.telefone" class="input-field-mid" required
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
+
           <div>
             <p>Data de Nascimento: *</p>
             <input v-model="passageiro.dataNascimento" type="date" class="input-field-mid" required
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
+
           <div>
             <p>Senha: *</p>
             <input v-model="passageiro.senha" type="password" required
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
+
           <div>
             <p>Confirme sua Senha: *</p>
             <input v-model="passageiro.confirmarSenha" type="password" required
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
+
           <div>
             <p>Informações adicionais:</p>
             <input type="text" class="input-field-add" v-model="passageiro.informacoesAdicionais"
@@ -134,7 +138,6 @@ async function cadastrar() {
           </div>
         </div>
       </div>
-
       <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
         <h2 class="responsaveis"><span class="mdi mdi-human-male-male-child"
             :style="{ color: themeManager.detalheAlternativo }"></span> Informações dos Responsáveis</h2>
@@ -160,7 +163,6 @@ async function cadastrar() {
           </div>
         </div>
       </div>
-
       <!-- <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
         <h2><span class="mdi mdi-map-marker" :style="{ color: themeManager.detalheAlternativo }"></span> Endereço
           Residencial</h2>
@@ -202,7 +204,7 @@ async function cadastrar() {
 
 <style scoped>
 .animate-on-scroll {
-  opacity: 1;
+  opacity: 0;
   transform: translateY(50px);
   transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
 }
@@ -212,10 +214,9 @@ async function cadastrar() {
   transform: translateY(0);
 }
 
-/* Original Styles */
 .form-container {
   margin: 0 300px;
-  padding: 0px 0 200px 0;
+  padding: 0 0 200px 0;
   border-radius: 8px;
   font-family: sans-serif;
   align-items: center;
@@ -280,12 +281,6 @@ input {
   border: 1px solid;
   border-radius: 10px;
   min-width: 350px;
-  align-items: center;
-  height: auto;
-}
-
-#telefone {
-  margin-left: 0.7rem;
 }
 
 .input-field-mid {
@@ -344,10 +339,6 @@ button:hover {
 
   form {
     padding: 40px 20px 100px 20px;
-  }
-
-  #telefone {
-    margin-left: 0rem;
   }
 
   .input-field-add {

@@ -97,7 +97,7 @@ onMounted(async () => {
           <div class="info">
             <img class="logo" src="/public/src-home/logoindytour.png" alt="IndyTour" />
             <div class="redes">
-              <a href="https://www.instagram.com/indy_tour" style="color: #fff;"><span class="mdi mdi-instagram"></span></a>
+              <a href="https://www.instagram.com/indy_tour" target="_blank" style="color: #fff;"><span class="mdi mdi-instagram"></span></a>
               <a href="tel:+5547992214606" style="color: #fff;"><span class="mdi mdi-phone"></span></a>
             </div>
           </div>
@@ -109,7 +109,7 @@ onMounted(async () => {
           <div class="info">
             <img class="logo" src="/public/src-home/logosul.png" alt="Sul Turismo" />
             <div class="redes">
-              <a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;"><span class="mdi mdi-instagram"></span></a>
+              <a href="https://www.instagram.com/sulturismotransportes" target="_blank" style="color: #fff;"><span class="mdi mdi-instagram"></span></a>
               <a href="tel:+5547996767651" style="color: #fff;"><span class="mdi mdi-phone"></span></a>
             </div>
           </div>

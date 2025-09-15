@@ -323,7 +323,7 @@ h2 {
     color: white;
     border: none;
     padding: 15px;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-top: 10px;
     cursor: pointer;
     border-radius: 5px;

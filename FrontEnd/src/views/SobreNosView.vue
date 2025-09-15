@@ -75,13 +75,17 @@ onMounted(async () => {
             veterinária, sistemas de informação, ciências agrícolas, química e redes de computadores.
           </p>
           <p class="textRight animate-on-scroll" :style="{ color: themeManager.text, borderColor: themeManager.text }">
-            Caso queira saber mais sobre o Instituto Federal Catarinense - Campus Araquari acesse o site: 
+            Caso queira saber mais sobre o Instituto Federal Catarinense - Campus Araquari acesse o site:
             <a href="https://araquari.ifc.edu.br/" :style="{ color: themeManager.detalheAlternativo }" target="_blank">
               https://araquari.ifc.edu.br/
             </a><br /><br />
             Entre em contato com a RouterIFC para mais informações:<br />
-            <a href="mailto: routerifc@gmail.com" :style="{ color: themeManager.detalheAlternativo}">routerifc@gmail.com</a><br />
-            <a href="https://www.instagram.com/routerifc" target="_blank" :style="{ color: themeManager.detalheAlternativo }">@routerifc</a>
+            <a href="mailto:routerifc@gmail.com" class="transition-colors hover:underline"
+              :style="{ color: themeManager.detalheAlternativo }">
+              routerifc@gmail.com
+            </a><br />
+            <a href="https://www.instagram.com/routerifc" target="_blank"
+              :style="{ color: themeManager.detalheAlternativo }">@routerifc</a>
           </p>
         </div>
       </div>
@@ -91,7 +95,8 @@ onMounted(async () => {
   <main class="celular" :style="{ backgroundColor: themeManager.fundo }">
     <section class="sobre-nos animate-on-scroll">
       <div>
-        <h1 class="title animate-on-scroll" :style="{ color: themeManager.text, borderBottom: '2px solid ' + themeManager.detalheAlternativo }">
+        <h1 class="title animate-on-scroll"
+          :style="{ color: themeManager.text, borderBottom: '2px solid ' + themeManager.detalheAlternativo }">
           SOBRE <span :style="{ color: themeManager.detalheAlternativo }">NÓS!</span>
         </h1>
         <img class="animate-on-scroll" src="/src-sobre/business.png" alt="Quem somos" />
@@ -130,13 +135,15 @@ onMounted(async () => {
             veterinária, sistemas de informação, ciências agrícolas, química e redes de computadores.
           </p>
           <p class="textRight animate-on-scroll" :style="{ color: themeManager.text, borderColor: themeManager.text }">
-            Caso queira saber mais sobre o Instituto Federal Catarinense - Campus Araquari acesse o site: 
+            Caso queira saber mais sobre o Instituto Federal Catarinense - Campus Araquari acesse o site:
             <a href="https://araquari.ifc.edu.br/" :style="{ color: themeManager.detalheAlternativo }" target="_blank">
               https://araquari.ifc.edu.br/
             </a><br /><br />
             Entre em contato com a RouterIFC para mais informações:<br />
-            <a href="mailto:routerifc@gmail.com" :style="{ color: themeManager.detalheAlternativo}" target="_blank">routerifc@gmail.com</a><br />
-            <a href="https://www.instagram.com/routerifc" target="_blank" :style="{ color: themeManager.detalheAlternativo }">@routerifc</a>
+            <a href="mailto:routerifc@gmail.com" :style="{ color: themeManager.detalheAlternativo }"
+              target="_blank">routerifc@gmail.com</a><br />
+            <a href="https://www.instagram.com/routerifc" target="_blank"
+              :style="{ color: themeManager.detalheAlternativo }">@routerifc</a>
           </p>
         </div>
       </div>
@@ -155,109 +162,110 @@ onMounted(async () => {
   opacity: 1;
   transform: translateY(0);
 }
+
 .sobre-nos {
-    padding: 110px 120px 0;
-    align-items: center;
-    text-align: center;
+  padding: 110px 120px 0;
+  align-items: center;
+  text-align: center;
 }
 
 .sobre-nos div {
-    padding-top: 10%;
-    min-height: 40vh;
+  padding-top: 10%;
+  min-height: 40vh;
 }
 
 .quem-somos {
-    padding: 0 0 0 160px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  padding: 0 0 0 160px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .quem-somos h2 {
-    text-align: left;
+  text-align: left;
 }
 
 .quem-somos .texto {
-    flex: 1;
+  flex: 1;
 }
 
 .quem-somos .imagem {
-    flex: 1;
-    text-align: center;
+  flex: 1;
+  text-align: center;
 }
 
 .quem-somos .imagem img {
-    min-width: 500px;
-    height: auto;
+  min-width: 500px;
+  height: auto;
 }
 
 .subtitulo {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .objetivo {
-    margin: 0 160px;
-    padding: 80px 200px;
-    border-radius: 4px;
-    color: white;
-    text-align: center;
+  margin: 0 160px;
+  padding: 80px 200px;
+  border-radius: 4px;
+  color: white;
+  text-align: center;
 }
 
 .objetivo-titulo {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .saiba-mais {
-    margin: 80px 160px 0 160px;
-    padding-bottom: 80px;
+  margin: 80px 160px 0 160px;
+  padding-bottom: 80px;
 }
 
 .saiba-mais-titulo {
-    text-align: right;
-    margin-bottom: 20px;
+  text-align: right;
+  margin-bottom: 20px;
 }
 
 .saiba-mais-conteudo {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .saiba-mais-conteudo p {
-    width: 50%;
+  width: 50%;
 }
 
 .saiba-mais-conteudo .textRight {
-    text-align: right;
-    padding-left: 20px;
-    margin-left: 20px;
-    border-left: 2px solid;
+  text-align: right;
+  padding-left: 20px;
+  margin-left: 20px;
+  border-left: 2px solid;
 }
 
 a {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 @media (max-width: 768px) {
-    .sobre-nos {
+  .sobre-nos {
     padding: 230px 0 0 0;
     align-items: center;
     text-align: center;
-}
+  }
 
-.sobre-nos div {
+  .sobre-nos div {
     display: block;
     justify-content: center;
     text-align: center;
     gap: 0px;
     min-height: 30vh;
     padding-top: 0;
-}
+  }
 
-img {
+  img {
     min-width: 10px;
     width: 400px;
     height: auto;
-}
+  }
 
   h1 {
     padding-bottom: 20px;
@@ -269,54 +277,54 @@ img {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
+  }
 
-.quem-somos h2 {
+  .quem-somos h2 {
     text-align: center;
     font-size: 2rem;
-}
+  }
 
-.quem-somos .texto {
+  .quem-somos .texto {
     flex: 1;
     text-align: justify;
-}
+  }
 
-.subtitulo {
+  .subtitulo {
     margin-bottom: 20px;
-}
+  }
 
-.objetivo {
+  .objetivo {
     margin: 0 10px;
     padding: 15px;
     border-radius: 4px;
     color: white;
     text-align: justify;
-}
+  }
 
-.objetivo-titulo {
+  .objetivo-titulo {
     margin-bottom: 20px;
-}
+  }
 
-.saiba-mais {
+  .saiba-mais {
     margin: 50px 20px 0 20px;
     padding-bottom: 80px;
-}
+  }
 
-.saiba-mais-titulo {
+  .saiba-mais-titulo {
     text-align: right;
     margin-bottom: 20px;
-}
+  }
 
-.saiba-mais-conteudo {
+  .saiba-mais-conteudo {
     display: block;
     justify-content: space-between;
-}
+  }
 
-.saiba-mais-conteudo p {
+  .saiba-mais-conteudo p {
     width: 100%;
-}
+  }
 
-.saiba-mais-conteudo .textRight {
+  .saiba-mais-conteudo .textRight {
     text-align: right;
     padding-left: 0px;
     margin-left: 0px;
@@ -324,6 +332,6 @@ img {
     margin-top: 20px;
     padding-top: 20px;
     border-top: 2px solid;
-}
+  }
 }
 </style>

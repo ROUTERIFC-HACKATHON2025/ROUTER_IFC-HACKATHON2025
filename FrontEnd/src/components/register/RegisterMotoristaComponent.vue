@@ -31,6 +31,7 @@ function toggleSelect() {
 
 function selecionarEmpresa(nome) {
   motorista.value.empresa = nome
+  authState.mudarStateEmpresa(nome) // 🔥 atualiza no store
   aberto.value = false
 }
 
@@ -39,28 +40,22 @@ function selecionarEmpresa(nome) {
 }*/
 
 
-onMounted(async () => {
+onMounted(() => {
   themeManager.init()
-    authState.restaurarStateEmpresa()
-  await nextTick()
+  authState.restaurarStateEmpresa()
 
-  const animateElements = () => {
-    const elements = document.querySelectorAll('.animate-on-scroll')
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view')
-        } else {
-          entry.target.classList.remove('in-view')
-        }
-      })
-    }, { threshold: 0.1 })
+  const elements = document.querySelectorAll('.animate-on-scroll')
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view')
+      } else {
+        entry.target.classList.remove('in-view')
+      }
+    })
+  }, { threshold: 0.1 })
 
-    elements.forEach(el => observer.observe(el))
-  }
-
-  animateElements()
-  window.addEventListener('scroll', animateElements)
+  elements.forEach(el => observer.observe(el))
 })
 
 function resetForm() {
@@ -176,7 +171,7 @@ async function cadastrar() {
 
 <style scoped>
 .animate-on-scroll {
-  opacity: 1;
+  opacity: 0;
   transform: translateY(50px);
   transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
 }
@@ -204,7 +199,11 @@ h1 {
   font-size: 2.5rem;
   padding: 100px 0 60px 0;
 }
-
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
 .space {
   margin-bottom: 15px;
   padding-bottom: 40px;

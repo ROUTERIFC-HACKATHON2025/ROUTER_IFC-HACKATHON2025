@@ -91,16 +91,16 @@ onMounted(async () => {
         </button>
       </div>
 
-      <div class="tab-content" :style="{ border: '2px solid ' + themeManager.detalheAlternativo, backgroundColor: '#fff', color: '#000' }">
+      <div class="tab-content" :style="{ border: '2px solid ' + themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }">
         <div v-show="abaSelecionada === 'Motoristas'" class="content-box animate-on-scroll">
           <div>
-            <p :style="{ color: '#000' }">
+            <p :style="{ color: themeManager.text }">
               Nosso site oferece aos motoristas a oportunidade de se cadastrarem e acessarem rotas disponíveis
               conforme sua região. Eles têm um painel próprio onde podem gerenciar seus horários e receber
               notificações sobre alterações de rota ou imprevistos. Além disso, prezamos pela segurança, exigindo
               documentos atualizados e treinamento básico sobre atendimento e primeiros socorros.
             </p>
-            <a href="/register" target="_blank" rel="noopener" @click="authStore.mudarStateAuth('Motorista')">
+            <a href="/register" rel="noopener" @click="authStore.mudarStateAuth('Motorista')">
               <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre-se como Motorista</button>
             </a>
           </div>
@@ -109,7 +109,7 @@ onMounted(async () => {
 
         <div v-show="abaSelecionada === 'Empresas'" class="content-box animate-on-scroll">
           <div>
-            <p :style="{ color: '#000' }">
+            <p :style="{ color: themeManager.text }">
               As empresas de transporte escolar que se cadastram no nosso site ganham visibilidade e organização. A
               plataforma permite o gerenciamento das rotas, dos motoristas e dos veículos em tempo real. Com isso,
               garantimos mais eficiência no serviço prestado e mais confiança por parte das famílias.
@@ -120,11 +120,11 @@ onMounted(async () => {
 
         <div v-show="abaSelecionada === 'Passageiros'" class="content-box animate-on-scroll">
           <div>
-            <p :style="{ color: '#000' }">
+            <p :style="{ color: themeManager.text }">
               Para os passageiros, nosso site oferece praticidade e acompanhamento em tempo real. Os alunos contam com
               um transporte confiável e organizado, tornando o trajeto escolar mais seguro e tranquilo todos os dias.
             </p>
-            <a href="/register" target="_blank" rel="noopener" @click="authStore.mudarStateAuth('Passageiro')">
+            <a href="/register" rel="noopener" @click="authStore.mudarStateAuth('Passageiro')">
               <button :style="{ backgroundColor: themeManager.detalhe }">Cadastre-se como Passageiro</button>
             </a>
           </div>
@@ -329,6 +329,10 @@ onMounted(async () => {
 
 .tab-section {
   padding: 80px 120px;
+}
+
+.tab-section h2 {
+  margin-bottom: 20px;
 }
 
 .tab-buttons {

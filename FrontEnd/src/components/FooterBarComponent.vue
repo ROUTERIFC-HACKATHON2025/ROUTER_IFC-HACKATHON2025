@@ -35,7 +35,7 @@ onMounted(themeManager.init)
           <h2>Redes Sociais</h2>
           <ul class="social-icons">
             <li><a href="https://www.instagram.com/routerifc" target="_blank"><span class="mdi mdi-instagram"></span></a></li>
-            <li><a href="https://www.facebook.com/routerifc" target="_blank"><span class="mdi mdi-facebook"></span></a></li>
+            <li><a href="https://www.facebook.com/people/Router-Ifc/pfbid02KpkKuZ7J8CJAtjzN1ZfBAWa8nDZXJBhJYyaehTLEJ5Wm6KLJ6cxik9zB8UU4Mp5Ql/" target="_blank"><span class="mdi mdi-facebook"></span></a></li>
             <li><a href="https://www.twitter.com/routerifc" target="_blank"><span class="mdi mdi-twitter"></span></a></li>
           </ul>
         </div>
@@ -63,14 +63,14 @@ onMounted(themeManager.init)
           </div>
         </div>
         <div>
-          <div class="footer-section-icons" id="footer-section-icons-space">
-            <h2>Redes Sociais</h2>
-            <ul class="social-icons">
-              <li><a href="#"><span class="mdi mdi-instagram"></span></a></li>
-              <li><a href="#"><span class="mdi mdi-facebook"></span></a></li>
-              <li><a href="#"><span class="mdi mdi-twitter"></span></a></li>
-            </ul>
-          </div>
+          <div class="footer-section-icons">
+          <h2>Redes Sociais</h2>
+          <ul class="social-icons">
+            <li><a href="https://www.instagram.com/routerifc" target="_blank"><span class="mdi mdi-instagram"></span></a></li>
+            <li><a href="https://www.facebook.com/people/Router-Ifc/pfbid02KpkKuZ7J8CJAtjzN1ZfBAWa8nDZXJBhJYyaehTLEJ5Wm6KLJ6cxik9zB8UU4Mp5Ql/" target="_blank"><span class="mdi mdi-facebook"></span></a></li>
+            <li><a href="https://www.twitter.com/routerifc" target="_blank"><span class="mdi mdi-twitter"></span></a></li>
+          </ul>
+        </div>
 
           <div class="footer-section">
             <h2>Empresa</h2>
