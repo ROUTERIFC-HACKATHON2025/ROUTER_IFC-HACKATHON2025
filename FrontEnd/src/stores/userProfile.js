@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import axios from 'axios'
 
 export const useUserProfileStore = defineStore('userProfile', () => {
   const nomePassageiro = ref('João Silva')
@@ -163,10 +164,27 @@ export const useUserProfileStore = defineStore('userProfile', () => {
     }
   ])
 
-  const usuarioAtual = ref(null)
+  const usuarioAtual = ref(JSON.parse(localStorage.getItem('usuarioAtual')) || null)
 
   function setUsuarioAtual(passageiro) {
     usuarioAtual.value = passageiro
+    localStorage.setItem('usuarioAtual', JSON.stringify(passageiro))
+  }
+
+  async function fetchUsuarioAtual() {
+    const token = localStorage.getItem('accessToken')
+    if (token) {
+      try {
+        const response = await axios.get('http://localhost:8000/api/usuarios/me/', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        setUsuarioAtual(response.data)
+      } catch (error) {
+        console.error('Erro ao buscar dados do usuário:', error)
+      }
+    }
   }
 
   function atualizarPerfil(dados) {
@@ -244,6 +262,6 @@ export const useUserProfileStore = defineStore('userProfile', () => {
     vans,
     passageiros,
     motoristas,
-    usuarioAtual, setUsuarioAtual, atualizarPerfil
+    usuarioAtual, setUsuarioAtual, fetchUsuarioAtual, atualizarPerfil
   }
 })

@@ -24,12 +24,23 @@ const defaultPassageiro = {
   informacoesAdicionais: ''
 }
 
+// Modelo padrão de endereço
+const defaultEndereco = {
+  cep: '',
+  rua: '',
+  numero: '',
+  cidade: '',
+  bairro: ''
+}
+
 const passageiro = reactive({ ...defaultPassageiro })
+const endereco = reactive({ ...defaultEndereco }) // ✅ agora existe
 const isEditing = ref(false)
 
 // Função para resetar formulário
 function resetForm() {
   Object.assign(passageiro, { ...defaultPassageiro })
+  Object.assign(endereco, { ...defaultEndereco })
 }
 
 // Função para cadastrar/atualizar passageiro
@@ -44,10 +55,16 @@ async function cadastrar() {
     return
   }
 
+  const payload = {
+    ...passageiro,
+    endereco: { ...endereco } // ✅ envia endereço junto
+  }
+
   if (isEditing.value) {
-    await passageirosStore.updatePassageiro({ ...passageiro })
+    await passageirosStore.updatePassageiro(payload)
   } else {
-    await passageirosStore.addPassageiro({ ...passageiro })
+    await passageirosStore.addPassageiro(payload)
+
     // Após auto-login, muda estado de auth conforme papel
     try {
       const access = localStorage.getItem('accessToken')
@@ -65,7 +82,7 @@ async function cadastrar() {
         }
       }
     } catch (e) {
-      // noop
+      console.error(e)
     }
   }
 
@@ -89,6 +106,7 @@ onMounted(() => {
   elements.forEach(el => observer.observe(el))
 })
 </script>
+
 
 
 <template>
@@ -174,7 +192,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <!-- <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
+      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
         <h2><span class="mdi mdi-map-marker" :style="{ color: themeManager.detalheAlternativo }"></span> Endereço
           Residencial</h2>
         <div class="grid">
@@ -204,7 +222,7 @@ onMounted(() => {
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
         </div>
-      </div> -->
+      </div> 
       <div class="buttons">
       <button type="submit" class="submit" :style="{ backgroundColor: themeManager.detalhe }">Cadastrar-se</button>
       <button type="button" @click="resetForm" :style="{ backgroundColor: themeManager.detalheAlternativo }">Cancelar</button>

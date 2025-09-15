@@ -42,17 +42,42 @@ class UserViewSet(ModelViewSet):
         passageiro = False
         motorista = False
         admin = False
-        if user.is_superuser:
-            admin = True
-        if hasattr(user, 'passageiro'):
-            passageiro = True
-        if hasattr(user, 'motorista'):
-            motorista = True
-        
-        return Response({
+        data = {
             'username': user.username,
             'email': user.email,
             'is_passageiro': passageiro,
             'is_motorista': motorista,
             'is_admin': admin
-        }, status=200)
+        }
+        if user.is_superuser:
+            admin = True
+            data['is_admin'] = admin
+        if hasattr(user, 'passageiro'):
+            passageiro = True
+            data['is_passageiro'] = passageiro
+            passageiro_obj = user.passageiro
+            data.update({
+                'nome': passageiro_obj.nome,
+                'telefone': passageiro_obj.telefone,
+                'email': passageiro_obj.email,
+                'senha': passageiro_obj.senha,
+                'dataNascimento': passageiro_obj.dataNascimento,
+                'cpf': passageiro_obj.cpf,
+                'nomeResponsavel': passageiro_obj.nomeResponsavel,
+                'cpfResponsavel': passageiro_obj.cpfResponsavel,
+                'telefoneResponsavel': passageiro_obj.telefoneResponsavel
+            })
+        if hasattr(user, 'motorista'):
+            motorista = True
+            data['is_motorista'] = motorista
+            motorista_obj = user.motorista
+            data.update({
+                'nome': motorista_obj.nome,
+                'telefone': motorista_obj.telefone,
+                'email': motorista_obj.email,
+                'senha': motorista_obj.senha,
+                'cpf': motorista_obj.cpf,
+                'codigoCnh': motorista_obj.codigoCnh
+            })
+        
+        return Response(data, status=200)

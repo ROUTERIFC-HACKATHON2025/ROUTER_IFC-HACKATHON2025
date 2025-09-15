@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useUserProfileStore } from '@/stores/userProfile'
@@ -10,11 +10,11 @@ const userProfile = useUserProfileStore()
 const authState = useAuthStateStore()
 const router = useRouter()
 
-const nome = ref(userProfile.nome ?? '')
-const telefone = ref(userProfile.telefone ?? '')
-const email = ref(userProfile.email ?? '')
-const senha = ref(userProfile.senha ?? '')
-const nascimento = ref(userProfile.nascimento ?? '')
+const nome = ref(userProfile.usuarioAtual?.nome ?? '')
+const telefone = ref(userProfile.usuarioAtual?.telefone ?? '')
+const email = ref(userProfile.usuarioAtual?.email ?? '')
+const senha = ref(userProfile.usuarioAtual?.senha ?? '')
+const nascimento = ref(userProfile.usuarioAtual?.nascimento ?? '')
 const verSenha = ref(false)
 const modoEdicao = ref(false)
 
@@ -45,13 +45,32 @@ function toggleEdicao() {
 
 function sairDaConta() {
   authState.reset()
+  userProfile.setUsuarioAtual(null)
   router.push('/')
 }
 
-onMounted(() => {
+onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
+  if (!userProfile.usuarioAtual) {
+    await userProfile.fetchUsuarioAtual()
+  }
 })
+
+// Observa mudanças no usuário para atualizar inputs
+watch(
+  () => userProfile.usuarioAtual,
+  (novoUsuario) => {
+    if (novoUsuario) {
+      nome.value = novoUsuario.nome
+      telefone.value = novoUsuario.telefone
+      email.value = novoUsuario.email
+      senha.value = novoUsuario.senha
+      nascimento.value = ''
+    }
+  },
+  { immediate: true }
+)
 
 const passageirosIda = ref([
   { nome: 'João Silva', endereco: 'Rua das Flores, 120', pego: false },

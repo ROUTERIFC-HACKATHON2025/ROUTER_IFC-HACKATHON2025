@@ -3,9 +3,11 @@ import axios from 'axios'
 import { ref, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
+import { useUserProfileStore } from '@/stores/userProfile'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
+const userProfile = useUserProfileStore()
 
 const usuario = ref({
   username: '',
@@ -62,6 +64,9 @@ async function handleLogin() {
     console.error('Erro ao obter informações do usuário:', err)
     erro.value = 'Erro ao obter informações do usuário.'
   })
+  if (response.data) {
+    userProfile.setUsuarioAtual(response.data)
+  }
   if (response.data.is_passageiro) {
     authState.mudarState('passageiro')
   }

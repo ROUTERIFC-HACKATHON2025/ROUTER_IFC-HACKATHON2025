@@ -33,9 +33,12 @@ const voltara = ref('')
 const horario = ref('')
 
 // Inicialização do tema e autenticação
-onMounted(() => {
+onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
+  if (!userProfile.usuarioAtual) {
+    await userProfile.fetchUsuarioAtual()
+  }
   initMap()
 })
 
@@ -48,7 +51,7 @@ watch(
       telefone.value = novoUsuario.telefone
       email.value = novoUsuario.email
       senha.value = novoUsuario.senha
-      nascimento.value = novoUsuario.nascimento
+      nascimento.value = novoUsuario.dataNascimento
       endereco.value = novoUsuario.endereco
       descricao.value = novoUsuario.descricao
     }
@@ -86,6 +89,7 @@ function toggleEdicao() {
 // Sair da conta
 function sairDaConta() {
   authState.reset()
+  userProfile.setUsuarioAtual(null)
   router.push('/')
 }
 
