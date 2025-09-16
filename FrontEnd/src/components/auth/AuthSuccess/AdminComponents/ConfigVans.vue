@@ -10,23 +10,23 @@ const authState = useAuthStateStore()
 const userProfile = useUserProfileStore()
 const admin = useAdminStore()
 
-const vanSelecionada = computed(() => admin.selectedVan || { 
-  nome: '-', 
-  modelo: '-', 
+const vanSelecionada = computed(() => admin.selectedVan || {
+  nome: '-',
+  modelo: '-',
   marca: '-',
-  placa: '-', 
-  acentos: 0, 
+  placa: '-',
+  acentos: 0,
   ano: '-',
   cor: '-',
   caracteristicas: [],
   status: '-',
-  motorista: null 
+  motorista: null
 })
 const motoristaSelecionado = computed(() => admin.selectedDriver)
 
 const infoExpandida = ref(false)
 const caracteristicasExpandida = ref(false)
-const motoristaExpandido = ref(true) 
+const motoristaExpandido = ref(true)
 
 function toggleInfo() {
   infoExpandida.value = !infoExpandida.value
@@ -44,10 +44,10 @@ function toggleStatusVan() {
   if (admin.selectedVan) {
     const novoStatus = admin.selectedVan.status === 'Ativo' ? 'Manutenção' : 'Ativo'
     const acao = novoStatus === 'Manutenção' ? 'colocar em manutenção' : 'ativar'
-    
+
     if (confirm(`Tem certeza que deseja ${acao} a van "${admin.selectedVan.nome}"?`)) {
       admin.updateVanStatus(novoStatus)
-      
+
       if (novoStatus === 'Manutenção') {
         admin.clearDriver()
         admin.clearAllPassengers()
@@ -67,7 +67,7 @@ const rotaVolta17 = computed(() => admin.getRotaEditada('volta17'))
 function editarRota(tipoRota, passageiros) {
   const rotaAtual = admin.getRotaEditada(tipoRota)
   const passageirosParaEditar = rotaAtual.length > 0 ? rotaAtual : passageiros
-  
+
   admin.setRotaEmEdicao({ tipo: tipoRota, passageiros: passageirosParaEditar })
   authState.mudarAdminPage('editarRota')
 }
@@ -76,7 +76,7 @@ function editarRota(tipoRota, passageiros) {
 <template>
   <section :style="{ color: themeManager.text }">
     <h1 class="titulo">
-      PÁGINA DE 
+      PÁGINA DE
       <span class="azul" :style="{ color: themeManager.detalheAlternativo }">
         GERENCIAMENTO
       </span>
@@ -104,13 +104,13 @@ function editarRota(tipoRota, passageiros) {
               <p><strong>Cor:</strong> {{ vanSelecionada.cor }}</p>
               <p><strong>Acentos:</strong> {{ vanSelecionada.acentos }}</p>
               <div class="status-container">
-                <p><strong>Status:</strong> 
+                <p><strong>Status:</strong>
                   <span :style="{ color: vanSelecionada.status === 'Ativo' ? '#4CAF50' : '#FF9800' }">{{ vanSelecionada.status }}</span>
                 </p>
-                <button 
-                  class="btn-status" 
+                <button
+                  class="btn-status"
                   @click="toggleStatusVan"
-                  :style="{ 
+                  :style="{
                     backgroundColor: vanSelecionada.status === 'Ativo' ? '#FF9800' : '#4CAF50',
                     color: '#fff'
                   }"
@@ -143,17 +143,17 @@ function editarRota(tipoRota, passageiros) {
           </div>
                         <div v-show="motoristaExpandido" class="secao-conteudo">
                 <div class="motorista-box">
-                  <img src="/public/src-auth/motorista.png" alt="">
+                  <img src="/src-auth/motorista.png" alt="">
                   <p v-if="motoristaSelecionado">{{ motoristaSelecionado.nome }}</p>
                   <p v-else>Selecione um motorista</p>
-                  <button 
-                    class="btn-add" 
+                  <button
+                    class="btn-add"
                     :disabled="vanSelecionada.status === 'Manutenção'"
-                    :style="{ 
+                    :style="{
                       backgroundColor: vanSelecionada.status === 'Manutenção' ? '#666' : themeManager.detalheAlternativo,
                       opacity: vanSelecionada.status === 'Manutenção' ? 0.6 : 1,
                       cursor: vanSelecionada.status === 'Manutenção' ? 'not-allowed' : 'pointer'
-                    }" 
+                    }"
                     @click="vanSelecionada.status !== 'Manutenção' && authState.mudarAdminPage('motorista')"
                   >
                     {{ vanSelecionada.status === 'Manutenção' ? 'Van em Manutenção' : (motoristaSelecionado ? 'Mudar Motorista' : 'Adicionar Motorista') }}
@@ -168,25 +168,25 @@ function editarRota(tipoRota, passageiros) {
           <h3>PASSAGEIROS</h3>
           <span>{{ admin.vanPassengers.length }}/{{ vanSelecionada.acentos }}</span>
         </div>
-        
+
         <div v-if="vanSelecionada.status === 'Manutenção'" class="aviso-manutencao">
           <span class="mdi mdi-wrench"></span>
           <p>Van em manutenção - Não é possível adicionar passageiros</p>
         </div>
         <ul class="lista-passageiros">
           <li v-for="p in admin.vanPassengers" :key="p.id">
-            <img src="/public/src-auth/passageiro.png" alt="" class="avatarP"> {{ p.nome }}
+            <img src="/src-auth/passageiro.png" alt="" class="avatarP"> {{ p.nome }}
             <button class="remover" @click="removerPassageiro(p.id)">remover</button>
           </li>
         </ul>
-        <button 
-          class="btn-add" 
+        <button
+          class="btn-add"
           :disabled="vanSelecionada.status === 'Manutenção'"
-          :style="{ 
+          :style="{
             backgroundColor: vanSelecionada.status === 'Manutenção' ? '#666' : themeManager.detalheAlternativo,
             opacity: vanSelecionada.status === 'Manutenção' ? 0.6 : 1,
             cursor: vanSelecionada.status === 'Manutenção' ? 'not-allowed' : 'pointer'
-          }" 
+          }"
           @click="vanSelecionada.status !== 'Manutenção' && authState.mudarAdminPage('passageiro')"
         >
           {{ vanSelecionada.status === 'Manutenção' ? 'Van em Manutenção' : 'Adicionar Passageiro' }}
@@ -583,6 +583,6 @@ section{
   font-size: 1.7rem;
   border-radius: 0 0 8px 8px;
 }
-  
+
 }
 </style>

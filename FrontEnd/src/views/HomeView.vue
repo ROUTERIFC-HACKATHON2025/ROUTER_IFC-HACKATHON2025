@@ -36,7 +36,7 @@ onMounted(async () => {
         backgroundSize: 'auto 101%',
         borderBottom: '2px solid ' + themeManager.detalhe
       }">
-        <img src="/public/src-home/onibus_inicial.png" alt="Ilustração Home" class="illustration animate-on-scroll" />
+        <img src="/src-home/onibus_inicial.png" alt="Ilustração Home" class="illustration animate-on-scroll" />
         <div class="intro animate-on-scroll">
           <h1 class="title" :style="{ color: themeManager.text }">
             BEM VINDO AO <span :style="{ color: themeManager.detalheAlternativo }">ROUTER IFC!</span>
@@ -55,13 +55,13 @@ onMounted(async () => {
         </div>
         <div class="empresas-lista">
           <div class="empresa-card animate-on-scroll">
-            <img src="/public/src-home/logoindytour.png" alt="Logo Indy Tour" class="logo" />
+            <img src="/src-home/logoindytour.png" alt="Logo Indy Tour" class="logo" />
             <h3>IndyTour</h3>
             <p><span class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/indy_tour" style="color: #fff; "  target="_blank">@indy_tour</a><br>
                <span class="mdi mdi-phone"></span> <a href="tel:+5547992214606" style="color: #fff;"  target="_blank">+55 (47) 99221-4606</a></p>
           </div>
           <div class="empresa-card animate-on-scroll">
-            <img src="/public/src-home/logosul.png" alt="Logo Sul Turismo" class="logo" />
+            <img src="/src-home/logosul.png" alt="Logo Sul Turismo" class="logo" />
             <h3>Sul Turismo</h3>
             <p><span class="mdi mdi-instagram"></span> <a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;"  target="_blank">@sulturismotransportes</a><br>
                <span class="mdi mdi-phone" style="color: #fff;"></span> <a href="tel:+5547996767651" style="color: #fff;"  target="_blank">+55 (47) 99676-7651</a></p>
@@ -158,7 +158,7 @@ onMounted(async () => {
         </div>
         <div class="empresas-lista">
           <div class="empresa-card">
-            <img src="/public/src-home/logoindytour.png" alt="Logo Indy Tour" class="logo"/>
+            <img src="/src-home/logoindytour.png" alt="Logo Indy Tour" class="logo"/>
             <div class="redes">
               <a  href="https://www.instagram.com/indy_tour"  style="color: #fff;" target="_blank">
                 <span class="mdi mdi-instagram" ></span>
@@ -168,7 +168,7 @@ onMounted(async () => {
           </div>
 
           <div class="empresa-card">
-            <img src="/public/src-home/logosul.png" alt="Logo Sul Turismo" class="logo" />
+            <img src="/src-home/logosul.png" alt="Logo Sul Turismo" class="logo" />
             <div class="redes">
               <a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;" target="_blank"><span class="mdi mdi-instagram"></span></a>
               <a href="tel:+5547996767651"><span class="mdi mdi-phone" style="color: #fff;"></span></a>

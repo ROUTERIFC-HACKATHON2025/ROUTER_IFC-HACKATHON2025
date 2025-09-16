@@ -40,11 +40,11 @@ onMounted(async () => {
         <p>
           A Sul Turismo, criada em 2015, atua no transporte de estudantes com foco em conforto, eficiência e atendimento de qualidade. Presente no dia a dia dos alunos do Instituto Federal Catarinense - Campus Araquari (IFC), a empresa organiza suas rotas de forma inteligente, buscando sempre facilitar a rotina escolar. Seu diferencial está no cuidado com cada passageiro e na confiança construída ao longo do tempo com famílias e instituições. A Sul Turismo não é apenas uma opção de transporte — é uma solução prática e segura para quem valoriza pontualidade e tranquilidade no trajeto até a escola.
         </p>
-        <img src="/public/src-empresa/logosulTurismo.png" alt="Ilustração empresa" class="animate-on-scroll" />
+        <img src="/src-empresa/logosulTurismo.png" alt="Ilustração empresa" class="animate-on-scroll" />
       </div>
     </section>
     <section class="preco animate-on-scroll">
-      <img src="/public/src-empresa/onibusSul.png" alt="Ônibus Sul Turismo" class="animate-on-scroll">
+      <img src="/src-empresa/onibusSul.png" alt="Ônibus Sul Turismo" class="animate-on-scroll">
       <div class="info animate-on-scroll" :style="{ borderColor: themeManager.text }">
         <p><strong>Mensalidade:</strong> <span :style="{ color: themeManager.detalheAlternativo }">11x de</span> R$ 600,00 <span :style="{ color: themeManager.detalheAlternativo }">ou 12x de</span> R$ 550,00</p>        <p><strong>Endereço:</strong><br>
           R. Jonecir José Baierski, 26 - Santa Catarina, Joinville - SC, 89232-070<br>
@@ -60,7 +60,7 @@ onMounted(async () => {
       <h1 :style="{ borderColor: themeManager.detalhe }"><span :style="{ color: themeManager.detalheAlternativo }">SUL
         </span>TURISMO</h1>
       <div class="descricao" :style="{ borderColor: themeManager.detalhe }">
-        <img src="/public/src-empresa/logosulTurismo.png" alt="Ilustração empresa" />
+        <img src="/src-empresa/logosulTurismo.png" alt="Ilustração empresa" />
         <p>
           A Sul Turismo, criada em 2015, atua no transporte de estudantes com foco em conforto, eficiência e atendimento
           de qualidade. Presente no dia a dia dos alunos do Instituto Federal Catarinense - Campus Araquari (IFC), a
@@ -72,7 +72,7 @@ onMounted(async () => {
       </div>
     </section>
     <section class="preco animate-on-scroll">
-      <img src="/public/src-empresa/onibusSul.png" alt="">
+      <img src="/src-empresa/onibusSul.png" alt="">
       <div class="info" :style="{ borderColor: themeManager.text }">
         <p><strong>Mensalidade:</strong> <span :style="{ color: themeManager.detalheAlternativo }">11x de</span> R$
           600,00 <span :style="{ color: themeManager.detalheAlternativo }">ou 12x de</span> R$ 550,00</p>

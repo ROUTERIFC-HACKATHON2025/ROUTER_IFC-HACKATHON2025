@@ -47,31 +47,38 @@ function toggleShowPassword() {
 }
 
 async function handleLogin() {
-  const { data } = await axios.post('http://localhost:8000/api/token/', {...usuario.value })
-    .catch(err => {
-      console.error('Erro ao obter token:', err)
-      erro.value = 'E-mail ou senha incorretos.'
-    })
-  const response = await axios.get('http://localhost:8000/api/usuarios/me/', {
-    headers: {
-      Authorization: `Bearer ${data.access}`
+  erro.value = ''
+  try {
+    const tokenRes = await axios.post('http://localhost:8000/api/token/', { ...usuario.value })
+    const access = tokenRes?.data?.access
+    if (!access) {
+      erro.value = 'Falha na autenticação.'
+      return
     }
-  }).catch(err => {
-    console.error('Erro ao obter informações do usuário:', err)
-    erro.value = 'Erro ao obter informações do usuário.'
-  })
-  if (response.data.is_passageiro) {
-    authState.mudarState('passageiro')
-  }
-  else if (response.data.is_motorista) {
-    authState.mudarState('motorista')
-  }
-  else if (response.data.is_admin) {
-    authState.mudarState('admin')
-  }
-  else {
+    // adiciona o token para as próximas requisições
+    axios.defaults.headers.common['Authorization'] = `Bearer ${access}`
+    localStorage.setItem('jwt_access', access)
+
+    const meRes = await axios.get('http://localhost:8000/api/usuarios/me/', {
+      headers: { Authorization: `Bearer ${access}` }
+    })
+
+    if (meRes?.data?.is_passageiro) {
+      authState.mudarState('passageiro')
+      return
+    }
+    if (meRes?.data?.is_motorista) {
+      authState.mudarState('motorista')
+      return
+    }
+    if (meRes?.data?.is_admin) {
+      authState.mudarState('admin')
+      return
+    }
     erro.value = 'Tipo de usuário desconhecido.'
-    return
+  } catch (err) {
+    console.error('Erro no login:', err)
+    erro.value = 'E-mail/usuário ou senha incorretos.'
   }
 }
 </script>
@@ -79,7 +86,7 @@ async function handleLogin() {
 <template>
   <section class="login-container" :style="{ backgroundColor: themeManager.fundo }">
     <div class="left-panel animate-on-scroll fade-in-left" :style="{ backgroundColor: themeManager.detalhe }">
-      <img src="/public/src-auth/auth-form-illustration.png" alt="Login Illustration" />
+      <img src="/src-auth/auth-form-illustration.png" alt="Login Illustration" />
     </div>
 
     <div class="right-panel animate-on-scroll fade-in-right" :style="{ backgroundColor: themeManager.fundo }">

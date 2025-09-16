@@ -24,6 +24,10 @@ class Motorista(models.Model):
    codigoCnh = models.CharField(max_length=45)
    empresa = models.ForeignKey(Empresa, on_delete=models.PROTECT, null=True, blank=True)
    usuario = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True, related_name='motorista')
+   latitude_atual = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+   longitude_atual = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+   rota_ativa = models.BooleanField(default=False)
+   atualizado_em = models.DateTimeField(null=True, blank=True)
 
   
    def __str__(self):

@@ -41,10 +41,10 @@ onMounted(async () => {
       <h1 :style="{ color: themeManager.detalheAlternativo, borderColor: themeManager.detalhe }">EMPRESAS</h1>
       <div class="descricao animate-on-scroll" :style="{ borderColor: themeManager.detalhe }">
         <p>
-          Nosso site busca fortalecer parcerias com empresas responsáveis e comprometidas. Mais do que estar presente na plataforma, ser parceira significa assumir o compromisso com segurança, confiança e transparência, garantindo benefícios para motoristas, passageiros e toda a comunidade. Juntos, construímos uma rede organizada, eficiente e que gera resultados melhores para todos. 
+          Nosso site busca fortalecer parcerias com empresas responsáveis e comprometidas. Mais do que estar presente na plataforma, ser parceira significa assumir o compromisso com segurança, confiança e transparência, garantindo benefícios para motoristas, passageiros e toda a comunidade. Juntos, construímos uma rede organizada, eficiente e que gera resultados melhores para todos.
 
         </p>
-        <img src="/public/src-empresa/empresa.png" alt="Ilustração empresa" />
+        <img src="/src-empresa/empresa.png" alt="Ilustração empresa" />
       </div>
     </section>
 
@@ -52,7 +52,7 @@ onMounted(async () => {
       <h2 :style="{ color: themeManager.detalheAlternativo }">PARCERIAS ATUAIS</h2>
       <div class="cards animate-on-scroll" :style="{ backgroundColor: themeManager.detalhe }">
         <div class="card animate-on-scroll">
-          <img class="logo" src="/public/src-home/logoindytour.png" alt="IndyTour" />
+          <img class="logo" src="/src-home/logoindytour.png" alt="IndyTour" />
           <div class="info">
             <p><strong>IndyTour</strong></p>
             <p><a href="https://www.instagram.com/indy_tour" style="color: #fff;" target="_blank">@indy_tour</a></p>
@@ -66,7 +66,7 @@ onMounted(async () => {
         <div class="line"></div>
 
         <div class="card animate-on-scroll">
-          <img class="logo" src="/public/src-home/logosul.png" alt="Sul Turismo" />
+          <img class="logo" src="/src-home/logosul.png" alt="Sul Turismo" />
           <div class="info">
             <p><strong>Sul Turismo</strong></p>
             <p><a href="https://www.instagram.com/sulturismotransportes" style="color: #fff;" target="_blank">@sulturismotransportes</a></p>
@@ -85,7 +85,7 @@ onMounted(async () => {
       <h1 :style="{ color: themeManager.detalheAlternativo, borderColor: themeManager.detalhe }">EMPRESAS</h1>
       <div class="descricao animate-on-scroll" :style="{ borderColor: themeManager.detalhe }">
         <p>
-          Nosso site busca fortalecer parcerias com empresas responsáveis e comprometidas. Mais do que estar presente na plataforma, ser parceira significa assumir o compromisso com segurança, confiança e transparência, garantindo benefícios para motoristas, passageiros e toda a comunidade. Juntos, construímos uma rede organizada, eficiente e que gera resultados melhores para todos. 
+          Nosso site busca fortalecer parcerias com empresas responsáveis e comprometidas. Mais do que estar presente na plataforma, ser parceira significa assumir o compromisso com segurança, confiança e transparência, garantindo benefícios para motoristas, passageiros e toda a comunidade. Juntos, construímos uma rede organizada, eficiente e que gera resultados melhores para todos.
         </p>
       </div>
     </section>
@@ -95,7 +95,7 @@ onMounted(async () => {
       <div class="cards animate-on-scroll" :style="{ backgroundColor: themeManager.detalhe }">
         <div class="card animate-on-scroll">
           <div class="info">
-            <img class="logo" src="/public/src-home/logoindytour.png" alt="IndyTour" />
+            <img class="logo" src="/src-home/logoindytour.png" alt="IndyTour" />
             <div class="redes">
               <a href="https://www.instagram.com/indy_tour" target="_blank" style="color: #fff;"><span class="mdi mdi-instagram"></span></a>
               <a href="tel:+5547992214606" style="color: #fff;"><span class="mdi mdi-phone"></span></a>
@@ -107,7 +107,7 @@ onMounted(async () => {
         </div>
         <div class="card animate-on-scroll">
           <div class="info">
-            <img class="logo" src="/public/src-home/logosul.png" alt="Sul Turismo" />
+            <img class="logo" src="/src-home/logosul.png" alt="Sul Turismo" />
             <div class="redes">
               <a href="https://www.instagram.com/sulturismotransportes" target="_blank" style="color: #fff;"><span class="mdi mdi-instagram"></span></a>
               <a href="tel:+5547996767651" style="color: #fff;"><span class="mdi mdi-phone"></span></a>
