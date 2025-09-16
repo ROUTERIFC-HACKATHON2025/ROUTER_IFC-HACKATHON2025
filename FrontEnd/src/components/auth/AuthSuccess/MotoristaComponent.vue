@@ -57,7 +57,6 @@ onMounted(async () => {
   }
 })
 
-// Observa mudanças no usuário para atualizar inputs
 watch(
   () => userProfile.usuarioAtual,
   (novoUsuario) => {
@@ -493,6 +492,7 @@ function marcarPegou(p) {
   background: rgba(255,255,255,0.1);
   color: #fff;
   outline: none;
+  margin: 5px 0;
 }
 
 .inputs p {

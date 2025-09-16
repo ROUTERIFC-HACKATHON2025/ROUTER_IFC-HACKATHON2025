@@ -26,6 +26,7 @@ const senha = ref('')
 const nascimento = ref('')
 const endereco = ref('Rua Principal, 100')
 const descricao = ref('')
+const editarEndereco = ref(false)
 
 // Inputs ida e volta
 const ira = ref('')
@@ -107,16 +108,22 @@ function confirmarIdaVolta() {
       <div class="perfil-topo">
         <img src="/public/src-auth/passageiro.png" class="avatar" alt="">
         <div class="enderecos">
-          <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline"></span></p>
+          <p>MEUS ENDEREÇOS</p>
           <ul>
-            <li v-if="endereco">
+            <li>
               <span class="mdi mdi-map-marker"></span>
-              <p>{{ endereco }}</p>
-              <span class="mdi mdi-pencil"></span>
+              <div v-if="!editarEndereco">
+                <p>{{ endereco }}</p>
+              </div>
+              <div v-else>
+                <input v-model="endereco" class="input-endereco" type="text" />
+              </div>
+              <span class="mdi mdi-pencil" @click="editarEndereco = !editarEndereco"></span>
             </li>
           </ul>
         </div>
       </div>
+
 
       <div class="inputs">
         <p class="info-label">Nome completo:</p>
@@ -154,7 +161,6 @@ function confirmarIdaVolta() {
 
       <div class="sair" @click="sairDaConta">SAIR DA CONTA</div>
     </div>
-
     <div>
       <div class="row right-side">
         <div class="transporte" :style="{ backgroundColor: themeManager.detalhe }">
@@ -389,6 +395,21 @@ function confirmarIdaVolta() {
   border: none;
   align-items: center;
   margin-top: 5px;
+}
+
+.enderecos ul li .mdi {
+  font-size: 15px;
+}
+
+.input-endereco {
+  border: 1px solid #fff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  width: 100%;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  outline: none;
+  margin: 5px 0;
 }
 
 .inputs p {
