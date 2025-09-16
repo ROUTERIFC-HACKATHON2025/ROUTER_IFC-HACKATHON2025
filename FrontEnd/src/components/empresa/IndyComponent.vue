@@ -40,12 +40,12 @@ onMounted(async () => {
         <p>
           A IndyTour, criada em 2020, é uma empresa de transporte por vans que atende os estudantes do Instituto Federal Catarinense - Campus Araquari (IFC) com segurança, pontualidade e conforto. Fundada por motoristas experientes, surgiu para facilitar o acesso à escola, principalmente para alunos que moram longe. Com veículos bem cuidados, rotas organizadas e motoristas capacitados, a IndyTour se tornou uma parceira importante na rotina escolar, ajudando os estudantes a chegarem ao campus com tranquilidade todos os dias.
         </p>
-        <img src="/public/src-empresa/Logoindytour.png" alt="Ilustração empresa" :style="{ borderColor: themeManager.text }" />
+        <img src="/src-empresa/Logoindytour.png" alt="Ilustração empresa" :style="{ borderColor: themeManager.text }" />
       </div>
     </section>
 
     <section class="preco animate-on-scroll">
-      <img src="/public/src-empresa/onibusIndy.png" alt="Ônibus IndyTour" class="animate-on-scroll">
+      <img src="/src-empresa/onibusIndy.png" alt="Ônibus IndyTour" class="animate-on-scroll">
       <div class="info animate-on-scroll" :style="{ borderColor: themeManager.text }">
         <p><strong>Mensalidade:</strong> <span :style="{ color: themeManager.detalheAlternativo }">11x de</span> R$ 600,00 <span :style="{ color: themeManager.detalheAlternativo }">ou 12x de</span> R$ 550,00</p>
         <p><strong>Endereço:</strong> R. Faustino Busarello, 520 - Boehmerwald, Joinville - SC, 89235-330</p>
@@ -58,14 +58,14 @@ onMounted(async () => {
     <section class="empresas animate-on-scroll">
       <h1 :style="{ borderColor: themeManager.detalhe }"><span :style="{color: themeManager.detalheAlternativo}">INDY</span>TOUR</h1>
       <div class="descricao" :style="{ borderColor: themeManager.detalhe }">
-        <img src="/public/src-empresa/Logoindytour.png" alt="Ilustração empresa" :style="{ borderColor: themeManager.text }" />
+        <img src="/src-empresa/Logoindytour.png" alt="Ilustração empresa" :style="{ borderColor: themeManager.text }" />
         <p>
           A IndyTour, criada em 2020, é uma empresa de transporte por vans que atende os estudantes do Instituto Federal Catarinense - Campus Araquari (IFC)com segurança, pontualidade e conforto. Fundada por motoristas experientes, surgiu para facilitar o acesso à escola, principalmente para alunos que moram longe. Com veículos bem cuidados, rotas organizadas e motoristas capacitados, a IndyTour se tornou uma parceira importante na rotina escolar, ajudando os estudantes a chegarem ao campus com tranquilidade todos os dias.
         </p>
       </div>
     </section>
     <section class="preco animate-on-scroll">
-      <img src="/public/src-empresa/onibusIndy.png" alt="">
+      <img src="/src-empresa/onibusIndy.png" alt="">
       <div class="info" :style="{ borderColor: themeManager.text }">
         <p><strong>Mensalidade:</strong> <span :style="{ color: themeManager.detalheAlternativo }">11x de</span> R$ 600,00 <span :style="{ color: themeManager.detalheAlternativo }">ou 12x de</span> R$ 550,00</p>
         <p><strong>Endereço:</strong> R. Faustino Busarello, 520 - Boehmerwald, Joinville - SC, 89235-330</p>

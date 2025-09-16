@@ -17,12 +17,12 @@ const passageirosFiltrados = computed(() => {
     if (!busca.value.trim()) {
         return userProfile.passageiros
     }
-    
+
     const termoBusca = busca.value.toLowerCase().trim()
-    
+
     return userProfile.passageiros.filter(m => {
         if (m.nome && m.nome.toLowerCase().includes(termoBusca)) return true
-        
+
         return false
     })
 })
@@ -48,7 +48,7 @@ function jaAdicionado(id) {
         <h1 class="titulo" :style="{ color: themeManager.text }">
             PÁGINA DE
             <span class="azul" :style="{ color: themeManager.detalheAlternativo }">
-                GERENCIAMENTO 
+                GERENCIAMENTO
             </span>
         </h1>
 
@@ -84,7 +84,7 @@ function jaAdicionado(id) {
                 <div v-for="m in passageirosFiltrados" :key="m.id" class="passageiro">
                     <div class="linha-passageiro" @click="toggleExpand(m.id)">
                         <div class="info-passageiro">
-                            <img src="/public/src-auth/passageiro.png" class="avatar" />
+                            <img src="/src-auth/passageiro.png" class="avatar" />
                             <span>{{ m.nome }}</span>
                         </div>
                         <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === m.id }"></span>
@@ -93,7 +93,7 @@ function jaAdicionado(id) {
                         <div v-if="expandidoId === m.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
                             <div class="card-detalhes">
                                 <div class="avatar-container">
-                                    <img src="/public/src-auth/passageiro.png" class="avatarG" />
+                                    <img src="/src-auth/passageiro.png" class="avatarG" />
                                     <h3>{{ m.nome }}</h3>
                                 </div>
                                 <div class="info">
@@ -109,14 +109,14 @@ function jaAdicionado(id) {
                                     <ul>
                                         <li>📍 {{ m.endereco }}</li>
                                     </ul>
-                                    <button 
-                                        class="btn-add" 
+                                    <button
+                                        class="btn-add"
                                         :disabled="jaAdicionado(m.id) || (admin.selectedVan && admin.selectedVan.status === 'Manutenção')"
-                                        :style="{ 
-                                            backgroundColor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? '#666' : themeManager.detalheAlternativo, 
+                                        :style="{
+                                            backgroundColor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? '#666' : themeManager.detalheAlternativo,
                                             opacity: (jaAdicionado(m.id) || (admin.selectedVan && admin.selectedVan.status === 'Manutenção')) ? 0.6 : 1,
                                             cursor: (jaAdicionado(m.id) || (admin.selectedVan && admin.selectedVan.status === 'Manutenção')) ? 'not-allowed' : 'pointer'
-                                        }" 
+                                        }"
                                         @click="(!jaAdicionado(m.id) && (!admin.selectedVan || admin.selectedVan.status !== 'Manutenção')) && adicionarNaVan(m)"
                                     >
                                         {{ (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'Van em Manutenção' : (jaAdicionado(m.id) ? 'Já adicionado' : 'Adicionar passageiro') }}
@@ -392,10 +392,10 @@ h2 {
 
 <style scoped>
 @media (max-width: 768px) {
-    
+
   section{
     padding: 0px 0px 50px 0px;
-    
+
   }
   .titulo {
   font-size: 2.5rem;
@@ -454,7 +454,7 @@ h2 {
 .enderecos h3{
   text-align: center;
   border-bottom: 1px solid #ccc;
-  
+
 }
 }
 

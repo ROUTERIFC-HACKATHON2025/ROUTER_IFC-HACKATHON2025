@@ -44,4 +44,26 @@ export default class MotoristaAPI {
             throw error;
         }
     }
+
+    async atualizarLocalizacao(idMotorista, { latitude, longitude, rota_ativa }) {
+        try {
+            const url = `${API_BASE_URL}${idMotorista}/atualizar-localizacao/`;
+            const response = await axios.post(url, { latitude, longitude, rota_ativa });
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao atualizar localização do motorista:", error);
+            throw error;
+        }
+    }
+
+    async obterLocalizacaoAtual(idMotorista) {
+        try {
+            const url = `${API_BASE_URL}${idMotorista}/localizacao-atual/`;
+            const response = await axios.get(url);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao obter localização do motorista:", error);
+            throw error;
+        }
+    }
 }

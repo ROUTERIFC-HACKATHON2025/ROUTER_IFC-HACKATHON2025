@@ -10,17 +10,17 @@ const authState = useAuthStateStore()
 const userProfile = useUserProfileStore()
 const admin = useAdminStore()
 
-const vanSelecionada = computed(() => admin.selectedVan || { 
-  nome: '-', 
-  modelo: '-', 
+const vanSelecionada = computed(() => admin.selectedVan || {
+  nome: '-',
+  modelo: '-',
   marca: '-',
-  placa: '-', 
-  acentos: 0, 
+  placa: '-',
+  acentos: 0,
   ano: '-',
   cor: '-',
   caracteristicas: [],
   status: '-',
-  motorista: null 
+  motorista: null
 })
 
 const vanPassengers = computed(() => admin.vanPassengers)
@@ -64,17 +64,17 @@ function adicionarPassageiro(passageiro) {
   if (passageirosAdicionados.value.find(p => p.id === passageiro.id)) {
     return
   }
-  
+
   const rotasOutras = ['ida', 'volta12', 'volta17'].filter(tipo => tipo !== admin.rotaEmEdicao?.tipo)
   let rotasOcupadas = 0
-  
+
   for (const tipoRota of rotasOutras) {
     const passageirosOutraRota = admin.getRotaEditada(tipoRota)
     if (passageirosOutraRota.find(p => p.id === passageiro.id)) {
       rotasOcupadas++
     }
   }
-  
+
   if (rotasOcupadas >= 2) {
     const rotasAtuais = []
     for (const tipoRota of rotasOutras) {
@@ -86,9 +86,9 @@ function adicionarPassageiro(passageiro) {
     alert(`Este passageiro já está em duas rotas: ${rotasAtuais.join(' e ')}. Máximo permitido: 2 rotas.`)
     return
   }
-  
+
   passageirosAdicionados.value.push(passageiro)
-  
+
   nextTick(() => {
     passageirosAdicionados.value = [...passageirosAdicionados.value]
   })
@@ -98,9 +98,9 @@ function passageiroEmOutraRota(passageiro) {
   const rotasOutras = ['ida', 'volta12', 'volta17'].filter(tipo => tipo !== admin.rotaEmEdicao?.tipo)
   let rotasOcupadas = 0
   let rotasAtuais = []
-  
+
   const jaNaRotaAtual = passageirosAdicionados.value.find(p => p.id === passageiro.id)
-  
+
   for (const tipoRota of rotasOutras) {
     const passageirosOutraRota = admin.getRotaEditada(tipoRota)
     if (passageirosOutraRota.find(p => p.id === passageiro.id)) {
@@ -108,7 +108,7 @@ function passageiroEmOutraRota(passageiro) {
       rotasAtuais.push(tipoRota)
     }
   }
-  
+
   return {
     rotasOcupadas,
     rotasAtuais,
@@ -121,7 +121,7 @@ function passageiroEmOutraRota(passageiro) {
 
 function removerPassageiro(index) {
   passageirosAdicionados.value.splice(index, 1)
-  
+
   nextTick(() => {
     passageirosAdicionados.value = [...passageirosAdicionados.value]
   })
@@ -147,9 +147,9 @@ function voltarParaConfigVans() {
 <template>
   <section :style="{ color: themeManager.text }">
     <h1 class="titulo">
-      PÁGINA DE 
+      PÁGINA DE
       <span class="azul" :style="{ color: themeManager.detalheAlternativo }">
-        GERENCIAMENTO 
+        GERENCIAMENTO
       </span>
     </h1>
 
@@ -168,14 +168,14 @@ function voltarParaConfigVans() {
         </div>
         <ul class="lista-passageiros">
           <li v-for="p in vanPassengers" :key="p.id">
-            <img src="/public/src-auth/passageiro.png" alt="" class="avatarP">
+            <img src="/src-auth/passageiro.png" alt="" class="avatarP">
             <div class="info-passageiro">
                 <span>{{ p.nome }}</span><br></br> <span class="endereco">({{ p.endereco }})</span>
             </div>
             <div class="botao-container">
-              <button 
-                class="btn-add" 
-                :style="{ backgroundColor: passageiroEmOutraRota(p).corBotao }" 
+              <button
+                class="btn-add"
+                :style="{ backgroundColor: passageiroEmOutraRota(p).corBotao }"
                 @click="adicionarPassageiro(p)"
                 :disabled="!passageiroEmOutraRota(p).podeAdicionar"
                 :title="passageiroEmOutraRota(p).mensagem"
@@ -193,7 +193,7 @@ function voltarParaConfigVans() {
           <h3 :style="{ backgroundColor: themeManager.detalheAlternativo }">Ordem da {{ tituloRota }}</h3>
           <ul>
             <li v-for="(p,i) in passageirosAdicionados" :key="p.id">
-                <span class="num">{{ i+1 }}</span> 
+                <span class="num">{{ i+1 }}</span>
               <div>
                 <span>{{ p.nome }}</span> <br></br> <span class="endereco">({{ p.endereco }})</span>
               </div>
@@ -437,7 +437,7 @@ section{
 .col-rotas {
   display: grid;
   grid-template-columns: none;
-  
+
 }
 
 .rota {
@@ -445,7 +445,7 @@ section{
   padding: 0;
   text-align: left;
 }
-  
+
 }
 </style>
 
