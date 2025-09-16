@@ -22,7 +22,6 @@ export const usePassageiroStore = defineStore('passageiro', () => {
         try {
             const novoPassageiro = await passageirosApi.addPassageiro(passageiroParaAdicionar);
             passageiros.value.push(novoPassageiro);
-            // Auto login usando JWT com email como username e senha informada
             const { email, senha } = passageiroParaAdicionar;
             if (email && senha) {
                 const tokenResp = await axios.post('http://localhost:8000/api/token/', { username: email, password: senha });

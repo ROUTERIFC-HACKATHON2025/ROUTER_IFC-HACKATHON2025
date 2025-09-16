@@ -110,7 +110,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* Animação scroll */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(50px);
@@ -122,7 +121,6 @@ onMounted(async () => {
   transform: translateY(0);
 }
 
-/* Fade lateral */
 .fade-in-left {
   transform: translateY(50px);
 }
@@ -137,7 +135,6 @@ onMounted(async () => {
   transform: translateY(0);
 }
 
-/* Estilos originais */
 .notebook, .celular {
   display: flex;
   justify-content: space-between;
@@ -222,8 +219,7 @@ h1 {
   cursor: pointer;
 }
 
-/* Responsivo */
-@media screen and (max-width: 768px) {
+@media (max-width: 768px) {
   .notebook {
     display: none;
   }

@@ -37,7 +37,6 @@ async function deleteSelectedMotorista(idMotorista) {
     <div>
         <h1>Gerenciamento de Motoristas</h1>
 
-        <!-- Formulário para Adicionar/Editar Motorista -->
         <form @submit.prevent="submitMotorista">
             <h2>{{ isEditing ? 'Editar Motorista' : 'Adicionar Novo Motorista' }}</h2>
             <div>

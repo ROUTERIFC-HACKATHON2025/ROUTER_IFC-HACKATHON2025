@@ -12,13 +12,11 @@ const authState = useAuthStateStore()
 const userProfile = useUserProfileStore()
 const router = useRouter()
 
-// Estados gerais
 const modoEdicao = ref(false)
 const verSenha = ref(false)
 const abrirPerfil = ref(true)
 const abrirTransportes = ref(false)
 
-// Inputs de perfil
 const nome = ref('')
 const telefone = ref('')
 const email = ref('')
@@ -28,12 +26,10 @@ const endereco = ref('Rua Principal, 100')
 const descricao = ref('')
 const editarEndereco = ref(false)
 
-// Inputs ida e volta
 const ira = ref('')
 const voltara = ref('')
 const horario = ref('')
 
-// Inicialização do tema e autenticação
 onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
@@ -43,7 +39,6 @@ onMounted(async () => {
   initMap()
 })
 
-// Observa mudanças no usuário para atualizar inputs
 watch(
   () => userProfile.usuarioAtual,
   (novoUsuario) => {
@@ -60,7 +55,6 @@ watch(
   { immediate: true }
 )
 
-// Inicialização do mapa
 function initMap() {
   const mapId = window.innerWidth > 768 ? "mapaNotebook" : "mapaCelular"
   const map = L.map(mapId).setView([-23.5505, -46.6333], 13)
@@ -70,7 +64,6 @@ function initMap() {
   L.marker([-23.5505, -46.6333]).addTo(map).bindPopup("Aqui é São Paulo!").openPopup()
 }
 
-// Toggle edição do perfil
 function toggleEdicao() {
   if (modoEdicao.value && userProfile.usuarioAtual) {
     userProfile.atualizarPerfil({
@@ -87,14 +80,12 @@ function toggleEdicao() {
   modoEdicao.value = !modoEdicao.value
 }
 
-// Sair da conta
 function sairDaConta() {
   authState.reset()
   userProfile.setUsuarioAtual(null)
   router.push('/')
 }
 
-// Confirmar ida/volta
 function confirmarIdaVolta() {
   console.log({ ira: ira.value, voltara: voltara.value, horario: horario.value })
   alert("Informações de ida e volta salvas!")

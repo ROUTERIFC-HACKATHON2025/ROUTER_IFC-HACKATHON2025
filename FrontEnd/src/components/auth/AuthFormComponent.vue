@@ -94,7 +94,6 @@ async function handleLogin() {
         <h1 class="title" :style="{ color: themeManager.text }">Bem-vindo de volta</h1>
         <p class="subtitle" :style="{ color: themeManager.text }">Acesse sua conta para continuar</p>
 
-        <!-- novalidate: não bloqueia 'p@p' -->
         <form @submit.prevent="handleLogin" class="form" novalidate>
           <p v-if="erro" class="erro-msg">{{ erro }}</p>
 
@@ -123,12 +122,6 @@ async function handleLogin() {
               :style="{ color: themeManager.text }"></span>
           </div>
 
-          <!-- IMPORTANTÍSSIMO: não deixar virar submit -->
-          <button type="button" class="recover-link" @click="authState.mudarState('autentificacao')"
-            :style="{ color: themeManager.text }">
-            Esqueceu a senha?
-          </button>
-
           <button type="submit" class="submit-btn" :style="{ backgroundColor: themeManager.detalhe }">
             Entrar
           </button>
@@ -141,25 +134,12 @@ async function handleLogin() {
             Cadastre-se
           </button>
         </p>
-
-        <div class="social-login">
-          <p :style="{ color: themeManager.text }">Fazer login por outra plataforma?</p>
-          <ul>
-            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }"
-                  class="mdi mdi-google"></span></button></li>
-            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }"
-                  class="mdi mdi-facebook"></span></button></li>
-            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }"
-                  class="mdi mdi-twitter"></span></button></li>
-          </ul>
-        </div>
       </div>
     </div>
   </section>
 </template>
 
 <style scoped>
-/* Scroll animation */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(50px);
@@ -171,7 +151,6 @@ async function handleLogin() {
   transform: translateY(0);
 }
 
-/* Fade lateral */
 .fade-in-left {
   transform: translateY(50px);
 }
@@ -188,7 +167,6 @@ async function handleLogin() {
   transform: translateY(0);
 }
 
-/* Original Styles */
 .login-container {
   display: flex;
   height: 80vh;
@@ -274,6 +252,7 @@ async function handleLogin() {
   color: white;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s ease;
+  margin-top: 1rem;
 }
 
 .submit-btn:hover {

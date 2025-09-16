@@ -10,7 +10,6 @@ const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 const passageirosStore = usePassageiroStore()
 
-// Modelo padrão de passageiro
 const defaultPassageiro = {
   idPassageiros: 0,
   nome: '',
@@ -26,7 +25,6 @@ const defaultPassageiro = {
   informacoesAdicionais: ''
 }
 
-// Modelo padrão de endereço
 const defaultEndereco = {
   cep: '',
   rua: '',
@@ -36,16 +34,14 @@ const defaultEndereco = {
 }
 
 const passageiro = reactive({ ...defaultPassageiro })
-const endereco = reactive({ ...defaultEndereco }) // ✅ agora existe
+const endereco = reactive({ ...defaultEndereco }) 
 const isEditing = ref(false)
 
-// Função para resetar formulário
 function resetForm() {
   Object.assign(passageiro, { ...defaultPassageiro })
   Object.assign(endereco, { ...defaultEndereco })
 }
 
-// Função para cadastrar/atualizar passageiro
 async function cadastrar() {
   if (!passageiro.nome || !passageiro.email || !passageiro.cpf) {
     alert('Preencha todos os campos obrigatórios!')
@@ -63,14 +59,12 @@ async function cadastrar() {
     await passageirosStore.updatePassageiro(payload)
   } else {
     await passageirosStore.addPassageiro(payload)
-    // Após cadastro, redireciona para authForm
     router.push('/login')
   }
 
   resetForm()
 }
 
-// Animações + inicialização
 onMounted(() => {
   themeManager.init()
   authState.restaurarStateEmpresa()
@@ -157,10 +151,6 @@ onMounted(() => {
             <input v-model="passageiro.nomeResponsavel"
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
-          <!-- <div>
-            <p>Parentesco: *</p>
-            <input v-model="passageiro.parentesco" :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}"/>
-          </div> -->
           <div>
             <p>CPF do Responsável: *</p>
             <input v-model="passageiro.cpfResponsavel"

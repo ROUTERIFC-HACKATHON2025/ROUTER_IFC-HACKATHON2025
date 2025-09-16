@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import VansComponent from './AdminComponents/VansComponent.vue'

@@ -33,14 +33,9 @@ function toggleSelect() {
 
 function selecionarEmpresa(nome) {
   motorista.value.empresa = nome
-  authState.mudarStateEmpresa(nome) // 🔥 atualiza no store
+  authState.mudarStateEmpresa(nome)
   aberto.value = false
 }
-
-/*function handleFileChange(e) {
-  motorista.value.cnhArquivo = e.target.files[0]
-}*/
-
 
 onMounted(() => {
   themeManager.init()
@@ -74,7 +69,6 @@ async function cadastrar() {
     }
     delete motorista.confirmarSenha;
       await motoristaStore.addMotorista({ ...motorista });
-      // Após cadastro, redireciona para authForm
       router.push('/login')
     }
     resetForm();

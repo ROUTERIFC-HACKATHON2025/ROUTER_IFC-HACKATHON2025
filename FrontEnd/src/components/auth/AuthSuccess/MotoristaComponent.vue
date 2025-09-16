@@ -123,7 +123,6 @@ function marcarPegou(p) {
 
 <template>
   <section class="notebook" :style="{ backgroundColor: themeManager.fundo }">
-    <!-- PERFIL -->
     <div class="perfil" :style="{ backgroundColor: themeManager.detalhe }">
       <h2>MEU PERFIL</h2>
       <div class="perfil-topo">
@@ -145,7 +144,6 @@ function marcarPegou(p) {
         </div>
       </div>
 
-      <!-- Campos do Perfil -->
       <div class="inputs">
         <p class="info-label">Nome completo:</p>
         <div class="input-group">
@@ -186,7 +184,6 @@ function marcarPegou(p) {
       <div class="sair" @click="sairDaConta">SAIR DA CONTA</div>
     </div>
 
-    <!-- TRANSPORTE -->
     <div class="transporte" :style="{ backgroundColor: themeManager.detalhe }">
       <h2>SEU TRANSPORTE PARA HOJE</h2>
       <div class="card">
@@ -198,7 +195,6 @@ function marcarPegou(p) {
       </div>
     </div>
 
-    <!-- ROTAS (IDA E VOLTA) -->
     <div v-for="(passageiros, index) in [passageirosIda, passageirosVolta12, passageirosVolta17]" :key="index" class="rota-container" v-show="rotaAtiva === index">
       <div class="rota-header" :style="{ backgroundColor: themeManager.detalhe }">
         <button @click="mudarRota('prev')" class="seta">‹</button>
@@ -687,10 +683,7 @@ function marcarPegou(p) {
   cursor: pointer;
   border-top: 1px solid #ccc;
 }
-</style>
 
-
-<style scoped>
 @media (max-width: 768px) {
   .notebook {
     display: none;

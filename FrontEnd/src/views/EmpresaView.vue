@@ -101,7 +101,7 @@ onMounted(async () => {
               <a href="tel:+5547992214606" style="color: #fff;"><span class="mdi mdi-phone"></span></a>
             </div>
           </div>
-          <a href="/IndySul" target="_blank" rel="noopener" @click="authState.mudarStateEmpresa('Indy')">
+          <a href="/IndySul" rel="noopener" @click="authState.mudarStateEmpresa('Indy')">
             <button :style="{ backgroundColor: themeManager.detalheAlternativo }">Saiba mais</button>
           </a>
         </div>
@@ -113,7 +113,7 @@ onMounted(async () => {
               <a href="tel:+5547996767651" style="color: #fff;"><span class="mdi mdi-phone"></span></a>
             </div>
           </div>
-          <a href="/IndySul" target="_blank" rel="noopener" @click="authState.mudarStateEmpresa('Sul')">
+          <a href="/IndySul" rel="noopener" @click="authState.mudarStateEmpresa('Sul')">
             <button :style="{ backgroundColor: themeManager.detalheAlternativo }">Saiba mais</button>
           </a>
         </div>
