@@ -1,3 +1,6 @@
+# Created by https://www.toptal.com/developers/gitignore/api/python,django,venv
+# Edit at https://www.toptal.com/developers/gitignore?templates=python,django,venv
+
 ### Django ###
 *.log
 *.pot
@@ -272,23 +275,4 @@ pyrightconfig.json
 pyvenv.cfg
 pip-selfcheck.json
 
-### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
-
-# Local History for Visual Studio Code
-.history/
-
-# Built Visual Studio Code Extensions
-*.vsix
-
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history
-.ionide
-
-# End of https://www.toptal.com/developers/gitignore/api/django,visualstudiocode,python,venv
+# End of https://www.toptal.com/developers/gitignore/api/python,django,venv
