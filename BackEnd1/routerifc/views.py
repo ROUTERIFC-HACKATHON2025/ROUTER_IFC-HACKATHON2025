@@ -2,6 +2,11 @@ from django.contrib.auth.models import User
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import status
+from django.utils import timezone
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Empresa, Motorista, Veiculo, Rotas, Endereco, Passageiro
 from .serializers import EmpresaSerializer, MotoristaSerializer, VeiculoSerializer, RotasSerializer, EnderecoSerializer, PassageiroSerializer, AdminSerializer
 
@@ -12,6 +17,63 @@ class EmpresaViewSet(ModelViewSet):
 class MotoristaViewSet(ModelViewSet):
     queryset = Motorista.objects.all()
     serializer_class = MotoristaSerializer
+
+    @action(detail=True, methods=['post'], url_path='atualizar-localizacao')
+    def atualizar_localizacao(self, request, pk=None):
+        try:
+            motorista = self.get_object()
+        except Motorista.DoesNotExist:
+            return Response({"detail": "Motorista não encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        latitude = request.data.get('latitude')
+        longitude = request.data.get('longitude')
+        rota_ativa_raw = request.data.get('rota_ativa')
+        rota_ativa = None
+        if rota_ativa_raw is not None:
+            if isinstance(rota_ativa_raw, bool):
+                rota_ativa = rota_ativa_raw
+            elif isinstance(rota_ativa_raw, (int, float)):
+                rota_ativa = bool(rota_ativa_raw)
+            elif isinstance(rota_ativa_raw, str):
+                rota_ativa = rota_ativa_raw.strip().lower() in ("true", "1", "yes", "y", "on")
+
+        # permitir finalizar rota sem coordenadas (rota_ativa false)
+        if (latitude is None or longitude is None) and str(rota_ativa).lower() not in ("false", "0", "none"):
+            return Response({"detail": "latitude e longitude são obrigatórios"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            if latitude is not None and longitude is not None:
+                motorista.latitude_atual = latitude
+                motorista.longitude_atual = longitude
+            if rota_ativa is not None:
+                motorista.rota_ativa = rota_ativa
+            motorista.atualizado_em = timezone.now()
+            motorista.save(update_fields=['latitude_atual', 'longitude_atual', 'rota_ativa', 'atualizado_em'])
+        except Exception as exc:
+            return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({
+            "idMotorista": motorista.idMotorista,
+            "latitude": float(motorista.latitude_atual) if motorista.latitude_atual is not None else None,
+            "longitude": float(motorista.longitude_atual) if motorista.longitude_atual is not None else None,
+            "rota_ativa": motorista.rota_ativa,
+            "atualizado_em": motorista.atualizado_em,
+        }, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['get'], url_path='localizacao-atual')
+    def localizacao_atual(self, request, pk=None):
+        try:
+            motorista = self.get_object()
+        except Motorista.DoesNotExist:
+            return Response({"detail": "Motorista não encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({
+            "idMotorista": motorista.idMotorista,
+            "latitude": float(motorista.latitude_atual) if motorista.latitude_atual is not None else None,
+            "longitude": float(motorista.longitude_atual) if motorista.longitude_atual is not None else None,
+            "rota_ativa": motorista.rota_ativa,
+            "atualizado_em": motorista.atualizado_em,
+        }, status=status.HTTP_200_OK)
 
 class VeiculoViewSet(ModelViewSet):
     queryset = Veiculo.objects.all()
@@ -48,6 +110,7 @@ class UserViewSet(ModelViewSet):
             'is_passageiro': passageiro,
             'is_motorista': motorista,
             'is_admin': admin
+<<<<<<< HEAD
         }
         if user.is_superuser:
             admin = True
@@ -81,3 +144,51 @@ class UserViewSet(ModelViewSet):
             })
         
         return Response(data, status=200)
+=======
+        }, status=200)
+
+
+class EmailOrUsernameTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        token['email'] = user.email
+        return token
+
+    def validate(self, attrs):
+        username_or_email = attrs.get('username')
+        password = attrs.get('password')
+
+        if username_or_email and '@' in username_or_email:
+            # Try email
+            try:
+                user = User.objects.get(email__iexact=username_or_email)
+                username = user.username
+            except User.DoesNotExist:
+                username = username_or_email  # fallback
+        else:
+            username = username_or_email
+
+        data = {}
+        user = authenticate(username=username, password=password)
+        if user is None:
+            # As a fallback, try authenticating by email directly if username lookup failed
+            try:
+                user_obj = User.objects.get(email__iexact=username_or_email)
+                user = authenticate(username=user_obj.username, password=password)
+            except User.DoesNotExist:
+                user = None
+
+        if user is None:
+            raise self.fail('no_active_account')
+
+        refresh = self.get_token(user)
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+        return data
+
+
+class EmailOrUsernameTokenObtainPairView(TokenObtainPairView):
+    serializer_class = EmailOrUsernameTokenObtainPairSerializer
+>>>>>>> 481a1e7febaa7b8b6b9bbe092253496c1eabc8a8

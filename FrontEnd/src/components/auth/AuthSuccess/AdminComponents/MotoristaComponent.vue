@@ -17,12 +17,12 @@ const motoristasFiltrados = computed(() => {
     if (!busca.value.trim()) {
         return userProfile.motoristas
     }
-    
+
     const termoBusca = busca.value.toLowerCase().trim()
-    
+
     return userProfile.motoristas.filter(m => {
         if (m.nome && m.nome.toLowerCase().includes(termoBusca)) return true
-        
+
         return false
     })
 })
@@ -81,7 +81,7 @@ function selecionarMotorista(motorista) {
                 <div v-for="m in motoristasFiltrados" :key="m.id" class="motorista">
                     <div class="linha-motorista" @click="toggleExpand(m.id)">
                         <div class="info-motorista">
-                            <img src="/public/src-auth/motorista.png" class="avatar" />
+                            <img src="/src-auth/motorista.png" class="avatar" />
                             <span>{{ m.nome }}</span>
                         </div>
                         <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === m.id }"></span>
@@ -90,7 +90,7 @@ function selecionarMotorista(motorista) {
                         <div v-if="expandidoId === m.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
                             <div class="card-detalhes">
                                 <div class="avatar-container">
-                                    <img src="/public/src-auth/motorista.png" class="avatarG" />
+                                    <img src="/src-auth/motorista.png" class="avatarG" />
                                     <h3>{{ m.nome }}</h3>
                                 </div>
                                 <div class="info">
@@ -104,14 +104,14 @@ function selecionarMotorista(motorista) {
                                     </h3>
                                     <p v-if="!admin.isDriverAssigned(m.id)">Nenhuma van cadastrada a esse motorista</p>
                                     <p v-else>Motorista cadastrado em uma van</p>
-                                    <button 
-                                        class="btn-add" 
+                                    <button
+                                        class="btn-add"
                                         :disabled="admin.selectedVan && admin.selectedVan.status === 'Manutenção'"
-                                        :style="{ 
+                                        :style="{
                                             backgroundColor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? '#666' : themeManager.detalheAlternativo,
                                             opacity: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 0.6 : 1,
                                             cursor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'not-allowed' : 'pointer'
-                                        }" 
+                                        }"
                                         @click="(admin.selectedVan && admin.selectedVan.status !== 'Manutenção') && selecionarMotorista(m)"
                                     >
                                         {{ (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'Van em Manutenção' : 'Adicionar Motorista' }}
@@ -120,7 +120,7 @@ function selecionarMotorista(motorista) {
                             </div>
                         </div>
                 </div>
-                
+
                 <div v-if="busca.trim() && motoristasFiltrados.length === 0" class="nenhum-motorista">
                     <div class="nenhum-motorista-content">
                         <span class="mdi mdi-account-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>
@@ -365,10 +365,10 @@ h2 {
 }
 
 @media (max-width: 768px) {
-    
+
   section{
     padding: 0px 0px 50px 0px;
-    
+
   }
   .titulo {
   font-size: 2.5rem;
@@ -427,7 +427,7 @@ h2 {
 .vans h3{
   text-align: center;
   border-bottom: 1px solid #ccc;
-  
+
 }
 }
 

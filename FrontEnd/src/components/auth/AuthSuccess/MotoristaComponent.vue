@@ -1,9 +1,15 @@
 <script setup>
+<<<<<<< HEAD
 import { ref, onMounted, watch } from 'vue'
+=======
+import { ref, onMounted, onUnmounted } from 'vue'
+>>>>>>> 481a1e7febaa7b8b6b9bbe092253496c1eabc8a8
 import { useRouter } from 'vue-router'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useUserProfileStore } from '@/stores/userProfile'
 import { useAuthStateStore } from '@/stores/authState'
+import MotoristaAPI from '@/api/motorista'
+import axios from 'axios'
 
 const themeManager = useThemeManagerStore()
 const userProfile = useUserProfileStore()
@@ -52,9 +58,83 @@ function sairDaConta() {
 onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
+<<<<<<< HEAD
   if (!userProfile.usuarioAtual) {
     await userProfile.fetchUsuarioAtual()
   }
+=======
+  // restaura token caso exista
+  const t = localStorage.getItem('jwt_access')
+  if (t) axios.defaults.headers.common['Authorization'] = `Bearer ${t}`
+})
+
+// Rastreamento de localização do motorista
+const apiMotorista = new MotoristaAPI()
+const motoristaId = ref(null)
+const assistindoPosicao = ref(false)
+let watchId = null
+
+async function enviarLocalizacao(latitude, longitude, ativa) {
+  try {
+    if (!motoristaId.value) return
+    await apiMotorista.atualizarLocalizacao(motoristaId.value, {
+      latitude,
+      longitude,
+      rota_ativa: ativa
+    })
+  } catch (e) {
+    console.error('Falha ao enviar localização:', e)
+  }
+}
+
+async function iniciarRastreamento() {
+  if (!('geolocation' in navigator) || assistindoPosicao.value) return
+  assistindoPosicao.value = true
+  // busca meu id de motorista (se usuário é motorista logado)
+  if (!motoristaId.value) {
+    try {
+      const me = await axios.get('http://localhost:8000/api/usuarios/me/')
+      if (me?.data?.is_motorista) {
+        // buscar primeiro motorista do backend com email igual, como fallback simples
+        const lista = await axios.get('http://localhost:8000/api/motoristas/')
+        const found = lista?.data?.find?.(m => m?.email?.toLowerCase?.() === (me?.data?.email||'').toLowerCase())
+        motoristaId.value = found?.idMotorista || lista?.data?.[0]?.idMotorista || null
+      }
+    } catch (_) {}
+  }
+  watchId = navigator.geolocation.watchPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords
+      enviarLocalizacao(latitude, longitude, true)
+    },
+    (err) => {
+      console.error('Erro no geolocation:', err)
+    },
+    { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+  )
+}
+
+function pararRastreamento() {
+  if (watchId !== null) {
+    navigator.geolocation.clearWatch(watchId)
+    watchId = null
+  }
+  assistindoPosicao.value = false
+  // marca rota como inativa
+  enviarLocalizacao(null, null, false)
+}
+
+function toggleRota() {
+  if (assistindoPosicao.value) {
+    pararRastreamento()
+  } else {
+    iniciarRastreamento()
+  }
+}
+
+onUnmounted(() => {
+  if (assistindoPosicao.value) pararRastreamento()
+>>>>>>> 481a1e7febaa7b8b6b9bbe092253496c1eabc8a8
 })
 
 watch(
@@ -126,7 +206,7 @@ function marcarPegou(p) {
     <div class="perfil" :style="{ backgroundColor: themeManager.detalhe }">
       <h2>MEU PERFIL</h2>
       <div class="perfil-topo">
-        <img src="/public/src-auth/motorista.png" class="avatar" alt="Avatar Motorista" />
+        <img src="/src-auth/motorista.png" class="avatar" alt="Avatar Motorista" />
         <div class="enderecos">
           <p>MEUS ENDEREÇOS</p>
           <ul>
@@ -205,7 +285,7 @@ function marcarPegou(p) {
       <div class="rota-lista">
         <div v-for="(p, i) in passageiros" :key="p.nome + '-' + i" class="rota-item">
           <div class="passageiro">
-            <img src="/public/src-auth/passageiro.png" alt="" class="avatar" />
+            <img src="/src-auth/passageiro.png" alt="" class="avatar" />
             <div>
               <p>{{ p.nome }}</p>
               <p class="endereco">{{ p.endereco }}</p>
@@ -222,7 +302,7 @@ function marcarPegou(p) {
         </div>
       </div>
 
-      <button class="iniciar-rota" :style="{ backgroundColor: themeManager.detalhe }">Iniciar Rota</button>
+      <button class="iniciar-rota" :style="{ backgroundColor: themeManager.detalhe }" @click="toggleRota">{{ assistindoPosicao ? 'Parar Rota' : 'Iniciar Rota' }}</button>
     </div>
   </section>
   <section class="celular" :style="{ backgroundColor: themeManager.fundo }">
@@ -234,7 +314,7 @@ function marcarPegou(p) {
 
         <div v-show="abrirPerfil" class="conteudo-retratil">
           <div class="perfil-topo">
-            <img src="/public/src-auth/motorista.png" class="avatar" alt="">
+            <img src="/src-auth/motorista.png" class="avatar" alt="">
             <div class="enderecos">
               <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline"></span></p>
               <ul>
@@ -315,7 +395,7 @@ function marcarPegou(p) {
       <div class="rota-lista">
         <div v-for="(p, i) in passageirosIda" :key="'ida-' + i" class="rota-item">
           <div class="passageiro">
-            <img src="/public/src-auth/passageiro.png" alt="" class="avatar" />
+            <img src="/src-auth/passageiro.png" alt="" class="avatar" />
             <div>
               <p>{{ p.nome }}</p>
               <p class="endereco">{{ p.endereco }}</p>
@@ -332,7 +412,7 @@ function marcarPegou(p) {
         </div>
       </div>
 
-      <button class="iniciar-rota" :style="{ backgroundColor: themeManager.detalhe }">Iniciar Rota</button>
+      <button class="iniciar-rota" :style="{ backgroundColor: themeManager.detalhe }" @click="toggleRota">{{ assistindoPosicao ? 'Parar Rota' : 'Iniciar Rota' }}</button>
     </div>
 
     <div class="rota-container" v-show="rotaAtiva === 1">
@@ -345,7 +425,7 @@ function marcarPegou(p) {
       <div class="rota-lista">
         <div v-for="(p, i) in passageirosVolta12" :key="'v12-' + i" class="rota-item">
           <div class="passageiro">
-            <img src="/public/src-auth/passageiro.png" alt="" class="avatar" />
+            <img src="/src-auth/passageiro.png" alt="" class="avatar" />
             <div>
               <p>{{ p.nome }}</p>
               <p class="endereco">{{ p.endereco }}</p>
@@ -362,7 +442,7 @@ function marcarPegou(p) {
         </div>
       </div>
 
-      <button class="iniciar-rota" :style="{ backgroundColor: themeManager.detalhe }">Iniciar Rota</button>
+      <button class="iniciar-rota" :style="{ backgroundColor: themeManager.detalhe }" @click="toggleRota">{{ assistindoPosicao ? 'Parar Rota' : 'Iniciar Rota' }}</button>
     </div>
 
     <div class="rota-container" v-show="rotaAtiva === 2">
@@ -375,7 +455,7 @@ function marcarPegou(p) {
       <div class="rota-lista">
         <div v-for="(p, i) in passageirosVolta17" :key="'v17-' + i" class="rota-item">
           <div class="passageiro">
-            <img src="/public/src-auth/passageiro.png" alt="" class="avatar" />
+            <img src="/src-auth/passageiro.png" alt="" class="avatar" />
             <div>
               <p>{{ p.nome }}</p>
               <p class="endereco">{{ p.endereco }}</p>

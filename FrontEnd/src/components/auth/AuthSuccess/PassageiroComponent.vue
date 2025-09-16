@@ -6,6 +6,8 @@ import { useUserProfileStore } from '@/stores/userProfile'
 import { useRouter } from 'vue-router'
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
+import MotoristaAPI from '@/api/motorista'
+import axios from 'axios'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
@@ -33,10 +35,16 @@ const horario = ref('')
 onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
+<<<<<<< HEAD
   if (!userProfile.usuarioAtual) {
     await userProfile.fetchUsuarioAtual()
   }
+=======
+  const t = localStorage.getItem('jwt_access')
+  if (t) axios.defaults.headers.common['Authorization'] = `Bearer ${t}`
+>>>>>>> 481a1e7febaa7b8b6b9bbe092253496c1eabc8a8
   initMap()
+  iniciarPollingLocalizacao()
 })
 
 watch(
@@ -61,7 +69,66 @@ function initMap() {
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors"
   }).addTo(map)
-  L.marker([-23.5505, -46.6333]).addTo(map).bindPopup("Aqui é São Paulo!").openPopup()
+  // marcador do motorista será criado dinamicamente
+  motoristaMap.value = { map, marker: null }
+}
+
+// Estado do mapa/marcador do motorista
+const motoristaMap = ref({ map: null, marker: null })
+const apiMotorista = new MotoristaAPI()
+const motoristaId = ref(null)
+let pollingId = null
+
+async function obterELancarMarcador() {
+  try {
+    if (!motoristaId.value) {
+      // tenta deduzir o motorista do passageiro atual (por enquanto: pega o primeiro)
+      try {
+        const lista = await axios.get('http://localhost:8000/api/motoristas/')
+        motoristaId.value = lista?.data?.[0]?.idMotorista || null
+      } catch (_) {}
+      if (!motoristaId.value) return
+    }
+    const loc = await apiMotorista.obterLocalizacaoAtual(motoristaId.value)
+    const mapa = motoristaMap.value.map
+    if (!mapa) return
+
+    const ativa = !!loc?.rota_ativa
+    const hasCoords = loc?.latitude != null && loc?.longitude != null
+
+    if (!ativa || !hasCoords) {
+      if (motoristaMap.value.marker) {
+        motoristaMap.value.map.removeLayer(motoristaMap.value.marker)
+        motoristaMap.value.marker = null
+      }
+      return
+    }
+
+    const lat = Number(loc.latitude)
+    const lng = Number(loc.longitude)
+
+    if (!motoristaMap.value.marker) {
+      motoristaMap.value.marker = L.marker([lat, lng]).addTo(motoristaMap.value.map)
+      motoristaMap.value.map.setView([lat, lng], 15)
+    } else {
+      motoristaMap.value.marker.setLatLng([lat, lng])
+    }
+  } catch (e) {
+    // silencia erros intermitentes
+  }
+}
+
+function iniciarPollingLocalizacao() {
+  if (pollingId) return
+  obterELancarMarcador()
+  pollingId = setInterval(obterELancarMarcador, 4000)
+}
+
+function pararPollingLocalizacao() {
+  if (pollingId) {
+    clearInterval(pollingId)
+    pollingId = null
+  }
 }
 
 function toggleEdicao() {
@@ -97,7 +164,7 @@ function confirmarIdaVolta() {
     <div class="perfil" :style="{ backgroundColor: themeManager.detalhe }">
       <h2>MEU PERFIL</h2>
       <div class="perfil-topo">
-        <img src="/public/src-auth/passageiro.png" class="avatar" alt="">
+        <img src="/src-auth/passageiro.png" class="avatar" alt="">
         <div class="enderecos">
           <p>MEUS ENDEREÇOS</p>
           <ul>
@@ -158,7 +225,7 @@ function confirmarIdaVolta() {
           <h2>MEUS TRANSPORTES</h2>
           <p><strong>Motorista:</strong></p>
           <div class="card">
-            <img src="/public/src-auth/motorista.png" class="avatar" alt="">
+            <img src="/src-auth/motorista.png" class="avatar" alt="">
             <div class="card-text">
               <p>{{ userProfile.usuarioAtual?.motorista?.nome || 'Pedro' }}</p>
               <p>{{ userProfile.usuarioAtual?.motorista?.telefone || '(47) 99999-9999' }}</p>
@@ -208,7 +275,7 @@ function confirmarIdaVolta() {
       </div>
       <div v-show="abrirPerfil" class="conteudo-retratil">
         <div class="perfil-topo">
-          <img src="/public/src-auth/passageiro.png" class="avatar" alt="">
+          <img src="/src-auth/passageiro.png" class="avatar" alt="">
           <div class="enderecos">
             <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline"></span></p>
             <ul>
@@ -262,7 +329,7 @@ function confirmarIdaVolta() {
       <div v-show="abrirTransportes" class="conteudo-retratil">
         <p><strong>Motorista:</strong></p>
         <div class="card">
-          <img src="/public/src-auth/motorista.png" class="avatar" alt="">
+          <img src="/src-auth/motorista.png" class="avatar" alt="">
           <div class="card-text">
             <p>{{ userProfile.usuarioAtual?.motorista?.nome || 'Pedro' }}</p>
             <p>{{ userProfile.usuarioAtual?.motorista?.telefone || '(47) 99999-9999' }}</p>

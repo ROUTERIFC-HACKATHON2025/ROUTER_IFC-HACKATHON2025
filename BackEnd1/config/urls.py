@@ -3,10 +3,9 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
     TokenRefreshView,
 )
-from routerifc.views import EmpresaViewSet, MotoristaViewSet, VeiculoViewSet, RotasViewSet, EnderecoViewSet, PassageiroViewSet, UserViewSet
+from routerifc.views import EmpresaViewSet, MotoristaViewSet, VeiculoViewSet, RotasViewSet, EnderecoViewSet, PassageiroViewSet, UserViewSet, EmailOrUsernameTokenObtainPairView
 
 router = DefaultRouter()
 router.register(r'empresas', EmpresaViewSet)
@@ -20,7 +19,7 @@ router.register(r'usuarios', UserViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/', EmailOrUsernameTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/swagger/', SpectacularSwaggerView.as_view(), name='swagger-ui'),

@@ -18,14 +18,14 @@ function getInfoEmpresa() {
       nome: 'IndyTour',
       descricao: 'Especializada em turismo executivo e corporativo',
       cor: '#4CAF50',
-      logo: '/public/Logoindytour.png'
+      logo: '/Logoindytour.png'
     }
   } else if (empresaLogada.value?.empresa === 'Sul Turismo') {
     return {
       nome: 'Sul Turismo',
       descricao: 'Focada em turismo regional e passeios',
       cor: '#2196F3',
-      logo: '/public/logosul.png'
+      logo: '/logosul.png'
     }
   }
   return {
@@ -270,11 +270,11 @@ const infoEmpresa = computed(() => getInfoEmpresa())
     flex-direction: column;
     gap: 20px;
   }
-  
+
   .empresa-info {
     text-align: center;
   }
-  
+
   .dashboard-empresa {
     grid-template-columns: 1fr;
   }
