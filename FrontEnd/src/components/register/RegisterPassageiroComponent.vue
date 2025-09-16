@@ -1,9 +1,11 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import { usePassageiroStore } from '@/stores/passageiros'
 
+const router = useRouter()
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 const passageirosStore = usePassageiroStore()
@@ -55,35 +57,14 @@ async function cadastrar() {
     return
   }
 
-  const payload = {
-    ...passageiro,
-    endereco: { ...endereco } // ✅ envia endereço junto
-  }
+  const { confirmarSenha, informacoesAdicionais, ...payload } = passageiro
 
   if (isEditing.value) {
     await passageirosStore.updatePassageiro(payload)
   } else {
     await passageirosStore.addPassageiro(payload)
-
-    // Após auto-login, muda estado de auth conforme papel
-    try {
-      const access = localStorage.getItem('accessToken')
-      if (access) {
-        const response = await fetch('http://localhost:8000/api/usuarios/me/', {
-          headers: { Authorization: `Bearer ${access}` }
-        })
-        const data = await response.json()
-        if (data.is_passageiro) {
-          authState.mudarState('passageiro')
-        } else if (data.is_motorista) {
-          authState.mudarState('motorista')
-        } else if (data.is_admin) {
-          authState.mudarState('admin')
-        }
-      }
-    } catch (e) {
-      console.error(e)
-    }
+    // Após cadastro, redireciona para authForm
+    router.push('/login')
   }
 
   resetForm()
@@ -192,37 +173,6 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
-        <h2><span class="mdi mdi-map-marker" :style="{ color: themeManager.detalheAlternativo }"></span> Endereço
-          Residencial</h2>
-        <div class="grid">
-          <div>
-            <p>CEP: *</p>
-            <input v-model="endereco.cep"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
-          </div>
-          <div>
-            <p>Rua: *</p>
-            <input v-model="endereco.rua"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
-          </div>
-          <div>
-            <p>Número: *</p>
-            <input v-model="endereco.numero"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
-          </div>
-          <div>
-            <p>Cidade: *</p>
-            <input v-model="endereco.cidade" class="input-field-mid"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
-          </div>
-          <div>
-            <p>Bairro: *</p>
-            <input v-model="endereco.bairro" class="input-field-mid"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
-          </div>
-        </div>
-      </div> 
       <div class="buttons">
       <button type="submit" class="submit" :style="{ backgroundColor: themeManager.detalhe }">Cadastrar-se</button>
       <button type="button" @click="resetForm" :style="{ backgroundColor: themeManager.detalheAlternativo }">Cancelar</button>

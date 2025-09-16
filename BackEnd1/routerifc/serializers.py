@@ -31,7 +31,7 @@ class EnderecoSerializer(ModelSerializer):
 class PassageiroSerializer(ModelSerializer):
     class Meta:
         model = Passageiro
-        fields = '__all__'
+        fields = ['idPassageiros', 'nome', 'telefone', 'email', 'cpf', 'dataNascimento', 'nomeResponsavel', 'cpfResponsavel', 'telefoneResponsavel', 'senha', 'usuario']
 
     def create(self, validated_data):
         # Cria/garante um User do Django vinculado ao Passageiro
@@ -68,6 +68,15 @@ class MotoristaSerializer(ModelSerializer):
 
         if not email or not senha_plana:
             raise serializers.ValidationError({'detail': 'Email e senha são obrigatórios para cadastro.'})
+
+        # Handle empresa
+        empresa_nome = validated_data.pop('empresa', None)
+        if empresa_nome:
+            try:
+                empresa = Empresa.objects.get(nome=empresa_nome)
+                validated_data['empresa'] = empresa
+            except Empresa.DoesNotExist:
+                raise serializers.ValidationError({'empresa': 'Empresa não encontrada.'})
 
         user, created = User.objects.get_or_create(username=email, defaults={'email': email})
         user.set_password(senha_plana)

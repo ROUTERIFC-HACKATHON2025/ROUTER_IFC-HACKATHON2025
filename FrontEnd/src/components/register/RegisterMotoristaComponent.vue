@@ -1,9 +1,11 @@
 <script setup>
 import { ref, reactive, onMounted, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useMotoristaStore } from '@/stores/motorista'
 import { useAuthStateStore } from '@/stores/authState'
 
+const router = useRouter()
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 
@@ -72,25 +74,8 @@ async function cadastrar() {
     }
     delete motorista.confirmarSenha;
       await motoristaStore.addMotorista({ ...motorista });
-    }
-    // pós cadastro: auto login e direcionamento
-    try {
-      const access = localStorage.getItem('accessToken')
-      if (access) {
-        const response = await fetch('http://localhost:8000/api/usuarios/me/', {
-          headers: { Authorization: `Bearer ${access}` }
-        })
-        const data = await response.json()
-        if (data.is_passageiro) {
-          authState.mudarState('passageiro')
-        } else if (data.is_motorista) {
-          authState.mudarState('motorista')
-        } else if (data.is_admin) {
-          authState.mudarState('admin')
-        }
-      }
-    } catch (e) {
-      // noop
+      // Após cadastro, redireciona para authForm
+      router.push('/login')
     }
     resetForm();
 }

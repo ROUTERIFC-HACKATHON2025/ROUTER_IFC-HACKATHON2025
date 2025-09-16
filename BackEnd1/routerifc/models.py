@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 class Empresa(models.Model):
    idEmpresa = models.AutoField(primary_key=True)
    nome = models.CharField(max_length=30)
-   cnpj = models.IntegerField()
+   cnpj = models.CharField(max_length=20)
    email = models.CharField(max_length=40)
-   telefone = models.IntegerField()
+   telefone = models.CharField(max_length=20)
   
 
 
@@ -16,9 +16,9 @@ class Empresa(models.Model):
 
 class Motorista(models.Model):
    idMotorista = models.AutoField(primary_key=True)
-   cpf = models.IntegerField()
+   cpf = models.CharField(max_length=20)
    nome = models.CharField(max_length=30)
-   telefone = models.IntegerField()
+   telefone = models.CharField(max_length=20)
    email = models.CharField(max_length=50, unique=True)
    senha = models.CharField(max_length=45)
    codigoCnh = models.CharField(max_length=45)
@@ -75,11 +75,11 @@ class Passageiro(models.Model):
    senha = models.CharField(max_length=45)
    nome = models.CharField(max_length=30)
    dataNascimento = models.DateField()
-   cpf = models.IntegerField()
-   telefone = models.IntegerField()
+   cpf = models.CharField(max_length=20)
+   telefone = models.CharField(max_length=20)
    nomeResponsavel = models.CharField(max_length=30)
-   cpfResponsavel = models.IntegerField()
-   telefoneResponsavel = models.IntegerField()
+   cpfResponsavel = models.CharField(max_length=20)
+   telefoneResponsavel = models.CharField(max_length=20)
    endereco = models.ManyToManyField('Endereco', related_name='passageiros', blank=True, null=True)
    usuario = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True, related_name='passageiro')
 
