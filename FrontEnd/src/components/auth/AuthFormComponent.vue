@@ -1,4 +1,4 @@
-<script setup>
+perfi<script setup>
 import axios from 'axios'
 import { ref, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
@@ -103,7 +103,7 @@ async function handleLogin() {
             <input
               v-model="usuario.username"
               type="text"
-              placeholder="Usuario"
+              placeholder="E-mail ou usuário"
               class="input"
               :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }"
               @keydown.enter.prevent="handleLogin" />

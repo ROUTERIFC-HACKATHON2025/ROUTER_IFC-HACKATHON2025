@@ -41,7 +41,7 @@ class Veiculo(models.Model):
    capacidade = models.IntegerField()
    modelo = models.CharField(max_length=45)
    motoristas = models.ManyToManyField('Motorista', related_name='veiculos')
-   passageiros = models.ManyToManyField('Passageiro', related_name='veiculos', null=True, blank=True)
+   passageiros = models.ManyToManyField('Passageiro', related_name='veiculos', blank=True)
 
 
    def __str__(self):
@@ -66,7 +66,7 @@ class Endereco(models.Model):
    rua = models.CharField(max_length=30)
    numero = models.IntegerField()
    cep = models.IntegerField(default="0000000000")
-   rotas = models.ForeignKey(Rotas, on_delete=models.PROTECT, related_name='endereco')
+   rotas = models.ForeignKey(Rotas, on_delete=models.PROTECT, related_name='endereco', null=True, blank=True)
 
 
    def __str__(self):
@@ -84,7 +84,7 @@ class Passageiro(models.Model):
    nomeResponsavel = models.CharField(max_length=30)
    cpfResponsavel = models.IntegerField()
    telefoneResponsavel = models.IntegerField()
-   endereco = models.ManyToManyField('Endereco', related_name='passageiros', blank=True, null=True)
+   endereco = models.ManyToManyField('Endereco', related_name='passageiros', blank=True)
    usuario = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True, related_name='passageiro')
 
 

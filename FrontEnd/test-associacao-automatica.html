@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Associação Automática de Endereços</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .step {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teste de Associação Automática de Endereços</h1>
+    
+    <div class="test-section">
+        <h2>Fluxo Completo de Teste</h2>
+        
+        <div class="step">
+            <h3>Passo 1: Login</h3>
+            <input type="email" id="email" placeholder="Email do passageiro" value="teste@teste.com">
+            <input type="password" id="senha" placeholder="Senha" value="123456">
+            <button onclick="fazerLogin()">Fazer Login</button>
+            <div id="resultado-login"></div>
+        </div>
+
+        <div class="step">
+            <h3>Passo 2: Verificar Dados do Usuário</h3>
+            <button onclick="verificarUsuario()">Verificar Usuário Logado</button>
+            <div id="resultado-usuario"></div>
+        </div>
+
+        <div class="step">
+            <h3>Passo 3: Criar Endereço</h3>
+            <input type="text" id="cidade" placeholder="Cidade" value="São Paulo">
+            <input type="text" id="bairro" placeholder="Bairro" value="Centro">
+            <input type="text" id="rua" placeholder="Rua" value="Rua das Flores">
+            <input type="number" id="numero" placeholder="Número" value="123">
+            <input type="number" id="cep" placeholder="CEP" value="12345678">
+            <button onclick="criarEndereco()">Criar Endereço</button>
+            <div id="resultado-criar"></div>
+        </div>
+
+        <div class="step">
+            <h3>Passo 4: Verificar Associação</h3>
+            <button onclick="verificarAssociacao()">Verificar Associação</button>
+            <div id="resultado-associacao"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        let token = null;
+        let userId = null;
+        let enderecoId = null;
+        
+        async function fazerLogin() {
+            const resultado = document.getElementById('resultado-login');
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            
+            resultado.innerHTML = 'Fazendo login...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/token/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: email,
+                        password: senha
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    token = data.access;
+                    
+                    // Buscar dados do usuário
+                    const userResponse = await fetch(`${API_BASE}/usuarios/me/`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    if (userResponse.ok) {
+                        const userData = await userResponse.json();
+                        userId = userData.username; // Usar username como ID
+                        
+                        resultado.innerHTML = `<div class="success">✅ Login realizado com sucesso!<br>Token: ${token.substring(0, 20)}...<br>User ID: ${userId}</div>`;
+                    } else {
+                        resultado.innerHTML = `<div class="error">❌ Erro ao buscar dados do usuário</div>`;
+                    }
+                } else {
+                    const error = await response.text();
+                    resultado.innerHTML = `<div class="error">❌ Erro no login: ${error}</div>`;
+                }
+            } catch (error) {
+                resultado.innerHTML = `<div class="error">❌ Erro de conexão: ${error.message}</div>`;
+            }
+        }
+        
+        async function verificarUsuario() {
+            const resultado = document.getElementById('resultado-usuario');
+            resultado.innerHTML = 'Verificando usuário...';
+            
+            try {
+                // Buscar passageiros para encontrar o ID correto
+                const passageirosResponse = await fetch(`${API_BASE}/passageiros/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (passageirosResponse.ok) {
+                    const passageiros = await passageirosResponse.json();
+                    const passageiro = passageiros.find(p => p.email === document.getElementById('email').value);
+                    
+                    if (passageiro) {
+                        userId = passageiro.idPassageiros;
+                        resultado.innerHTML = `<div class="success">✅ Passageiro encontrado!<br>ID: ${passageiro.idPassageiros}<br>Nome: ${passageiro.nome}<br>Email: ${passageiro.email}<br>Endereços atuais: ${passageiro.endereco ? passageiro.endereco.length : 0}</div>`;
+                    } else {
+                        resultado.innerHTML = `<div class="error">❌ Passageiro não encontrado</div>`;
+                    }
+                } else {
+                    resultado.innerHTML = `<div class="error">❌ Erro ao buscar passageiros</div>`;
+                }
+            } catch (error) {
+                resultado.innerHTML = `<div class="error">❌ Erro de conexão: ${error.message}</div>`;
+            }
+        }
+        
+        async function criarEndereco() {
+            const resultado = document.getElementById('resultado-criar');
+            resultado.innerHTML = 'Criando endereço...';
+            
+            try {
+                const endereco = {
+                    cidade: document.getElementById('cidade').value,
+                    bairro: document.getElementById('bairro').value,
+                    rua: document.getElementById('rua').value,
+                    numero: parseInt(document.getElementById('numero').value),
+                    cep: parseInt(document.getElementById('cep').value)
+                };
+                
+                // Criar endereço
+                const enderecoResponse = await fetch(`${API_BASE}/enderecos/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(endereco)
+                });
+                
+                if (enderecoResponse.ok) {
+                    const enderecoData = await enderecoResponse.json();
+                    enderecoId = enderecoData.idEndereco;
+                    
+                    // Associar ao passageiro
+                    const passageiroResponse = await fetch(`${API_BASE}/passageiros/${userId}/`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            endereco: [enderecoId]
+                        })
+                    });
+                    
+                    if (passageiroResponse.ok) {
+                        const passageiroData = await passageiroResponse.json();
+                        resultado.innerHTML = `<div class="success">✅ Endereço criado e associado com sucesso!<br>ID do Endereço: ${enderecoId}<br>Endereços do passageiro: ${passageiroData.endereco ? passageiroData.endereco.length : 0}</div>`;
+                    } else {
+                        const error = await passageiroResponse.text();
+                        resultado.innerHTML = `<div class="error">❌ Erro ao associar endereço: ${error}</div>`;
+                    }
+                } else {
+                    const error = await enderecoResponse.text();
+                    resultado.innerHTML = `<div class="error">❌ Erro ao criar endereço: ${error}</div>`;
+                }
+            } catch (error) {
+                resultado.innerHTML = `<div class="error">❌ Erro de conexão: ${error.message}</div>`;
+            }
+        }
+        
+        async function verificarAssociacao() {
+            const resultado = document.getElementById('resultado-associacao');
+            resultado.innerHTML = 'Verificando associação...';
+            
+            try {
+                // Buscar dados atualizados do passageiro
+                const passageiroResponse = await fetch(`${API_BASE}/passageiros/${userId}/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (passageiroResponse.ok) {
+                    const passageiro = await passageiroResponse.json();
+                    
+                    // Buscar detalhes dos endereços
+                    const enderecosResponse = await fetch(`${API_BASE}/enderecos/`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    if (enderecosResponse.ok) {
+                        const enderecos = await enderecosResponse.json();
+                        const enderecosDoPassageiro = enderecos.filter(addr => 
+                            passageiro.endereco && passageiro.endereco.includes(addr.idEndereco)
+                        );
+                        
+                        resultado.innerHTML = `<div class="success">✅ Verificação concluída!<br>Endereços associados: ${enderecosDoPassageiro.length}<br><pre>${JSON.stringify(enderecosDoPassageiro, null, 2)}</pre></div>`;
+                    } else {
+                        resultado.innerHTML = `<div class="error">❌ Erro ao buscar endereços</div>`;
+                    }
+                } else {
+                    resultado.innerHTML = `<div class="error">❌ Erro ao buscar dados do passageiro</div>`;
+                }
+            } catch (error) {
+                resultado.innerHTML = `<div class="error">❌ Erro de conexão: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

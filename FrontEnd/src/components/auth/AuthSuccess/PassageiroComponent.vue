@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
-import { useUserProfileStore } from '@/stores/userProfile'
+import { useUserDataStore } from '@/stores/userData'
 import { useRouter } from 'vue-router'
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
@@ -11,7 +11,7 @@ import axios from 'axios'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
-const userProfile = useUserProfileStore()
+const userData = useUserDataStore()
 const router = useRouter()
 
 // Estados gerais
@@ -19,6 +19,18 @@ const modoEdicao = ref(false)
 const verSenha = ref(false)
 const abrirPerfil = ref(true)
 const abrirTransportes = ref(false)
+
+// Estados para gerenciamento de endereços
+const mostrarFormularioEndereco = ref(false)
+const editandoEndereco = ref(false)
+const enderecoEditando = ref(null)
+const novoEndereco = ref({
+  cidade: '',
+  bairro: '',
+  rua: '',
+  numero: '',
+  cep: ''
+})
 
 // Inputs de perfil
 const nome = ref('')
@@ -35,27 +47,31 @@ const voltara = ref('')
 const horario = ref('')
 
 // Inicialização do tema e autenticação
-onMounted(() => {
+onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
   const t = localStorage.getItem('jwt_access')
   if (t) axios.defaults.headers.common['Authorization'] = `Bearer ${t}`
+
+  // Carregar dados do usuário do backend
+  await userData.fetchUserData()
+
   initMap()
   iniciarPollingLocalizacao()
 })
 
-// Observa mudanças no usuário para atualizar inputs
+// Observa mudanças nos dados do usuário para atualizar inputs
 watch(
-  () => userProfile.usuarioAtual,
+  () => userData.userData,
   (novoUsuario) => {
     if (novoUsuario) {
-      nome.value = novoUsuario.nome
-      telefone.value = novoUsuario.telefone
-      email.value = novoUsuario.email
-      senha.value = novoUsuario.senha
-      nascimento.value = novoUsuario.nascimento
-      endereco.value = novoUsuario.endereco
-      descricao.value = novoUsuario.descricao
+      nome.value = novoUsuario.nome || ''
+      telefone.value = novoUsuario.telefone || ''
+      email.value = novoUsuario.email || ''
+      senha.value = novoUsuario.senha || ''
+      nascimento.value = novoUsuario.nascimento || ''
+      endereco.value = novoUsuario.endereco || 'Endereço não informado'
+      descricao.value = novoUsuario.descricao || ''
     }
   },
   { immediate: true }
@@ -80,14 +96,30 @@ let pollingId = null
 
 async function obterELancarMarcador() {
   try {
-    if (!motoristaId.value) {
-      // tenta deduzir o motorista do passageiro atual (por enquanto: pega o primeiro)
-      try {
-        const lista = await axios.get('http://localhost:8000/api/motoristas/')
-        motoristaId.value = lista?.data?.[0]?.idMotorista || null
-      } catch (_) {}
-      if (!motoristaId.value) return
+    // Sempre busca motoristas com rota ativa a cada verificação
+    let motoristaComRotaAtiva = null
+    try {
+      const lista = await axios.get('http://localhost:8000/api/motoristas/')
+      // Procura por um motorista com rota ativa
+      motoristaComRotaAtiva = lista?.data?.find(m => m.rota_ativa === true)
+    } catch (error) {
+      console.error('Erro ao buscar motoristas:', error)
+      return
     }
+
+    // Se não há motorista com rota ativa, remove marcador e retorna
+    if (!motoristaComRotaAtiva) {
+      if (motoristaMap.value.marker) {
+        motoristaMap.value.map.removeLayer(motoristaMap.value.marker)
+        motoristaMap.value.marker = null
+      }
+      motoristaId.value = null
+      return
+    }
+
+    // Atualiza o ID do motorista ativo
+    motoristaId.value = motoristaComRotaAtiva.idMotorista
+
     const loc = await apiMotorista.obterLocalizacaoAtual(motoristaId.value)
     const mapa = motoristaMap.value.map
     if (!mapa) return
@@ -95,6 +127,7 @@ async function obterELancarMarcador() {
     const ativa = !!loc?.rota_ativa
     const hasCoords = loc?.latitude != null && loc?.longitude != null
 
+    // Só exibe se rota estiver ativa E tiver coordenadas
     if (!ativa || !hasCoords) {
       if (motoristaMap.value.marker) {
         motoristaMap.value.map.removeLayer(motoristaMap.value.marker)
@@ -113,7 +146,7 @@ async function obterELancarMarcador() {
       motoristaMap.value.marker.setLatLng([lat, lng])
     }
   } catch (e) {
-    // silencia erros intermitentes
+    console.error('Falhou', e)
   }
 }
 
@@ -123,17 +156,12 @@ function iniciarPollingLocalizacao() {
   pollingId = setInterval(obterELancarMarcador, 4000)
 }
 
-function pararPollingLocalizacao() {
-  if (pollingId) {
-    clearInterval(pollingId)
-    pollingId = null
-  }
-}
 
 // Toggle edição do perfil
-function toggleEdicao() {
-  if (modoEdicao.value && userProfile.usuarioAtual) {
-    userProfile.atualizarPerfil({
+async function toggleEdicao() {
+  if (modoEdicao.value && userData.userData) {
+    // Salvar no backend
+    const success = await userData.updateUserData({
       nome: nome.value,
       telefone: telefone.value,
       email: email.value,
@@ -142,13 +170,19 @@ function toggleEdicao() {
       endereco: endereco.value,
       descricao: descricao.value
     })
-    alert('Perfil atualizado com sucesso!')
+
+    if (success) {
+      alert('Perfil atualizado com sucesso!')
+    } else {
+      alert('Erro ao atualizar perfil. Tente novamente.')
+    }
   }
   modoEdicao.value = !modoEdicao.value
 }
 
 // Sair da conta
 function sairDaConta() {
+  userData.clearUserData()
   authState.reset()
   router.push('/')
 }
@@ -157,6 +191,101 @@ function sairDaConta() {
 function confirmarIdaVolta() {
   console.log({ ira: ira.value, voltara: voltara.value, horario: horario.value })
   alert("Informações de ida e volta salvas!")
+}
+
+// Funções para gerenciar endereços
+function abrirFormularioEndereco() {
+  mostrarFormularioEndereco.value = true
+  editandoEndereco.value = false
+  enderecoEditando.value = null
+  novoEndereco.value = {
+    cidade: '',
+    bairro: '',
+    rua: '',
+    numero: '',
+    cep: ''
+  }
+}
+
+function abrirEdicaoEndereco(endereco) {
+  mostrarFormularioEndereco.value = true
+  editandoEndereco.value = true
+  enderecoEditando.value = endereco
+  novoEndereco.value = {
+    cidade: endereco.cidade,
+    bairro: endereco.bairro,
+    rua: endereco.rua,
+    numero: endereco.numero,
+    cep: endereco.cep
+  }
+}
+
+function fecharFormularioEndereco() {
+  mostrarFormularioEndereco.value = false
+  editandoEndereco.value = false
+  enderecoEditando.value = null
+  novoEndereco.value = {
+    cidade: '',
+    bairro: '',
+    rua: '',
+    numero: '',
+    cep: ''
+  }
+}
+
+async function salvarEndereco() {
+  try {
+    // Validar campos obrigatórios
+    if (!novoEndereco.value.cidade || !novoEndereco.value.bairro || !novoEndereco.value.rua || !novoEndereco.value.numero) {
+      alert('Por favor, preencha todos os campos obrigatórios.')
+      return
+    }
+
+    // Preparar dados do endereço com tipos corretos
+    const enderecoData = {
+      cidade: novoEndereco.value.cidade,
+      bairro: novoEndereco.value.bairro,
+      rua: novoEndereco.value.rua,
+      numero: parseInt(novoEndereco.value.numero),
+      cep: novoEndereco.value.cep ? parseInt(novoEndereco.value.cep) : 0
+    }
+
+    console.log('Dados do endereço preparados:', enderecoData)
+
+    let success = false
+    if (editandoEndereco.value) {
+      // Editar endereço existente
+      success = await userData.editarEndereco(enderecoEditando.value.idEndereco, enderecoData)
+    } else {
+      // Adicionar novo endereço
+      success = await userData.adicionarEndereco(enderecoData)
+    }
+
+    if (success) {
+      alert(editandoEndereco.value ? 'Endereço atualizado com sucesso!' : 'Endereço adicionado com sucesso!')
+      fecharFormularioEndereco()
+    } else {
+      alert('Erro ao salvar endereço. Tente novamente.')
+    }
+  } catch (error) {
+    console.error('Erro ao salvar endereço:', error)
+    alert('Erro ao salvar endereço. Tente novamente.')
+  }
+}
+
+async function removerEndereco(idEndereco) {
+  if (confirm('Tem certeza que deseja remover este endereço?')) {
+    const success = await userData.removerEndereco(idEndereco)
+    if (success) {
+      alert('Endereço removido com sucesso!')
+    } else {
+      alert('Erro ao remover endereço. Tente novamente.')
+    }
+  }
+}
+
+function formatarEndereco(endereco) {
+  return `${endereco.rua}, ${endereco.numero} - ${endereco.bairro}, ${endereco.cidade}`
 }
 </script>
 
@@ -167,12 +296,19 @@ function confirmarIdaVolta() {
       <div class="perfil-topo">
         <img src="/src-auth/passageiro.png" class="avatar" alt="">
         <div class="enderecos">
-          <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline"></span></p>
+          <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline" @click="abrirFormularioEndereco"></span></p>
           <ul>
-            <li v-if="endereco">
+            <li v-for="endereco in userData.userData?.enderecos || []" :key="endereco.idEndereco">
               <span class="mdi mdi-map-marker"></span>
-              <p>{{ endereco }}</p>
-              <span class="mdi mdi-pencil"></span>
+              <p>{{ formatarEndereco(endereco) }}</p>
+              <div class="endereco-actions">
+                <span class="mdi mdi-pencil" @click="abrirEdicaoEndereco(endereco)"></span>
+                <span class="mdi mdi-delete" @click="removerEndereco(endereco.idEndereco)"></span>
+              </div>
+            </li>
+            <li v-if="!userData.userData?.enderecos || userData.userData?.enderecos.length === 0">
+              <span class="mdi mdi-map-marker"></span>
+              <p>Nenhum endereço cadastrado</p>
             </li>
           </ul>
         </div>
@@ -223,15 +359,15 @@ function confirmarIdaVolta() {
           <div class="card">
             <img src="/src-auth/motorista.png" class="avatar" alt="">
             <div class="card-text">
-              <p>{{ userProfile.usuarioAtual?.motorista?.nome || 'Pedro' }}</p>
-              <p>{{ userProfile.usuarioAtual?.motorista?.telefone || '(47) 99999-9999' }}</p>
+              <p>{{ userData.userData?.motorista?.nome || 'Pedro' }}</p>
+              <p>{{ userData.userData?.motorista?.telefone || '(47) 99999-9999' }}</p>
             </div>
           </div>
 
           <p><strong>Veículo:</strong></p>
           <div class="card">
             <div class="card-separacao-text"></div>
-            <p>{{ userProfile.usuarioAtual?.van?.nome || 'Van Executiva Premium' }}</p>
+            <p>{{ userData.userData?.van?.nome || 'Van Executiva Premium' }}</p>
           </div>
         </div>
 
@@ -273,12 +409,19 @@ function confirmarIdaVolta() {
         <div class="perfil-topo">
           <img src="/src-auth/passageiro.png" class="avatar" alt="">
           <div class="enderecos">
-            <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline"></span></p>
+            <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline" @click="abrirFormularioEndereco"></span></p>
             <ul>
-              <li v-if="endereco">
+              <li v-for="endereco in userData.userData?.enderecos || []" :key="endereco.idEndereco">
                 <span class="mdi mdi-map-marker"></span>
-                <p>{{ endereco }}</p>
-                <span class="mdi mdi-pencil"></span>
+                <p>{{ formatarEndereco(endereco) }}</p>
+                <div class="endereco-actions">
+                  <span class="mdi mdi-pencil" @click="abrirEdicaoEndereco(endereco)"></span>
+                  <span class="mdi mdi-delete" @click="removerEndereco(endereco.idEndereco)"></span>
+                </div>
+              </li>
+              <li v-if="!userData.userData?.enderecos || userData.userData?.enderecos.length === 0">
+                <span class="mdi mdi-map-marker"></span>
+                <p>Nenhum endereço cadastrado</p>
               </li>
             </ul>
           </div>
@@ -327,14 +470,14 @@ function confirmarIdaVolta() {
         <div class="card">
           <img src="/src-auth/motorista.png" class="avatar" alt="">
           <div class="card-text">
-            <p>{{ userProfile.usuarioAtual?.motorista?.nome || 'Pedro' }}</p>
-            <p>{{ userProfile.usuarioAtual?.motorista?.telefone || '(47) 99999-9999' }}</p>
+            <p>{{ userData.userData?.motorista?.nome || 'Pedro' }}</p>
+            <p>{{ userData.userData?.motorista?.telefone || '(47) 99999-9999' }}</p>
           </div>
         </div>
         <p><strong>Veículo:</strong></p>
         <div class="card">
           <div class="card-separacao-text"></div>
-          <p>{{ userProfile.usuarioAtual?.van?.nome || 'Van Executiva Premium' }}</p>
+          <p>{{ userData.userData?.van?.nome || 'Van Executiva Premium' }}</p>
         </div>
       </div>
       <div id="mapaCelular" class="mapa"></div>
@@ -363,6 +506,50 @@ function confirmarIdaVolta() {
         :style="{ backgroundColor: themeManager.detalhe }">CONFIRMAR</button>
     </div>
   </section>
+
+  <!-- Modal para adicionar/editar endereço -->
+  <div v-if="mostrarFormularioEndereco" class="modal-overlay" @click="fecharFormularioEndereco">
+    <div class="modal-content" :style="{ backgroundColor: themeManager.fundo }" @click.stop>
+      <div class="modal-header">
+        <h3>{{ editandoEndereco ? 'Editar Endereço' : 'Adicionar Endereço' }}</h3>
+        <span class="mdi mdi-close" @click="fecharFormularioEndereco"></span>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Cidade *</label>
+          <input v-model="novoEndereco.cidade" type="text" placeholder="Digite a cidade" />
+        </div>
+
+        <div class="form-group">
+          <label>Bairro *</label>
+          <input v-model="novoEndereco.bairro" type="text" placeholder="Digite o bairro" />
+        </div>
+
+        <div class="form-group">
+          <label>Rua *</label>
+          <input v-model="novoEndereco.rua" type="text" placeholder="Digite a rua" />
+        </div>
+
+        <div class="form-group">
+          <label>Número *</label>
+          <input v-model="novoEndereco.numero" type="number" placeholder="Digite o número" />
+        </div>
+
+        <div class="form-group">
+          <label>CEP</label>
+          <input v-model="novoEndereco.cep" type="number" placeholder="Digite o CEP" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button @click="fecharFormularioEndereco" class="btn-cancelar">Cancelar</button>
+        <button @click="salvarEndereco" class="btn-salvar" :style="{ backgroundColor: themeManager.detalhe }">
+          {{ editandoEndereco ? 'Atualizar' : 'Adicionar' }}
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 
@@ -425,6 +612,12 @@ function confirmarIdaVolta() {
 .enderecos p span {
   margin-left: 8px;
   color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.enderecos p span:hover {
+  color: #4CAF50;
 }
 
 .enderecos ul {
@@ -449,6 +642,27 @@ function confirmarIdaVolta() {
   border: none;
   align-items: center;
   margin-top: 5px;
+  flex: 1;
+}
+
+.endereco-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.endereco-actions span {
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.endereco-actions .mdi-pencil:hover {
+  color: #2196F3;
+}
+
+.endereco-actions .mdi-delete:hover {
+  color: #f44336;
 }
 
 .inputs p {
@@ -785,5 +999,153 @@ function confirmarIdaVolta() {
     font-size: 20px;
   }
 
+}
+
+/* Estilos do Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 20px;
+}
+
+.modal-header .mdi-close {
+  cursor: pointer;
+  font-size: 24px;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.modal-header .mdi-close:hover {
+  color: #f44336;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.btn-cancelar {
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #666;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-cancelar:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+}
+
+.btn-salvar {
+  padding: 10px 20px;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-salvar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsividade do Modal */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    margin: 20px;
+  }
+
+  .modal-header {
+    padding: 16px;
+  }
+
+  .modal-body {
+    padding: 16px;
+  }
+
+  .modal-footer {
+    padding: 16px;
+    flex-direction: column;
+  }
+
+  .btn-cancelar,
+  .btn-salvar {
+    width: 100%;
+  }
 }
 </style>
