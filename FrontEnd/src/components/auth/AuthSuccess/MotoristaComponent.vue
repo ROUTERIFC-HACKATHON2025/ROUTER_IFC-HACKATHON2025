@@ -1,22 +1,22 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
-import { useUserProfileStore } from '@/stores/userProfile'
+import { useUserDataStore } from '@/stores/userData'
 import { useAuthStateStore } from '@/stores/authState'
 import MotoristaAPI from '@/api/motorista'
 import axios from 'axios'
 
 const themeManager = useThemeManagerStore()
-const userProfile = useUserProfileStore()
+const userData = useUserDataStore()
 const authState = useAuthStateStore()
 const router = useRouter()
 
-const nome = ref(userProfile.nome ?? '')
-const telefone = ref(userProfile.telefone ?? '')
-const email = ref(userProfile.email ?? '')
-const senha = ref(userProfile.senha ?? '')
-const nascimento = ref(userProfile.nascimento ?? '')
+const nome = ref('')
+const telefone = ref('')
+const email = ref('')
+const senha = ref('')
+const nascimento = ref('')
 const verSenha = ref(false)
 const modoEdicao = ref(false)
 
@@ -26,36 +26,63 @@ const editarEndereco = ref(false)
 const abrirPerfil = ref(true)
 const abrirTransportes = ref(false)
 
-function toggleEdicao() {
-  if (modoEdicao.value) {
-    userProfile.atualizarPerfil({
+async function toggleEdicao() {
+  if (modoEdicao.value && userData.userData) {
+    // Salvar no backend
+    const success = await userData.updateUserData({
       nome: nome.value,
       telefone: telefone.value,
       email: email.value,
       senha: senha.value,
       nascimento: nascimento.value
     })
+
+    if (success) {
+      alert('Perfil atualizado com sucesso!')
+    } else {
+      alert('Erro ao atualizar perfil. Tente novamente.')
+    }
   } else {
-    nome.value = userProfile.nome ?? ''
-    telefone.value = userProfile.telefone ?? ''
-    email.value = userProfile.email ?? ''
-    senha.value = userProfile.senha ?? ''
-    nascimento.value = userProfile.nascimento ?? ''
+    // Carregar dados do usuário
+    nome.value = userData.userData?.nome ?? ''
+    telefone.value = userData.userData?.telefone ?? ''
+    email.value = userData.userData?.email ?? ''
+    senha.value = userData.userData?.senha ?? ''
+    nascimento.value = userData.userData?.nascimento ?? ''
   }
   modoEdicao.value = !modoEdicao.value
 }
 
 function sairDaConta() {
+  userData.clearUserData()
   authState.reset()
   router.push('/')
 }
 
-onMounted(() => {
+// Observa mudanças nos dados do usuário para atualizar inputs
+watch(
+  () => userData.userData,
+  (novoUsuario) => {
+    if (novoUsuario) {
+      nome.value = novoUsuario.nome || ''
+      telefone.value = novoUsuario.telefone || ''
+      email.value = novoUsuario.email || ''
+      senha.value = novoUsuario.senha || ''
+      nascimento.value = novoUsuario.nascimento || ''
+    }
+  },
+  { immediate: true }
+)
+
+onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
   // restaura token caso exista
   const t = localStorage.getItem('jwt_access')
   if (t) axios.defaults.headers.common['Authorization'] = `Bearer ${t}`
+
+  // Carregar dados do usuário do backend
+  await userData.fetchUserData()
 })
 
 // Rastreamento de localização do motorista
@@ -80,7 +107,13 @@ async function enviarLocalizacao(latitude, longitude, ativa) {
 async function iniciarRastreamento() {
   if (!('geolocation' in navigator) || assistindoPosicao.value) return
   assistindoPosicao.value = true
-  // busca meu id de motorista (se usuário é motorista logado)
+
+  // Usar o ID do motorista do userData se disponível
+  if (!motoristaId.value && userData.userData?.id) {
+    motoristaId.value = userData.userData.id
+  }
+
+  // Fallback: busca meu id de motorista (se usuário é motorista logado)
   if (!motoristaId.value) {
     try {
       const me = await axios.get('http://localhost:8000/api/usuarios/me/')
@@ -90,7 +123,15 @@ async function iniciarRastreamento() {
         const found = lista?.data?.find?.(m => m?.email?.toLowerCase?.() === (me?.data?.email||'').toLowerCase())
         motoristaId.value = found?.idMotorista || lista?.data?.[0]?.idMotorista || null
       }
-    } catch (_) {}
+    } catch (e) {
+      console.error('Falha ao buscar o motorista', e)
+    }
+  }
+
+  if (!motoristaId.value) {
+    console.error('ID do motorista não encontrado')
+    assistindoPosicao.value = false
+    return
   }
   watchId = navigator.geolocation.watchPosition(
     (pos) => {

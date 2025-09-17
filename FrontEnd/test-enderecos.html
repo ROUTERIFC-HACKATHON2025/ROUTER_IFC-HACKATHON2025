@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Endereços</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teste de Funcionalidade de Endereços</h1>
+    
+    <div class="test-section">
+        <h2>1. Teste de Criação de Endereço</h2>
+        <p>Teste se é possível criar um novo endereço via API</p>
+        <button onclick="testarCriarEndereco()">Testar Criar Endereço</button>
+        <div id="resultado-criar"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Teste de Listagem de Endereços</h2>
+        <p>Teste se é possível listar todos os endereços</p>
+        <button onclick="testarListarEnderecos()">Testar Listar Endereços</button>
+        <div id="resultado-listar"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Teste de Atualização de Endereço</h2>
+        <p>Teste se é possível atualizar um endereço existente</p>
+        <input type="number" id="id-endereco" placeholder="ID do endereço">
+        <button onclick="testarAtualizarEndereco()">Testar Atualizar Endereço</button>
+        <div id="resultado-atualizar"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Teste de Associação com Passageiro</h2>
+        <p>Teste se é possível associar endereço a um passageiro</p>
+        <input type="number" id="id-passageiro" placeholder="ID do passageiro">
+        <input type="number" id="id-endereco-associar" placeholder="ID do endereço">
+        <button onclick="testarAssociarEndereco()">Testar Associar Endereço</button>
+        <div id="resultado-associar"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api';
+        
+        async function testarCriarEndereco() {
+            const resultado = document.getElementById('resultado-criar');
+            resultado.innerHTML = 'Testando...';
+            
+            try {
+                const endereco = {
+                    cidade: 'São Paulo',
+                    bairro: 'Centro',
+                    rua: 'Rua das Flores',
+                    numero: 123,
+                    cep: 12345678
+                };
+                
+                const response = await fetch(`${API_BASE}/enderecos/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(endereco)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultado.innerHTML = `<div class="success">✅ Endereço criado com sucesso! ID: ${data.idEndereco}</div>`;
+                } else {
+                    const error = await response.text();
+                    resultado.innerHTML = `<div class="error">❌ Erro: ${error}</div>`;
+                }
+            } catch (error) {
+                resultado.innerHTML = `<div class="error">❌ Erro de conexão: ${error.message}</div>`;
+            }
+        }
+        
+        async function testarListarEnderecos() {
+            const resultado = document.getElementById('resultado-listar');
+            resultado.innerHTML = 'Testando...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/enderecos/`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultado.innerHTML = `<div class="success">✅ ${data.length} endereços encontrados</div><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    const error = await response.text();
+                    resultado.innerHTML = `<div class="error">❌ Erro: ${error}</div>`;
+                }
+            } catch (error) {
+                resultado.innerHTML = `<div class="error">❌ Erro de conexão: ${error.message}</div>`;
+            }
+        }
+        
+        async function testarAtualizarEndereco() {
+            const resultado = document.getElementById('resultado-atualizar');
+            const idEndereco = document.getElementById('id-endereco').value;
+            
+            if (!idEndereco) {
+                resultado.innerHTML = '<div class="error">❌ Por favor, insira um ID de endereço</div>';
+                return;
+            }
+            
+            resultado.innerHTML = 'Testando...';
+            
+            try {
+                const enderecoAtualizado = {
+                    cidade: 'Rio de Janeiro',
+                    bairro: 'Copacabana',
+                    rua: 'Avenida Atlântica',
+                    numero: 456,
+                    cep: 87654321
+                };
+                
+                const response = await fetch(`${API_BASE}/enderecos/${idEndereco}/`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(enderecoAtualizado)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultado.innerHTML = `<div class="success">✅ Endereço atualizado com sucesso!</div><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    const error = await response.text();
+                    resultado.innerHTML = `<div class="error">❌ Erro: ${error}</div>`;
+                }
+            } catch (error) {
+                resultado.innerHTML = `<div class="error">❌ Erro de conexão: ${error.message}</div>`;
+            }
+        }
+        
+        async function testarAssociarEndereco() {
+            const resultado = document.getElementById('resultado-associar');
+            const idPassageiro = document.getElementById('id-passageiro').value;
+            const idEndereco = document.getElementById('id-endereco-associar').value;
+            
+            if (!idPassageiro || !idEndereco) {
+                resultado.innerHTML = '<div class="error">❌ Por favor, insira os IDs do passageiro e endereço</div>';
+                return;
+            }
+            
+            resultado.innerHTML = 'Testando...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/passageiros/${idPassageiro}/`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        endereco: [parseInt(idEndereco)]
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultado.innerHTML = `<div class="success">✅ Endereço associado com sucesso!</div><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    const error = await response.text();
+                    resultado.innerHTML = `<div class="error">❌ Erro: ${error}</div>`;
+                }
+            } catch (error) {
+                resultado.innerHTML = `<div class="error">❌ Erro de conexão: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
