@@ -5,7 +5,6 @@ import FooterBarComponent from './components/FooterBarComponent.vue'
 </script>
 
 <template>
-  //C:\Users\paulo\AppData\Local\Programs\Python\Python313-32\python.exe manage.py runserver
   <NavigationBarComponent/>
   <main >
     <RouterView class="view"/>
