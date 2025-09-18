@@ -45,7 +45,7 @@ onMounted(async () => {
         <div class="texto animate-on-scroll">
           <h2 class="subtitulo animate-on-scroll" :style="{ color: themeManager.detalheAlternativo }">QUEM SOMOS?</h2>
           <p :style="{ color: themeManager.text }">
-            Somos um website desenvolvido com o objetivo de facilitar a organização de empresas de
+            Somos uma empresa desenvolvida com o objetivo de facilitar a organização de empresas de
             transporte de alunos no Instituto Federal Catarinense (IFC) - Câmpus Araquari.<br>
             A nossa principal funcionalidade é otimizar a locomoção dos alunos no trajeto “casa - escola”,
             por meio de ferramentas que viabilizem uma melhor comunicação entre empresa e cliente.
@@ -108,7 +108,7 @@ onMounted(async () => {
         <div class="texto animate-on-scroll">
           <h2 class="subtitulo animate-on-scroll" :style="{ color: themeManager.detalheAlternativo }">QUEM SOMOS?</h2>
           <p :style="{ color: themeManager.text }">
-            Somos um website desenvolvido com o objetivo de facilitar a organização de empresas de
+            Somos uma empresa desenvolvida com o objetivo de facilitar a organização de empresas de
             transporte de alunos no Instituto Federal Catarinense (IFC) - Câmpus Araquari.<br>
             A nossa principal funcionalidade é otimizar a locomoção dos alunos no trajeto “casa - escola”,
             por meio de ferramentas que viabilizem uma melhor comunicação entre empresa e cliente.

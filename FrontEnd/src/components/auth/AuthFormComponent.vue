@@ -55,7 +55,6 @@ async function handleLogin() {
       erro.value = 'Falha na autenticação.'
       return
     }
-    // adiciona o token para as próximas requisições
     axios.defaults.headers.common['Authorization'] = `Bearer ${access}`
     localStorage.setItem('jwt_access', access)
 

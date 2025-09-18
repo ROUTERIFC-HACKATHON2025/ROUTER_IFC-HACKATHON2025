@@ -206,6 +206,10 @@ footer {
     font-size: 1.5rem;
   }
 
+  .footer-section-icons {
+    margin-bottom: 50px;
+  }
+
   .social-icons li a {
     font-size: 1.5rem;
   }

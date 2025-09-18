@@ -56,10 +56,10 @@ onMounted(async () => {
               Desenvolveu o BackEnd do RouterIFC utilizando Django e auxiliou na prototipagem das telas no Figma.
             </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
-              <li><span class="mdi mdi-github"  target="_blank"></span></li>
-              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
-              <li><span class="mdi mdi-email"  target="_blank"></span></li>
+              <li><a href="https://www.instagram.com/_gabeski?igsh=emUyNmxiMmtlaXFh" target="_blank"><span class="mdi mdi-instagram" style="color: #fff;"></span></a></li>
+              <li><a href="https://github.com/GabrielaSenderski" target="_blank"><span class="mdi mdi-github" style="color: #fff;"></span></a></li>
+              <li><a href="https://www.linkedin.com/in/gabriela-senderski-007681338/" target="_blank"><span class="mdi mdi-linkedin" style="color: #fff;"></span></a></li>
+              <li><a href="mailto:gabrielasenderski.ifc@gmail.com"><span class="mdi mdi-email" style="color: #fff;"></span></a></li>
             </ul>
           </div>
         </div>
@@ -71,49 +71,53 @@ onMounted(async () => {
               Desenvolveu a modelagem do database com MySQL workbench e contribuiu para o BackEnd com Django.
             </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
-              <li><span class="mdi mdi-github"  target="_blank"></span></li>
-              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
-              <li><span class="mdi mdi-email"  target="_blank"></span></li>
+              <li><a href="https://www.instagram.com/henri.ssb?igsh=MWc0M3Rwcm55bTVtMA==" target="_blank"><span class="mdi mdi-instagram" style="color: #fff;"></span></a></li>
+              <li><a href="https://github.com/Henri0042007" target="_blank"><span class="mdi mdi-github" style="color: #fff;"></span></a></li>
+              <li><a href="https://www.linkedin.com/in/henrique-santiago-00b4962bb/" target="_blank"><span class="mdi mdi-linkedin" style="color: #fff;"></span></a></li>
+              <li><a href="mailto:henrique.santiago.sb@gmail.com"><span class="mdi mdi-email" style="color: #fff;"></span></a></li>
             </ul>
           </div>
           <img src="/src-equipe/HenriqueS.jpeg" alt="Henrique S. S. Borba" class="profile-img" />
         </div>
-        <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
-            src="/src-equipe/HigorB.jpeg" alt="Higor T. A. Braga" class="profile-img" />
+
+        <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }">
+          <img src="/src-equipe/HigorB.jpeg" alt="Higor T. A. Braga" class="profile-img" />
           <div class="info">
-            <h2>Higor T. A. de Braga</h2>
+            <h2>Higor T. A. Braga</h2>
             <p>Trabalhou na prototipagem das telas com Figma e integração de APIGeolocation </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
-              <li><span class="mdi mdi-github"  target="_blank"></span></li>
-              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
-              <li><span class="mdi mdi-email"  target="_blank"></span></li>
+              <li><a href="https://www.instagram.com/bragaxzh_?igsh=MWRzN2Z3YWI4Nzlubw==" target="_blank"><span class="mdi mdi-instagram" style="color: #fff;"></span></a></li>
+              <li><a href="https://github.com/higortab" target="_blank"><span class="mdi mdi-github" style="color: #fff;"></span></a></li>
+              <li><a href="https://www.linkedin.com/in/higor-thiago-andresen-de-braga-592683385" target="_blank"><span class="mdi mdi-linkedin" style="color: #fff;"></span></a></li>
+              <li><a href="mailto:higor.tabraga@gmail.com"><span class="mdi mdi-email" style="color: #fff;"></span></a></li>
             </ul>
           </div>
         </div>
+
         <div class="card-right animate-card-right" :style="{ backgroundColor: themeManager.detalhe }">
           <div class="info">
             <h2>Maria E. G. Tavares</h2>
             <p>Projetou os requisitos de software e integração de APIGeolocation.</p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
-              <li><span class="mdi mdi-github"  target="_blank"></span></li>
-              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
-              <li><span class="mdi mdi-email"  target="_blank"></span></li>
+              <li><a href="https://www.instagram.com/dudatavarezs?igsh=eDExNW51aHdpcHFj" target="_blank"><span class="mdi mdi-instagram" style="color: #fff;"></span></a></li>
+              <li><a href="https://github.com/mariagtavres" target="_blank"><span class="mdi mdi-github" style="color: #fff;"></span></a></li>
+              <li><a href="https://www.linkedin.com/in/maria-eduarda-gonçalves-tavares-78a160381" target="_blank"><span class="mdi mdi-linkedin" style="color: #fff;"></span></a></li>
+              <li><a href="mailto:mariagoncalves.ifc.araquari@gmail.com"><span class="mdi mdi-email" style="color: #fff;"></span></a></li>
             </ul>
-          </div> <img src="/src-equipe/MariaT.jpeg" alt="Maria E. G. Tavares" class="profile-img" />
+          </div>
+          <img src="/src-equipe/MariaT.jpeg" alt="Maria E. G. Tavares" class="profile-img" />
         </div>
-        <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
-            src="/src-equipe/PauloA.jpeg" alt="Paulo A. Pereira" class="profile-img" />
+
+        <div class="card-left animate-card-left" :style="{ backgroundColor: themeManager.detalheAlternativo }">
+          <img src="/src-equipe/PauloA.jpeg" alt="Paulo A. Pereira" class="profile-img" />
           <div class="info">
             <h2>Paulo A. Pereira</h2>
             <p>Desenvolveu integralmente o FrontEnd e responsividade, utilizando Vue.js.</p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"  target="_blank"></span></li>
-              <li><span class="mdi mdi-github"  target="_blank"></span></li>
-              <li><span class="mdi mdi-linkedin"  target="_blank"></span></li>
-              <li><span class="mdi mdi-email"  target="_blank"></span></li>
+              <li><a href="https://www.instagram.com/pauloartur_23?igsh=Z2JpYThhMGo1ZGNu" target="_blank"><span class="mdi mdi-instagram" style="color: #fff;"></span></a></li>
+              <li><a href="https://github.com/Pauloartur-23" target="_blank"><span class="mdi mdi-github" style="color: #fff;"></span></a></li>
+              <li><a href="https://www.linkedin.com/in/paulo-artur-pereira-1748172b8/" target="_blank"><span class="mdi mdi-linkedin" style="color: #fff;"></span></a></li>
+              <li><a href="mailto:pauloartur.ifc@gmail.com"><span class="mdi mdi-email" style="color: #fff;"></span></a></li>
             </ul>
           </div>
         </div>
@@ -142,14 +146,13 @@ onMounted(async () => {
           <div class="info">
             <h2>Gabriela Senderski</h2>
             <p>
-              Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
-              backend de Django, auxiliando também em partes do frontend com Vue.js.
+              Desenvolveu o BackEnd do RouterIFC utilizando Django e auxiliou na prototipagem das telas no Figma.
             </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><a href="https://www.instagram.com/_gabeski?igsh=emUyNmxiMmtlaXFh" target="_blank"><span class="mdi mdi-instagram" style="color: #fff;"></span></a></li>
+              <li><a href="https://github.com/GabrielaSenderski" target="_blank"><span class="mdi mdi-github" style="color: #fff;"></span></a></li>
+              <li><a href="https://www.linkedin.com/in/gabriela-senderski-007681338/" target="_blank"><span class="mdi mdi-linkedin" style="color: #fff;"></span></a></li>
+              <li><a href="mailto:gabrielasenderski.ifc@gmail.com"><span class="mdi mdi-email" style="color: #fff;"></span></a></li>
             </ul>
           </div>
         </div>
@@ -158,56 +161,56 @@ onMounted(async () => {
           <div class="info">
             <h2>Henrique S. S. Borba</h2>
             <p>
-              Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
-              backend de Django, auxiliando também em partes do frontend com Vue.js.
+              Desenvolveu a modelagem do database com MySQL workbench e contribuiu para o BackEnd com Django.
             </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><a href="https://www.instagram.com/henri.ssb?igsh=MWc0M3Rwcm55bTVtMA==" target="_blank"><span class="mdi mdi-instagram" style="color: #fff;"></span></a></li>
+              <li><a href="https://github.com/Henri0042007" target="_blank"><span class="mdi mdi-github" style="color: #fff;"></span></a></li>
+              <li><a href="https://www.linkedin.com/in/henrique-santiago-00b4962bb/" target="_blank"><span class="mdi mdi-linkedin" style="color: #fff;"></span></a></li>
+              <li><a href="mailto:henrique.santiago.sb@gmail.com"><span class="mdi mdi-email" style="color: #fff;"></span></a></li>
             </ul>
           </div>
           <img src="/src-equipe/HenriqueS.jpeg" alt="Henrique S. S. Borba" class="profile-img" />
         </div>
-        <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
-            src="/src-equipe/HigorB.jpeg" alt="Higor T. A. Braga" class="profile-img" />
+
+        <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }">
+          <img src="/src-equipe/HigorB.jpeg" alt="Higor T. A. Braga" class="profile-img" />
           <div class="info">
             <h2>Higor T. A. Braga</h2>
-            <p> Tenho 16 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
-              backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
+            <p>Trabalhou na prototipagem das telas com Figma e integração de APIGeolocation </p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><a href="https://www.instagram.com/bragaxzh_?igsh=MWRzN2Z3YWI4Nzlubw==" target="_blank"><span class="mdi mdi-instagram" style="color: #fff;"></span></a></li>
+              <li><a href="https://github.com/higortab" target="_blank"><span class="mdi mdi-github" style="color: #fff;"></span></a></li>
+              <li><a href="https://www.linkedin.com/in/higor-thiago-andresen-de-braga-592683385" target="_blank"><span class="mdi mdi-linkedin" style="color: #fff;"></span></a></li>
+              <li><a href="mailto:higor.tabraga@gmail.com"><span class="mdi mdi-email" style="color: #fff;"></span></a></li>
             </ul>
           </div>
         </div>
+
         <div class="card-right animate-on-scroll" :style="{ backgroundColor: themeManager.detalhe }">
           <div class="info">
             <h2>Maria E. G. Tavares</h2>
-            <p> Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
-              backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
+            <p>Projetou os requisitos de software e integração de APIGeolocation.</p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><a href="https://www.instagram.com/dudatavarezs?igsh=eDExNW51aHdpcHFj" target="_blank"><span class="mdi mdi-instagram" style="color: #fff;"></span></a></li>
+              <li><a href="https://github.com/mariagtavres" target="_blank"><span class="mdi mdi-github" style="color: #fff;"></span></a></li>
+              <li><a href="https://www.linkedin.com/in/maria-eduarda-gonçalves-tavares-78a160381" target="_blank"><span class="mdi mdi-linkedin" style="color: #fff;"></span></a></li>
+              <li><a href="mailto:mariagoncalves.ifc.araquari@gmail.com"><span class="mdi mdi-email" style="color: #fff;"></span></a></li>
             </ul>
-          </div> <img src="/src-equipe/MariaT.jpeg" alt="Maria E. G. Tavares" class="profile-img" />
+          </div>
+          <img src="/src-equipe/MariaT.jpeg" alt="Maria E. G. Tavares" class="profile-img" />
         </div>
-        <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }"> <img
-            src="/src-equipe/PauloA.jpeg" alt="Paulo A. Pereira" class="profile-img" />
+
+        <div class="card-left animate-on-scroll" :style="{ backgroundColor: themeManager.detalheAlternativo }">
+          <img src="/src-equipe/PauloA.jpeg" alt="Paulo A. Pereira" class="profile-img" />
           <div class="info">
             <h2>Paulo A. Pereira</h2>
-            <p> Tenho 17 anos e trabalhei no desenvolvimento do RouterIFC principalmente na prototipagem das telas e no
-              backend de Django, auxiliando também em partes do frontend com Vue.js. </p>
+            <p>Desenvolveu integralmente o FrontEnd e responsividade, utilizando Vue.js.</p>
             <ul class="social-icons">
-              <li><span class="mdi mdi-instagram"></span></li>
-              <li><span class="mdi mdi-github"></span></li>
-              <li><span class="mdi mdi-linkedin"></span></li>
-              <li><span class="mdi mdi-email"></span></li>
+              <li><a href="https://www.instagram.com/pauloartur_23?igsh=Z2JpYThhMGo1ZGNu" target="_blank"><span class="mdi mdi-instagram" style="color: #fff;"></span></a></li>
+              <li><a href="https://github.com/Pauloartur-23" target="_blank"><span class="mdi mdi-github" style="color: #fff;"></span></a></li>
+              <li><a href="https://www.linkedin.com/in/paulo-artur-pereira-1748172b8/" target="_blank"><span class="mdi mdi-linkedin" style="color: #fff;"></span></a></li>
+              <li><a href="mailto:pauloartur.ifc@gmail.com"><span class="mdi mdi-email" style="color: #fff;"></span></a></li>
             </ul>
           </div>
         </div>
