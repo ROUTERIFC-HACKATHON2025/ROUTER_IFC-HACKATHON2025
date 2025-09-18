@@ -123,7 +123,7 @@ async function handleLogin() {
           </div>
 
           <!-- IMPORTANTÍSSIMO: não deixar virar submit -->
-          <button type="button" class="recover-link" @click="authState.mudarState('autentificacao')"
+          <button type="button" class="recover-link" @click="authState.mudarState('esqueceuSenha')"
             :style="{ color: themeManager.text }">
             Esqueceu a senha?
           </button>
