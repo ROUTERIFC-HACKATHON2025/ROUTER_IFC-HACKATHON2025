@@ -17,9 +17,9 @@ export const useAuthStateStore = defineStore('authState', () => {
     localStorage.setItem('authState', 'inicio')   
   }
 
-  const restaurarState = () => {
+const restaurarState = () => {
     const salvo = localStorage.getItem('authState')
-    if (['inicio', 'autentificacao', 'passageiro', 'motorista', 'admin'].includes(salvo)) {
+    if (['inicio', 'autentificacao', 'passageiro', 'motorista', 'admin', 'esqueceuSenha'].includes(salvo)) {
       state.value = salvo
     }
   }

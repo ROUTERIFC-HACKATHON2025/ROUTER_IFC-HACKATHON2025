@@ -55,7 +55,6 @@ async function handleLogin() {
       erro.value = 'Falha na autenticação.'
       return
     }
-    // adiciona o token para as próximas requisições
     axios.defaults.headers.common['Authorization'] = `Bearer ${access}`
     localStorage.setItem('jwt_access', access)
 
@@ -124,7 +123,7 @@ async function handleLogin() {
           </div>
 
           <!-- IMPORTANTÍSSIMO: não deixar virar submit -->
-          <button type="button" class="recover-link" @click="authState.mudarState('autentificacao')"
+          <button type="button" class="recover-link" @click="authState.mudarState('esqueceuSenha')"
             :style="{ color: themeManager.text }">
             Esqueceu a senha?
           </button>
@@ -141,18 +140,6 @@ async function handleLogin() {
             Cadastre-se
           </button>
         </p>
-
-        <div class="social-login">
-          <p :style="{ color: themeManager.text }">Fazer login por outra plataforma?</p>
-          <ul>
-            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }"
-                  class="mdi mdi-google"></span></button></li>
-            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }"
-                  class="mdi mdi-facebook"></span></button></li>
-            <li><button :style="{ borderColor: themeManager.text }"><span :style="{ color: themeManager.text }"
-                  class="mdi mdi-twitter"></span></button></li>
-          </ul>
-        </div>
       </div>
     </div>
   </section>
@@ -301,49 +288,17 @@ async function handleLogin() {
 
 .recover-link {
   background: none;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   border: none;
   cursor: pointer;
   margin: 0 0 0 70%;
 }
 
-.social-login {
-  margin-top: 1rem;
-}
-
-.social-login p {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-}
-
-.social-login ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.social-login li button {
-  background: none;
-  border: 2px solid;
-  padding: 2px 4px;
-  border-radius: 30px;
-  cursor: pointer;
-  font-size: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.social-login li button:hover {
-  transform: scale(1.1);
-}
-
 .erro-msg {
   color: red;
-  font-size: 0.8rem;
-  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
 }
-
 @media (max-width: 768px) {
   .login-container {
     margin-top: 20px;

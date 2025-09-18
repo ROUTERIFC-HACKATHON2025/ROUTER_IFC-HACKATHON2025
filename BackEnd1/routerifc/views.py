@@ -1,10 +1,13 @@
 from django.contrib.auth.models import User
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
 from django.contrib.auth import authenticate
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Empresa, Motorista, Veiculo, Rotas, Endereco, Passageiro
@@ -163,3 +166,49 @@ class EmailOrUsernameTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class EmailOrUsernameTokenObtainPairView(TokenObtainPairView):
     serializer_class = EmailOrUsernameTokenObtainPairSerializer
+
+
+@api_view(['POST'])
+def password_reset_request(request):
+    email = request.data.get('email')
+    if not email:
+        return Response({"detail": "Email é obrigatório"}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({"detail": "Usuário não encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+    # Generate token
+    token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+    # In a real app, send email with uid and token
+    # For now, return them in response for testing
+    return Response({
+        "message": "Token gerado. Use o uid e token para redefinir a senha.",
+        "uid": uid,
+        "token": token
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def password_reset_confirm(request):
+    uidb64 = request.data.get('uid')
+    token = request.data.get('token')
+    password = request.data.get('password')
+
+    if not uidb64 or not token or not password:
+        return Response({"detail": "uid, token e password são obrigatórios"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        return Response({"detail": "Token inválido"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not default_token_generator.check_token(user, token):
+        return Response({"detail": "Token inválido"}, status=status.HTTP_400_BAD_REQUEST)
+
+    user.set_password(password)
+    user.save()
+    return Response({"message": "Senha alterada com sucesso"}, status=status.HTTP_200_OK)

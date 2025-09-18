@@ -22,7 +22,7 @@ class Motorista(models.Model):
    email = models.CharField(max_length=50, unique=True)
    senha = models.CharField(max_length=45)
    codigoCnh = models.CharField(max_length=45)
-   empresa = models.ForeignKey(Empresa, on_delete=models.PROTECT, null=True, blank=True)
+   empresa = models.CharField(max_length=100, null=True, blank=True)
    usuario = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True, related_name='motorista')
    latitude_atual = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
    longitude_atual = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)

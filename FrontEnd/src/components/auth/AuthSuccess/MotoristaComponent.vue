@@ -7,59 +7,64 @@ import { useAuthStateStore } from '@/stores/authState'
 import MotoristaAPI from '@/api/motorista'
 import axios from 'axios'
 
+// Stores
 const themeManager = useThemeManagerStore()
 const userData = useUserDataStore()
 const authState = useAuthStateStore()
 const router = useRouter()
 
+// Perfil
 const nome = ref('')
 const telefone = ref('')
 const email = ref('')
 const senha = ref('')
 const nascimento = ref('')
-const verSenha = ref(false)
-const modoEdicao = ref(false)
-
 const endereco = ref('Rua Principal, 100')
-const editarEndereco = ref(false)
+const descricao = ref('')
 
+// Estados UI
+const modoEdicao = ref(false)
+const verSenha = ref(false)
 const abrirPerfil = ref(true)
 const abrirTransportes = ref(false)
 
+// Endereços
+const mostrarFormularioEndereco = ref(false)
+const editandoEndereco = ref(false)
+const enderecoEditando = ref(null)
+const novoEndereco = ref({
+  cidade: '',
+  bairro: '',
+  rua: '',
+  numero: '',
+  cep: ''
+})
+
+// Alternar edição perfil
 async function toggleEdicao() {
   if (modoEdicao.value && userData.userData) {
-    // Salvar no backend
     const success = await userData.updateUserData({
       nome: nome.value,
       telefone: telefone.value,
       email: email.value,
       senha: senha.value,
-      nascimento: nascimento.value
+      nascimento: nascimento.value,
+      endereco: endereco.value,
+      descricao: descricao.value
     })
-
-    if (success) {
-      alert('Perfil atualizado com sucesso!')
-    } else {
-      alert('Erro ao atualizar perfil. Tente novamente.')
-    }
-  } else {
-    // Carregar dados do usuário
-    nome.value = userData.userData?.nome ?? ''
-    telefone.value = userData.userData?.telefone ?? ''
-    email.value = userData.userData?.email ?? ''
-    senha.value = userData.userData?.senha ?? ''
-    nascimento.value = userData.userData?.nascimento ?? ''
+    alert(success ? 'Perfil atualizado com sucesso!' : 'Erro ao atualizar perfil. Tente novamente.')
   }
   modoEdicao.value = !modoEdicao.value
 }
 
+// Sair
 function sairDaConta() {
   userData.clearUserData()
   authState.reset()
   router.push('/')
 }
 
-// Observa mudanças nos dados do usuário para atualizar inputs
+// Reagir ao userData
 watch(
   () => userData.userData,
   (novoUsuario) => {
@@ -69,23 +74,27 @@ watch(
       email.value = novoUsuario.email || ''
       senha.value = novoUsuario.senha || ''
       nascimento.value = novoUsuario.nascimento || ''
+      endereco.value = novoUsuario.endereco || 'Endereço não informado'
+      descricao.value = novoUsuario.descricao || ''
     }
   },
   { immediate: true }
 )
 
+// Lifecycle
 onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
-  // restaura token caso exista
   const t = localStorage.getItem('jwt_access')
   if (t) axios.defaults.headers.common['Authorization'] = `Bearer ${t}`
-
-  // Carregar dados do usuário do backend
   await userData.fetchUserData()
 })
 
-// Rastreamento de localização do motorista
+onUnmounted(() => {
+  if (assistindoPosicao.value) pararRastreamento()
+})
+
+// ===== Rota & localização =====
 const apiMotorista = new MotoristaAPI()
 const motoristaId = ref(null)
 const assistindoPosicao = ref(false)
@@ -94,11 +103,7 @@ let watchId = null
 async function enviarLocalizacao(latitude, longitude, ativa) {
   try {
     if (!motoristaId.value) return
-    await apiMotorista.atualizarLocalizacao(motoristaId.value, {
-      latitude,
-      longitude,
-      rota_ativa: ativa
-    })
+    await apiMotorista.atualizarLocalizacao(motoristaId.value, { latitude, longitude, rota_ativa: ativa })
   } catch (e) {
     console.error('Falha ao enviar localização:', e)
   }
@@ -108,19 +113,18 @@ async function iniciarRastreamento() {
   if (!('geolocation' in navigator) || assistindoPosicao.value) return
   assistindoPosicao.value = true
 
-  // Usar o ID do motorista do userData se disponível
   if (!motoristaId.value && userData.userData?.id) {
     motoristaId.value = userData.userData.id
   }
 
-  // Fallback: busca meu id de motorista (se usuário é motorista logado)
   if (!motoristaId.value) {
     try {
       const me = await axios.get('http://localhost:8000/api/usuarios/me/')
       if (me?.data?.is_motorista) {
-        // buscar primeiro motorista do backend com email igual, como fallback simples
         const lista = await axios.get('http://localhost:8000/api/motoristas/')
-        const found = lista?.data?.find?.(m => m?.email?.toLowerCase?.() === (me?.data?.email||'').toLowerCase())
+        const found = lista?.data?.find?.(
+          m => m?.email?.toLowerCase?.() === (me?.data?.email || '').toLowerCase()
+        )
         motoristaId.value = found?.idMotorista || lista?.data?.[0]?.idMotorista || null
       }
     } catch (e) {
@@ -133,14 +137,13 @@ async function iniciarRastreamento() {
     assistindoPosicao.value = false
     return
   }
+
   watchId = navigator.geolocation.watchPosition(
     (pos) => {
       const { latitude, longitude } = pos.coords
       enviarLocalizacao(latitude, longitude, true)
     },
-    (err) => {
-      console.error('Erro no geolocation:', err)
-    },
+    (err) => console.error('Erro no geolocation:', err),
     { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
   )
 }
@@ -151,22 +154,14 @@ function pararRastreamento() {
     watchId = null
   }
   assistindoPosicao.value = false
-  // marca rota como inativa
   enviarLocalizacao(null, null, false)
 }
 
 function toggleRota() {
-  if (assistindoPosicao.value) {
-    pararRastreamento()
-  } else {
-    iniciarRastreamento()
-  }
+  assistindoPosicao.value ? pararRastreamento() : iniciarRastreamento()
 }
 
-onUnmounted(() => {
-  if (assistindoPosicao.value) pararRastreamento()
-})
-
+// ===== Passageiros & rotas =====
 const passageirosIda = ref([
   { nome: 'João Silva', endereco: 'Rua das Flores, 120', pego: false },
   { nome: 'Maria Oliveira', endereco: 'Av. Central, 45', pego: false },
@@ -211,53 +206,99 @@ function mudarRota(direcao) {
   if (direcao === 'next' && rotaAtiva.value < 2) rotaAtiva.value++
   if (direcao === 'prev' && rotaAtiva.value > 0) rotaAtiva.value--
 }
-
 function marcarPegou(p) {
   p.pego = !p.pego
+}
+
+// ===== Endereços =====
+function abrirFormularioEndereco() {
+  mostrarFormularioEndereco.value = true
+  editandoEndereco.value = false
+  enderecoEditando.value = null
+  novoEndereco.value = { cidade: '', bairro: '', rua: '', numero: '', cep: '' }
+}
+
+function abrirEdicaoEndereco(endereco) {
+  mostrarFormularioEndereco.value = true
+  editandoEndereco.value = true
+  enderecoEditando.value = endereco
+  novoEndereco.value = { ...endereco }
+}
+
+function fecharFormularioEndereco() {
+  mostrarFormularioEndereco.value = false
+  editandoEndereco.value = false
+  enderecoEditando.value = null
+  novoEndereco.value = { cidade: '', bairro: '', rua: '', numero: '', cep: '' }
+}
+
+async function salvarEndereco() {
+  try {
+    if (!novoEndereco.value.cidade || !novoEndereco.value.bairro || !novoEndereco.value.rua || !novoEndereco.value.numero) {
+      alert('Por favor, preencha todos os campos obrigatórios.')
+      return
+    }
+
+    const enderecoData = {
+      cidade: novoEndereco.value.cidade,
+      bairro: novoEndereco.value.bairro,
+      rua: novoEndereco.value.rua,
+      numero: parseInt(novoEndereco.value.numero),
+      cep: novoEndereco.value.cep ? parseInt(novoEndereco.value.cep) : 0
+    }
+
+    let success = false
+    if (editandoEndereco.value) {
+      success = await userData.editarEndereco(enderecoEditando.value.idEndereco, enderecoData)
+    } else {
+      success = await userData.adicionarEndereco(enderecoData)
+    }
+
+    if (success) {
+      alert(editandoEndereco.value ? 'Endereço atualizado com sucesso!' : 'Endereço adicionado com sucesso!')
+      fecharFormularioEndereco()
+    } else {
+      alert('Erro ao salvar endereço. Tente novamente.')
+    }
+  } catch (error) {
+    console.error('Erro ao salvar endereço:', error)
+    alert('Erro ao salvar endereço. Tente novamente.')
+  }
+}
+
+async function removerEndereco(idEndereco) {
+  if (confirm('Tem certeza que deseja remover este endereço?')) {
+    const success = await userData.removerEndereco(idEndereco)
+    alert(success ? 'Endereço removido com sucesso!' : 'Erro ao remover endereço. Tente novamente.')
+  }
+}
+
+function formatarEndereco(endereco) {
+  return `${endereco.rua}, ${endereco.numero} - ${endereco.bairro}, ${endereco.cidade}`
 }
 </script>
 
 <template>
   <section class="notebook" :style="{ backgroundColor: themeManager.fundo }">
-    <!-- PERFIL -->
     <div class="perfil" :style="{ backgroundColor: themeManager.detalhe }">
       <h2>MEU PERFIL</h2>
       <div class="perfil-topo">
-        <img src="/src-auth/motorista.png" class="avatar" alt="Avatar Motorista" />
-        <div class="enderecos">
-          <p>MEUS ENDEREÇOS</p>
-          <ul>
-            <li>
-              <span class="mdi mdi-map-marker"></span>
-              <div v-if="!editarEndereco">
-                <p>{{ endereco }}</p>
-              </div>
-              <div v-else>
-                <input v-model="endereco" class="input-endereco" type="text" />
-              </div>
-              <span class="mdi mdi-pencil" @click="editarEndereco = !editarEndereco"></span>
-            </li>
-          </ul>
-        </div>
+        <img src="/src-auth/motorista.png" class="avatar" alt="">
       </div>
 
-      <!-- Campos do Perfil -->
       <div class="inputs">
         <p class="info-label">Nome completo:</p>
-        <div class="input-group">
-          <span class="mdi mdi-account"></span>
+        <div class="input-group"><span class="mdi mdi-account"></span>
           <input v-model="nome" :readonly="!modoEdicao" class="input-text" type="text" />
         </div>
 
         <p class="info-label">Telefone:</p>
-        <div class="input-group">
-          <span class="mdi mdi-phone"></span>
+        <div class="input-group"><span class="mdi mdi-phone"></span>
           <input v-model="telefone" :readonly="!modoEdicao" class="input-text" type="tel" />
         </div>
 
         <p class="info-label">Email:</p>
-        <div class="input-group">
-          <span class="mdi mdi-email"></span>
+        <div class="input-group"><span class="mdi mdi-email"></span>
           <input v-model="email" :readonly="!modoEdicao" class="input-text" type="email" />
         </div>
 
@@ -276,13 +317,12 @@ function marcarPegou(p) {
       </div>
 
       <div class="editar">
-        <span @click="toggleEdicao">{{ modoEdicao ? 'Salvar' : 'Editar' }}</span>
+        <span @click="toggleEdicao">{{ modoEdicao ? 'Salvar' : 'Editar' }}</span> | Ver informação completa
       </div>
 
       <div class="sair" @click="sairDaConta">SAIR DA CONTA</div>
     </div>
 
-    <!-- TRANSPORTE -->
     <div class="transporte" :style="{ backgroundColor: themeManager.detalhe }">
       <h2>SEU TRANSPORTE PARA HOJE</h2>
       <div class="card">
@@ -294,7 +334,6 @@ function marcarPegou(p) {
       </div>
     </div>
 
-    <!-- ROTAS (IDA E VOLTA) -->
     <div v-for="(passageiros, index) in [passageirosIda, passageirosVolta12, passageirosVolta17]" :key="index" class="rota-container" v-show="rotaAtiva === index">
       <div class="rota-header" :style="{ backgroundColor: themeManager.detalhe }">
         <button @click="mudarRota('prev')" class="seta">‹</button>
@@ -331,62 +370,43 @@ function marcarPegou(p) {
         <h2>MEU PERFIL</h2>
         <span class="mdi" :class="abrirPerfil ? 'mdi-chevron-up' : 'mdi-chevron-down'"></span>
       </div>
+      <div v-show="abrirPerfil" class="conteudo-retratil">
+        <div class="perfil-topo">
+          <img src="/src-auth/motorista.png" class="avatar" alt="">
+        </div>
 
-        <div v-show="abrirPerfil" class="conteudo-retratil">
-          <div class="perfil-topo">
-            <img src="/src-auth/motorista.png" class="avatar" alt="">
-            <div class="enderecos">
-              <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline"></span></p>
-              <ul>
-                <li v-if="endereco">
-                  <span class="mdi mdi-map-marker"></span>
-                  <p>{{ endereco }}</p>
-                  <span class="mdi mdi-pencil"></span>
-                </li>
-              </ul>
-            </div>
+        <div class="inputs">
+          <p class="info-label">Nome completo:</p>
+          <div class="input-group"><span class="mdi mdi-account"></span>
+            <input v-model="nome" :readonly="!modoEdicao" class="input-text" type="text" />
           </div>
-
-          <div class="inputs">
-        <p class="info-label">Nome completo:</p>
-        <div class="input-group">
-          <span class="mdi mdi-account"></span>
-          <input v-model="nome" :readonly="!modoEdicao" class="input-text" type="text" />
-        </div>
-
-        <p class="info-label">Telefone:</p>
-        <div class="input-group">
-          <span class="mdi mdi-phone"></span>
-          <input v-model="telefone" :readonly="!modoEdicao" class="input-text" type="tel" />
-        </div>
-
-        <p class="info-label">Email:</p>
-        <div class="input-group">
-          <span class="mdi mdi-email"></span>
-          <input v-model="email" :readonly="!modoEdicao" class="input-text" type="email" />
-        </div>
-
-        <p class="info-label">Senha:</p>
-        <div class="input-group senha-campo">
-          <span class="mdi mdi-lock"></span>
-          <input :type="verSenha ? 'text' : 'password'" v-model="senha" :readonly="!modoEdicao" class="input-text" />
-          <span class="mdi" :class="verSenha ? 'mdi-eye-off' : 'mdi-eye'" @click="verSenha = !verSenha"></span>
-        </div>
-
-        <p class="info-label">Data de nascimento:</p>
-        <div class="input-group data-campo">
-          <span class="mdi mdi-calendar-month-outline"></span>
-          <input type="date" v-model="nascimento" :readonly="!modoEdicao" class="input-text" />
-        </div>
-      </div>
-
-          <div class="editar">
-            <span @click="toggleEdicao">{{ modoEdicao ? 'Salvar' : 'Editar' }}</span> | Ver informação completa
+          <p class="info-label">Telefone:</p>
+          <div class="input-group"><span class="mdi mdi-phone"></span>
+            <input v-model="telefone" :readonly="!modoEdicao" class="input-text" type="tel" />
           </div>
-
-          <div class="sair" @click="sairDaConta">SAIR DA CONTA</div>
+          <p class="info-label">Email:</p>
+          <div class="input-group"><span class="mdi mdi-email"></span>
+            <input v-model="email" :readonly="!modoEdicao" class="input-text" type="email" />
+          </div>
+          <p class="info-label">Senha:</p>
+          <div class="input-group senha-campo">
+            <span class="mdi mdi-lock"></span>
+            <input :type="verSenha ? 'text' : 'password'" v-model="senha" :readonly="!modoEdicao" class="input-text" />
+            <span class="mdi" :class="verSenha ? 'mdi-eye-off' : 'mdi-eye'" @click="verSenha = !verSenha"></span>
+          </div>
+          <p class="info-label">Data de nascimento:</p>
+          <div class="input-group data-campo">
+            <span class="mdi mdi-calendar-month-outline"></span>
+            <input type="date" v-model="nascimento" :readonly="!modoEdicao" class="input-text" />
+          </div>
         </div>
+
+        <div class="editar">
+          <span @click="toggleEdicao">{{ modoEdicao ? 'Salvar' : 'Editar' }}</span> | Ver informação completa
+        </div>
+        <div class="sair" @click="sairDaConta">SAIR DA CONTA</div>
       </div>
+    </div>
   <div class="barra-retratil" :style="{ backgroundColor: themeManager.detalhe }">
       <div class="barra-titulo" @click="abrirTransportes = !abrirTransportes">
         <h2>MEUS TRANSPORTES</h2>
@@ -498,17 +518,23 @@ function marcarPegou(p) {
 </template>
 
 <style scoped>
-.notebook, .celular {
+.notebook,
+.celular {
   padding: 20px 130px 60px 130px;
   min-height: 80vh;
   display: flex;
   gap: 16px;
   justify-content: space-between;
-  flex-wrap: wrap;
 }
 
-.celular{
+.celular {
   display: none;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .perfil {
@@ -528,7 +554,7 @@ function marcarPegou(p) {
 
 .perfil-topo {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 12px;
   margin-bottom: 12px;
 }
@@ -541,7 +567,7 @@ function marcarPegou(p) {
 }
 
 .enderecos p {
-  font-size: 20px;
+  font-size: 18px;
   border-bottom: 1px solid #dadadab4;
   margin-bottom: 4px;
   color: #fff;
@@ -550,6 +576,12 @@ function marcarPegou(p) {
 .enderecos p span {
   margin-left: 8px;
   color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.enderecos p span:hover {
+  color: #4CAF50;
 }
 
 .enderecos ul {
@@ -569,31 +601,38 @@ function marcarPegou(p) {
   color: #fff;
 }
 
-.enderecos ul li p{
+.enderecos ul li p {
   font-size: 15px;
   border: none;
   align-items: center;
   margin-top: 5px;
+  flex: 1;
 }
 
-.enderecos ul li .mdi {
-  font-size: 15px;
+.endereco-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
-.input-endereco {
-  border: 1px solid #fff;
-  border-radius: 4px;
-  padding: 4px 8px;
-  width: 100%;
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-  outline: none;
+.endereco-actions span {
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.endereco-actions .mdi-pencil:hover {
+  color: #2196F3;
+}
+
+.endereco-actions .mdi-delete:hover {
+  color: #f44336;
 }
 
 .inputs p {
-  color: #fff;
   font-size: 12px;
   margin-bottom: 3px;
+  color: #fff;
 }
 
 .info-label {
@@ -636,11 +675,11 @@ function marcarPegou(p) {
 }
 
 .editar {
-  color: #ffffff;
   margin-top: 8px;
   font-size: 10px;
   cursor: pointer;
   user-select: none;
+  color: #ffffff;
 }
 
 .sair {
@@ -657,6 +696,7 @@ function marcarPegou(p) {
   color: rgb(255, 97, 97);
   transform: scale(1.05);
 }
+
 
 .right-side {
   display: flex;
@@ -782,10 +822,7 @@ function marcarPegou(p) {
   cursor: pointer;
   border-top: 1px solid #ccc;
 }
-</style>
 
-
-<style scoped>
 @media (max-width: 768px) {
   .notebook {
     display: none;
@@ -939,6 +976,153 @@ function marcarPegou(p) {
   font-size: 20px;
 }
 
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 20px;
+}
+
+.modal-header .mdi-close {
+  cursor: pointer;
+  font-size: 24px;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.modal-header .mdi-close:hover {
+  color: #f44336;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.btn-cancelar {
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #666;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-cancelar:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+}
+
+.btn-salvar {
+  padding: 10px 20px;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-salvar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    margin: 20px;
+  }
+
+  .modal-header {
+    padding: 16px;
+  }
+
+  .modal-body {
+    padding: 16px;
+  }
+
+  .modal-footer {
+    padding: 16px;
+    flex-direction: column;
+  }
+
+  .btn-cancelar,
+  .btn-salvar {
+    width: 100%;
+  }
 }
 </style>
 

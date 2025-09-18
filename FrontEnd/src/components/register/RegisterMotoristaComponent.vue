@@ -1,26 +1,30 @@
 <script setup>
-import { ref, reactive, onMounted, nextTick } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useMotoristaStore } from '@/stores/motorista'
 import { useAuthStateStore } from '@/stores/authState'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
+const motoristaStore = useMotoristaStore()
+const router = useRouter()
 
+const defaultMotorista = {
+  idMotorista: 0,
+  nome: '',
+  email: '',
+  telefone: '',
+  cpf: '',
+  dataNascimento: '',
+  codigoCnh: '',
+  senha: '',
+  confirmarSenha: '',
+  empresa: ''
+}
 
-const motoristaStore = useMotoristaStore();
-
-const defaultMotorista = { idMotorista: 0, 
-nome: '', 
-email: '', 
-telefone: '', 
-cpf: '', 
-codigoCnh: '', 
-senha: '',
-confirmarSenha: '',};
-
-const motorista = reactive({ ...defaultMotorista });
-const isEditing = ref(false);
+const motorista = reactive({ ...defaultMotorista })
+const isEditing = ref(false)
 
 const empresas = ['SulTurismo', 'IndyTour']
 const aberto = ref(false)
@@ -30,15 +34,30 @@ function toggleSelect() {
 }
 
 function selecionarEmpresa(nome) {
-  motorista.value.empresa = nome
-  authState.mudarStateEmpresa(nome) // 🔥 atualiza no store
+  motorista.empresa = nome 
+  authState.mudarStateEmpresa(nome) 
   aberto.value = false
 }
 
-/*function handleFileChange(e) {
-  motorista.value.cnhArquivo = e.target.files[0]
-}*/
+function resetForm() {
+  Object.assign(motorista, { ...defaultMotorista })
+  authState.mudarState('inicio')
+  router.push('/login')
+}
 
+async function cadastrar() {
+  if (isEditing.value) {
+    await motoristaStore.updateMotorista({ ...motorista })
+  } else {
+    if (motorista.senha !== motorista.confirmarSenha) {
+      alert('As senhas não coincidem!')
+      return
+    }
+    const { confirmarSenha, ...motoristaSemConfirma } = motorista
+    await motoristaStore.addMotorista({ ...motoristaSemConfirma })
+  }
+  resetForm()
+}
 
 onMounted(() => {
   themeManager.init()
@@ -57,25 +76,6 @@ onMounted(() => {
 
   elements.forEach(el => observer.observe(el))
 })
-
-function resetForm() {
-    Object.assign(motorista, { ...defaultMotorista });
-}
-
-async function cadastrar() {
-  if (isEditing.value) {
-        await motoristaStore.updateMotorista({ ...motorista });
-    } else {
-    if (motorista.senha !== motorista.confirmarSenha) {
-      alert('As senhas não coincidem!');
-      return;
-    }
-    delete motorista.confirmarSenha;
-      await motoristaStore.addMotorista({ ...motorista });
-    }
-    resetForm();
-}
-
 </script>
 
 <template>
@@ -92,12 +92,12 @@ async function cadastrar() {
         <div class="grid">
           <div>
             <p>Nome Completo: *</p>
-            <input v-model="motorista.nome" required
+            <input v-model="motorista.nome" required placeholder="Nome Sobrenome"
               :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
             <p>E-mail: *</p>
-            <input v-model="motorista.email" type="email" required
+            <input v-model="motorista.email" type="email" required placeholder="exemplo@dominio.com"
               :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
@@ -106,41 +106,48 @@ async function cadastrar() {
               :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
+            <p>Data de Nascimento: *</p>
+            <input class="input-field" v-model="motorista.dataNascimento" type="date" required 
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+          </div>
+          <div>
             <p>Telefone: *</p>
-            <input v-model="motorista.telefone" class="input-field-mid" required
+            <input v-model="motorista.telefone" class="input-field" required placeholder="(00) 00000-0000"
               :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
             <p>Crie uma senha: *</p>
-            <input v-model="motorista.senha" type="password" required
+            <input v-model="motorista.senha" type="password" required placeholder="Mínimo 8 caracteres"
               :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
             <p>Confirme sua Senha: *</p>
-            <input v-model="motorista.confirmarSenha" type="password" required
+            <input v-model="motorista.confirmarSenha" type="password" required placeholder="Repita a senha" 
               :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Selecione a empresa: *</p>
             <div
-              class="select-custom"
-              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.detalhe, color: '#fff' }"
+              class="select-custom input-field"
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.detalhe, color: '#fff' }"
               @click="toggleSelect"
             >
               {{ motorista.empresa || 'Selecione a empresa' }}
-              <span class="seta"><span :class="aberto ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'"></span></span>
+              <span class="seta">
+                <span :class="aberto ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'"></span>
+              </span>
             </div>
 
             <div
               v-show="aberto"
               class="opcoes"
-              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo }"
+              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo }"
             >
               <div
                 v-for="empresa in empresas"
                 :key="empresa"
-                class="opcao"
+                class="opcao input-field"
                 @click.stop="selecionarEmpresa(empresa)"
                 :class="{ selecionada: motorista.empresa === empresa }"
                 :style="{
@@ -155,15 +162,15 @@ async function cadastrar() {
 
           <div>
             <p>CNH(nº registro): *</p>
-            <input v-model="motorista.codigoCnh" required
+            <input v-model="motorista.codigoCnh" required placeholder="00000000000"
               :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
         </div>
       </div>
 
       <div class="buttons">
-      <button type="submit" class="submit" :style="{ backgroundColor: themeManager.detalhe }">Cadastrar-se</button>
-      <button type="button" @click="resetForm" :style="{ backgroundColor: themeManager.detalheAlternativo }">Cancelar</button>
+        <button type="submit" class="submit" :style="{ backgroundColor: themeManager.detalhe }">Cadastrar-se</button>
+        <button type="button" @click="resetForm" :style="{ backgroundColor: themeManager.detalheAlternativo }">Cancelar</button>
       </div>
     </form>
   </section>
@@ -175,7 +182,6 @@ async function cadastrar() {
   transform: translateY(50px);
   transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
 }
-
 .animate-on-scroll.in-view {
   opacity: 1;
   transform: translateY(0);
@@ -183,9 +189,10 @@ async function cadastrar() {
 
 .form-container {
   margin: 0 300px;
-  padding: 0px 0 200px 0;
+  padding: 0 0 200px 0;
   border-radius: 8px;
   font-family: sans-serif;
+  position: relative;
 }
 
 form {
@@ -199,106 +206,51 @@ h1 {
   font-size: 2.5rem;
   padding: 100px 0 60px 0;
 }
-h2 {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-  text-align: center;
-}
+
 .space {
   margin-bottom: 15px;
   padding-bottom: 40px;
   border-bottom: 2px solid;
 }
 
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
 .grid {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-}
-
-.grid div {
-  margin-bottom: 10px;
-}
-
-.grid div p{
-  font-size: 0.8rem;
-}
-
-input {
-  padding: 0.7rem;
-  border: 1px solid;
-  border-radius: 10px;
-  min-width: 350px;
-}
-
-.input-field-mid {
-  min-width: 170px;
-}
-
-.select-custom {
-  margin-bottom: 0;
-  padding: 0.7rem;
-  border: 2px solid;
-  border-radius: 10px;
-  min-width: 350px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  user-select: none;
-}
-
-.seta {
-  font-size: 0.8rem;
-}
-
-.opcoes {
-  border: 2px solid;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.opcao {
-  padding: 0.7rem;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.selecionada {
-  font-weight: bold;
-}
-
-.btn-upload {
-  cursor: pointer;
-  padding: 0.7rem;
-  border-radius: 10px;
-  font-weight: 600;
-}
-
-.file-name {
-  font-size: 0.8rem;
-  font-style: italic;
-}
-
-.buttons{
-  display: flex;
-  justify-content: center;
-  text-align: center;
   gap: 20px;
 }
 
-button.submit {
-  margin-top: 20px;
-  width: 30%;
-  padding: 14px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 12px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s ease;
+.grid p {
+  font-size: 15px;
+}
 
+input, .input-field {
+  padding: 0.7rem;
+  border: 1px solid;
+  border-radius: 10px;
+  width: 345px;
+}
+
+textarea.input-field-add {
+  width: 717px;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.input-field {
+  width: 160px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
 button {
@@ -312,11 +264,39 @@ button {
   color: white;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s ease;
-  width: 30%;
 }
 
 button:hover {
   transform: scale(1.05);
+}
+
+.select-custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 0.4rem 1rem;
+  width: 345px;
+  border: 1px solid;
+}
+
+.opcoes {
+  margin-top: 5px;
+  border-radius: 10px;
+  border: 1px solid;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 10;
+  position: absolute;
+  width: 345px;
+}
+
+.opcao {
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
 }
 
 @media (max-width: 768px) {
@@ -324,26 +304,21 @@ button:hover {
     margin: 0 10px;
     padding: 20px 0 100px 0;
   }
-
   form {
-    padding: 40px 20px 100px 20px;
+    padding: 20px;
   }
-
-  .input-field-mid {
+  input {
+    min-width: 200px;
+  }
+  .input-field {
     min-width: 150px;
   }
 
-  .file-upload {
-    flex-direction: column;
-    align-items: flex-start;
+  button {
+    width: 100%;
   }
-
-  .file-name {
-    margin-top: 5px;
-  }
-
-  .space{
-    border: none;
+  .opcoes {
+    width: 100%;
   }
 }
 </style>

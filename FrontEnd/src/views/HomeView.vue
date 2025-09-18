@@ -253,7 +253,7 @@ onMounted(async () => {
 }
 
 .notebook .Home-header {
-  padding: 110px 120px 0;
+  padding: 80px 120px 0;
 }
 
 .header {
