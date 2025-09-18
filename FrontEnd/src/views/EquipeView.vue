@@ -254,7 +254,8 @@ onMounted(async () => {
 }
 
 .equipe-header {
-  padding: 110px 120px 0px;
+  padding: 80px 120px 0;
+
 }
 
 .header {

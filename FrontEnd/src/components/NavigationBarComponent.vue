@@ -143,13 +143,13 @@ function navigateToResult(result) {
 
   if (result.rota) {
     if (result.tipo === 'empresa' && result.alterar) {
-      authState.mudarStateEmpresa(result.alterar)  
+      authState.mudarStateEmpresa(result.alterar)
       router.push(result.rota)
-    } 
+    }
     else if (result.tipo === 'pagina' && result.alterar) {
-      authState.mudarStateAuth(result.alterar)  
+      authState.mudarStateAuth(result.alterar)
       router.push(result.rota)
-    } 
+    }
     else {
       router.push(result.rota)
     }
@@ -212,10 +212,7 @@ onUnmounted(() => {
 
 
 <template>
-  <div v-if="menuAberto"
-       class="menu-overlay"
-       @click="fecharMenu"
-       :style="{ opacity: overlayOpacity }"></div>
+  <div v-if="menuAberto" class="menu-overlay" @click="fecharMenu" :style="{ opacity: overlayOpacity }"></div>
 
   <div class="notebook" :class="showHeader ? 'animate-slideDown' : 'animate-slideUp'">
     <div class="top-bar" :style="{ backgroundColor: themeManager.detalhe }">
@@ -225,7 +222,7 @@ onUnmounted(() => {
 
     <header :style="{ backgroundColor: themeManager.fundo }">
       <div class="container"
-           :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
+        :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
         <div class="logo">
           <RouterLink to="/">
             <img :src="themeManager.logo" alt="Logotipo ROUTER" />
@@ -236,29 +233,27 @@ onUnmounted(() => {
         </div>
 
         <div class="search" :style="{ color: themeManager.text }">
-          <input v-model="searchQuery"
-                 @keydown="handleSearchKeydown"
-                 type="text"
-                 placeholder="Pesquisar páginas, empresas..."
-                 :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, border: '2px solid ' + themeManager.detalhe }" />
+          <input v-model="searchQuery" @keydown="handleSearchKeydown" type="text"
+            placeholder="Pesquisar páginas, empresas..."
+            :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, border: '2px solid ' + themeManager.detalhe }" />
           <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe }"></span>
-          <div v-if="isLoading" class="search-loading"><div class="spinner"></div></div>
+          <div v-if="isLoading" class="search-loading">
+            <div class="spinner"></div>
+          </div>
           <div v-if="showSearchResults && searchResults.length > 0" class="search-results"
-               :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
-            <div v-for="(result, index) in searchResults"
-                 :key="`${result.tipo}-${result.id}`"
-                 class="search-result-item"
-                 :class="{ 'selected': index === selectedIndex }"
-                 @click="navigateToResult(result)"
-                 @mouseenter="selectedIndex = index">
+            :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+            <div v-for="(result, index) in searchResults" :key="`${result.tipo}-${result.id}`"
+              class="search-result-item" :class="{ 'selected': index === selectedIndex }"
+              @click="navigateToResult(result)" @mouseenter="selectedIndex = index">
               <div class="result-content">
                 <div class="result-title">{{ result.nome }}</div>
-                <div class="result-subtitle">{{ result.descricao }} <span v-if="result.alterar" class="result-alterar">({{ result.alterar }})</span></div>
+                <div class="result-subtitle">{{ result.descricao }} <span v-if="result.alterar"
+                    class="result-alterar">({{ result.alterar }})</span></div>
               </div>
             </div>
           </div>
           <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results"
-               :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+            :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
             <span class="mdi mdi-magnify-close" :style="{ color: themeManager.detalhe }"></span>
             <p :style="{ color: themeManager.text }">Nenhum resultado encontrado</p>
           </div>
@@ -292,61 +287,69 @@ onUnmounted(() => {
   <div class="celular" :class="showHeader ? 'animate-slideDown' : 'animate-slideUp'">
     <header :style="{ backgroundColor: themeManager.fundo }">
       <div class="container"
-           :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
+        :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
         <div class="logo-bar">
           <RouterLink to="/">
             <img :src="themeManager.logo" alt="Logotipo ROUTER" />
-            <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">Sua rota<br /><span>mais segura</span></p>
+            <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">Sua
+              rota<br /><span>mais segura</span></p>
           </RouterLink>
-          <div><span class="mdi mdi-view-headline" @click="abrirMenu" :style="{ color: themeManager.text }"></span></div>
+          <div><span class="mdi mdi-view-headline" @click="abrirMenu" :style="{ color: themeManager.text }"></span>
+          </div>
         </div>
 
         <div class="search" :style="{ color: themeManager.text }">
-          <input v-model="searchQuery"
-                 @keydown="handleSearchKeydown"
-                 type="text"
-                 placeholder="Pesquisar páginas, empresas..."
-                 :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, border: '2px solid ' + themeManager.detalhe }" />
+          <input v-model="searchQuery" @keydown="handleSearchKeydown" type="text"
+            placeholder="Pesquisar páginas, empresas..."
+            :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, border: '2px solid ' + themeManager.detalhe }" />
           <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe }"></span>
-          <div v-if="isLoading" class="search-loading"><div class="spinner"></div></div>
+          <div v-if="isLoading" class="search-loading">
+            <div class="spinner"></div>
+          </div>
           <div v-if="showSearchResults && searchResults.length > 0" class="search-results mobile"
-               :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
-            <div v-for="(result, index) in searchResults"
-                 :key="`${result.tipo}-${result.id}`"
-                 class="search-result-item"
-                 :class="{ 'selected': index === selectedIndex }"
-                 @click="navigateToResult(result)"
-                 @mouseenter="selectedIndex = index">
+            :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+            <div v-for="(result, index) in searchResults" :key="`${result.tipo}-${result.id}`"
+              class="search-result-item" :class="{ 'selected': index === selectedIndex }"
+              @click="navigateToResult(result)" @mouseenter="selectedIndex = index">
               <div class="result-content">
                 <div class="result-title">{{ result.nome }}</div>
-                <div class="result-subtitle">{{ result.descricao }} <span v-if="result.alterar" class="result-alterar">({{ result.alterar }})</span></div>
+                <div class="result-subtitle">{{ result.descricao }} <span v-if="result.alterar"
+                    class="result-alterar">({{ result.alterar }})</span></div>
               </div>
             </div>
           </div>
-          <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results mobile"
-               :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
+          <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()"
+            class="search-no-results mobile"
+            :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
             <span class="mdi mdi-magnify-close" :style="{ color: themeManager.detalhe }"></span>
             <p :style="{ color: themeManager.text }">Nenhum resultado</p>
           </div>
         </div>
       </div>
 
-      <nav class="menu-mobile"
-           :class="{ 'menu-aberto': menuAberto, dragging: dragging }"
-           :style="{ right: menuAberto ? `-${dragOffset}px` : '-100%', backgroundColor: themeManager.fundo }">
+      <nav class="menu-mobile" :class="{ 'menu-aberto': menuAberto, dragging: dragging }"
+        :style="{ right: menuAberto ? `-${dragOffset}px` : '-100%', backgroundColor: themeManager.fundo }">
         <div class="menu-top">
-          <RouterLink to="/login" @click="fecharMenu"><span class="mdi mdi-account" :style="{ color: themeManager.text }"></span></RouterLink>
+          <RouterLink to="/login" @click="fecharMenu"><span class="mdi mdi-account"
+              :style="{ color: themeManager.text }"></span></RouterLink>
           <span class="mdi mdi-close-outline" @click="fecharMenu" :style="{ color: themeManager.text }"></span>
         </div>
         <ul>
-          <li><RouterLink to="/" :style="{ color: themeManager.text }" @click="fecharMenu">Início</RouterLink></li>
-          <li><RouterLink to="/SobreNos" :style="{ color: themeManager.text }" @click="fecharMenu">Sobre</RouterLink></li>
-          <li><RouterLink to="/equipe" :style="{ color: themeManager.text }" @click="fecharMenu">Equipe</RouterLink></li>
-          <li><RouterLink to="/Empresa" :style="{ color: themeManager.text }" @click="fecharMenu">Empresas</RouterLink></li>
+          <li>
+            <RouterLink to="/" :style="{ color: themeManager.text }" @click="fecharMenu">Início</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/SobreNos" :style="{ color: themeManager.text }" @click="fecharMenu">Sobre</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/equipe" :style="{ color: themeManager.text }" @click="fecharMenu">Equipe</RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/Empresa" :style="{ color: themeManager.text }" @click="fecharMenu">Empresas</RouterLink>
+          </li>
         </ul>
-        <span :class="themeManager.icone"
-              :style="{ color: themeManager.text }"
-              @click="themeManager.toggleTheme"></span>
+        <span :class="themeManager.icone" :style="{ color: themeManager.text }"
+          @click="themeManager.toggleTheme"></span>
       </nav>
     </header>
   </div>
@@ -374,8 +377,15 @@ onUnmounted(() => {
   box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
   transition: right 0.3s ease-in-out;
 }
-.menu-aberto { right: 0; min-height: 100vh; }
-.menu-mobile.dragging { transition: none !important; }
+
+.menu-aberto {
+  right: 0;
+  min-height: 100vh;
+}
+
+.menu-mobile.dragging {
+  transition: none !important;
+}
 
 .search-result-item.selected {
   background-color: rgba(78, 70, 229, 0.082);
@@ -388,7 +398,7 @@ onUnmounted(() => {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 999;
+  z-index: 1000;
   transition: all 0.5s ease;
   opacity: 1;
 }
@@ -568,24 +578,28 @@ onUnmounted(() => {
   border: 2px solid transparent;
   border-top: 2px solid currentColor;
   border-radius: 50%;
-  animation: spin 200ms linear infinite; 
+  animation: spin 200ms linear infinite;
 }
 
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
+
   25% {
-    transform: rotate(90deg); 
+    transform: rotate(90deg);
   }
+
   50% {
-    transform: rotate(180deg); 
+    transform: rotate(180deg);
   }
+
   75% {
-    transform: rotate(270deg); 
+    transform: rotate(270deg);
   }
+
   100% {
-    transform: rotate(360deg); 
+    transform: rotate(360deg);
   }
 }
 

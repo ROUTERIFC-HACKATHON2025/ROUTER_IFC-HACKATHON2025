@@ -33,6 +33,6 @@ onMounted(() => {
 
 <style scoped>
 main {
-  padding-top: 110px;
+  padding-top: 80px;
 }
 </style>

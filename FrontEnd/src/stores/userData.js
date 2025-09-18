@@ -7,7 +7,7 @@ import EnderecosAPI from '@/api/enderecos'
 
 export const useUserDataStore = defineStore('userData', () => {
   const userData = ref(null)
-  const userType = ref(null) // 'passageiro' ou 'motorista'
+  const userType = ref(null) 
   const loading = ref(false)
   const error = ref(null)
 

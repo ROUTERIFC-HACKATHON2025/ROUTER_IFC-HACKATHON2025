@@ -7,11 +7,13 @@ import { useAuthStateStore } from '@/stores/authState'
 import MotoristaAPI from '@/api/motorista'
 import axios from 'axios'
 
+// Stores
 const themeManager = useThemeManagerStore()
 const userData = useUserDataStore()
 const authState = useAuthStateStore()
 const router = useRouter()
 
+// Perfil
 const nome = ref('')
 const telefone = ref('')
 const email = ref('')
@@ -20,11 +22,13 @@ const nascimento = ref('')
 const endereco = ref('Rua Principal, 100')
 const descricao = ref('')
 
+// Estados UI
 const modoEdicao = ref(false)
 const verSenha = ref(false)
 const abrirPerfil = ref(true)
 const abrirTransportes = ref(false)
 
+// Endereços
 const mostrarFormularioEndereco = ref(false)
 const editandoEndereco = ref(false)
 const enderecoEditando = ref(null)
@@ -36,8 +40,7 @@ const novoEndereco = ref({
   cep: ''
 })
 
-
-
+// Alternar edição perfil
 async function toggleEdicao() {
   if (modoEdicao.value && userData.userData) {
     const success = await userData.updateUserData({
@@ -49,22 +52,19 @@ async function toggleEdicao() {
       endereco: endereco.value,
       descricao: descricao.value
     })
-
-    if (success) {
-      alert('Perfil atualizado com sucesso!')
-    } else {
-      alert('Erro ao atualizar perfil. Tente novamente.')
-    }
+    alert(success ? 'Perfil atualizado com sucesso!' : 'Erro ao atualizar perfil. Tente novamente.')
   }
   modoEdicao.value = !modoEdicao.value
 }
 
+// Sair
 function sairDaConta() {
   userData.clearUserData()
   authState.reset()
   router.push('/')
 }
 
+// Reagir ao userData
 watch(
   () => userData.userData,
   (novoUsuario) => {
@@ -81,15 +81,20 @@ watch(
   { immediate: true }
 )
 
+// Lifecycle
 onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
   const t = localStorage.getItem('jwt_access')
   if (t) axios.defaults.headers.common['Authorization'] = `Bearer ${t}`
-
   await userData.fetchUserData()
 })
 
+onUnmounted(() => {
+  if (assistindoPosicao.value) pararRastreamento()
+})
+
+// ===== Rota & localização =====
 const apiMotorista = new MotoristaAPI()
 const motoristaId = ref(null)
 const assistindoPosicao = ref(false)
@@ -98,11 +103,7 @@ let watchId = null
 async function enviarLocalizacao(latitude, longitude, ativa) {
   try {
     if (!motoristaId.value) return
-    await apiMotorista.atualizarLocalizacao(motoristaId.value, {
-      latitude,
-      longitude,
-      rota_ativa: ativa
-    })
+    await apiMotorista.atualizarLocalizacao(motoristaId.value, { latitude, longitude, rota_ativa: ativa })
   } catch (e) {
     console.error('Falha ao enviar localização:', e)
   }
@@ -121,7 +122,9 @@ async function iniciarRastreamento() {
       const me = await axios.get('http://localhost:8000/api/usuarios/me/')
       if (me?.data?.is_motorista) {
         const lista = await axios.get('http://localhost:8000/api/motoristas/')
-        const found = lista?.data?.find?.(m => m?.email?.toLowerCase?.() === (me?.data?.email||'').toLowerCase())
+        const found = lista?.data?.find?.(
+          m => m?.email?.toLowerCase?.() === (me?.data?.email || '').toLowerCase()
+        )
         motoristaId.value = found?.idMotorista || lista?.data?.[0]?.idMotorista || null
       }
     } catch (e) {
@@ -134,14 +137,13 @@ async function iniciarRastreamento() {
     assistindoPosicao.value = false
     return
   }
+
   watchId = navigator.geolocation.watchPosition(
     (pos) => {
       const { latitude, longitude } = pos.coords
       enviarLocalizacao(latitude, longitude, true)
     },
-    (err) => {
-      console.error('Erro no geolocation:', err)
-    },
+    (err) => console.error('Erro no geolocation:', err),
     { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
   )
 }
@@ -156,17 +158,10 @@ function pararRastreamento() {
 }
 
 function toggleRota() {
-  if (assistindoPosicao.value) {
-    pararRastreamento()
-  } else {
-    iniciarRastreamento()
-  }
+  assistindoPosicao.value ? pararRastreamento() : iniciarRastreamento()
 }
 
-onUnmounted(() => {
-  if (assistindoPosicao.value) pararRastreamento()
-})
-
+// ===== Passageiros & rotas =====
 const passageirosIda = ref([
   { nome: 'João Silva', endereco: 'Rua das Flores, 120', pego: false },
   { nome: 'Maria Oliveira', endereco: 'Av. Central, 45', pego: false },
@@ -211,48 +206,30 @@ function mudarRota(direcao) {
   if (direcao === 'next' && rotaAtiva.value < 2) rotaAtiva.value++
   if (direcao === 'prev' && rotaAtiva.value > 0) rotaAtiva.value--
 }
-
 function marcarPegou(p) {
   p.pego = !p.pego
 }
 
+// ===== Endereços =====
 function abrirFormularioEndereco() {
   mostrarFormularioEndereco.value = true
   editandoEndereco.value = false
   enderecoEditando.value = null
-  novoEndereco.value = {
-    cidade: '',
-    bairro: '',
-    rua: '',
-    numero: '',
-    cep: ''
-  }
+  novoEndereco.value = { cidade: '', bairro: '', rua: '', numero: '', cep: '' }
 }
 
 function abrirEdicaoEndereco(endereco) {
   mostrarFormularioEndereco.value = true
   editandoEndereco.value = true
   enderecoEditando.value = endereco
-  novoEndereco.value = {
-    cidade: endereco.cidade,
-    bairro: endereco.bairro,
-    rua: endereco.rua,
-    numero: endereco.numero,
-    cep: endereco.cep
-  }
+  novoEndereco.value = { ...endereco }
 }
 
 function fecharFormularioEndereco() {
   mostrarFormularioEndereco.value = false
   editandoEndereco.value = false
   enderecoEditando.value = null
-  novoEndereco.value = {
-    cidade: '',
-    bairro: '',
-    rua: '',
-    numero: '',
-    cep: ''
-  }
+  novoEndereco.value = { cidade: '', bairro: '', rua: '', numero: '', cep: '' }
 }
 
 async function salvarEndereco() {
@@ -269,8 +246,6 @@ async function salvarEndereco() {
       numero: parseInt(novoEndereco.value.numero),
       cep: novoEndereco.value.cep ? parseInt(novoEndereco.value.cep) : 0
     }
-
-    console.log('Dados do endereço preparados:', enderecoData)
 
     let success = false
     if (editandoEndereco.value) {
@@ -294,11 +269,7 @@ async function salvarEndereco() {
 async function removerEndereco(idEndereco) {
   if (confirm('Tem certeza que deseja remover este endereço?')) {
     const success = await userData.removerEndereco(idEndereco)
-    if (success) {
-      alert('Endereço removido com sucesso!')
-    } else {
-      alert('Erro ao remover endereço. Tente novamente.')
-    }
+    alert(success ? 'Endereço removido com sucesso!' : 'Erro ao remover endereço. Tente novamente.')
   }
 }
 
@@ -306,29 +277,13 @@ function formatarEndereco(endereco) {
   return `${endereco.rua}, ${endereco.numero} - ${endereco.bairro}, ${endereco.cidade}`
 }
 </script>
+
 <template>
   <section class="notebook" :style="{ backgroundColor: themeManager.fundo }">
     <div class="perfil" :style="{ backgroundColor: themeManager.detalhe }">
       <h2>MEU PERFIL</h2>
       <div class="perfil-topo">
         <img src="/src-auth/motorista.png" class="avatar" alt="">
-        <div class="enderecos">
-          <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline" @click="abrirFormularioEndereco"></span></p>
-          <ul>
-            <li v-for="endereco in userData.userData?.enderecos || []" :key="endereco.idEndereco">
-              
-              <p>{{ formatarEndereco(endereco) }}</p>
-              <div class="endereco-actions">
-                <span class="mdi mdi-pencil" @click="abrirEdicaoEndereco(endereco)"></span>
-                <span class="mdi mdi-delete" @click="removerEndereco(endereco.idEndereco)"></span>
-              </div>
-            </li>
-            <li v-if="!userData.userData?.enderecos || userData.userData?.enderecos.length === 0">
-              
-              <p>Nenhum endereço cadastrado</p>
-            </li>
-          </ul>
-        </div>
       </div>
 
       <div class="inputs">
@@ -368,7 +323,6 @@ function formatarEndereco(endereco) {
       <div class="sair" @click="sairDaConta">SAIR DA CONTA</div>
     </div>
 
-    <!-- TRANSPORTE -->
     <div class="transporte" :style="{ backgroundColor: themeManager.detalhe }">
       <h2>SEU TRANSPORTE PARA HOJE</h2>
       <div class="card">
@@ -419,23 +373,6 @@ function formatarEndereco(endereco) {
       <div v-show="abrirPerfil" class="conteudo-retratil">
         <div class="perfil-topo">
           <img src="/src-auth/motorista.png" class="avatar" alt="">
-          <div class="enderecos">
-            <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline" @click="abrirFormularioEndereco"></span></p>
-            <ul>
-              <li v-for="endereco in userData.userData?.enderecos || []" :key="endereco.idEndereco">
-                
-                <p>{{ formatarEndereco(endereco) }}</p>
-                <div class="endereco-actions">
-                  <span class="mdi mdi-pencil" @click="abrirEdicaoEndereco(endereco)"></span>
-                  <span class="mdi mdi-delete" @click="removerEndereco(endereco.idEndereco)"></span>
-                </div>
-              </li>
-              <li v-if="!userData.userData?.enderecos || userData.userData?.enderecos.length === 0">
-                
-                <p>Nenhum endereço cadastrado</p>
-              </li>
-            </ul>
-          </div>
         </div>
 
         <div class="inputs">
@@ -578,48 +515,6 @@ function formatarEndereco(endereco) {
       <button class="iniciar-rota" :style="{ backgroundColor: themeManager.detalhe }">Iniciar Rota</button>
     </div>
   </section>
-  <div v-if="mostrarFormularioEndereco" class="modal-overlay" @click="fecharFormularioEndereco">
-    <div class="modal-content" :style="{ backgroundColor: themeManager.fundo }" @click.stop>
-      <div class="modal-header">
-        <h3 :style="{ color: themeManager.text }">{{ editandoEndereco ? 'Editar Endereço' : 'Adicionar Endereço' }}</h3>
-        <span class="mdi mdi-close" @click="fecharFormularioEndereco"></span>
-      </div>
-
-      <div class="modal-body">
-        <div class="form-group">
-          <label :style="{ color: themeManager.text }">Cidade *</label>
-          <input v-model="novoEndereco.cidade" type="text" placeholder="Digite a cidade" />
-        </div>
-
-        <div class="form-group">
-          <label :style="{ color: themeManager.text }" >Bairro *</label>
-          <input v-model="novoEndereco.bairro" type="text" placeholder="Digite o bairro" />
-        </div>
-
-        <div class="form-group">
-          <label :style="{ color: themeManager.text }">Rua *</label>
-          <input v-model="novoEndereco.rua" type="text" placeholder="Digite a rua" />
-        </div>
-
-        <div class="form-group">
-          <label :style="{ color: themeManager.text }">Número *</label>
-          <input v-model="novoEndereco.numero" type="number" placeholder="Digite o número" />
-        </div>
-
-        <div class="form-group">
-          <label :style="{ color: themeManager.text }">CEP</label>
-          <input v-model="novoEndereco.cep" type="number" placeholder="Digite o CEP" />
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button @click="fecharFormularioEndereco" class="btn-cancelar">Cancelar</button>
-        <button @click="salvarEndereco" class="btn-salvar" :style="{ backgroundColor: themeManager.detalhe }">
-          {{ editandoEndereco ? 'Atualizar' : 'Adicionar' }}
-        </button>
-      </div>
-    </div>
-  </div>
 </template>
 
 <style scoped>
@@ -659,7 +554,7 @@ function formatarEndereco(endereco) {
 
 .perfil-topo {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 12px;
   margin-bottom: 12px;
 }
