@@ -14,13 +14,11 @@ const authState = useAuthStateStore()
 const userData = useUserDataStore()
 const router = useRouter()
 
-// Estados gerais
 const modoEdicao = ref(false)
 const verSenha = ref(false)
 const abrirPerfil = ref(true)
 const abrirTransportes = ref(false)
 
-// Estados para gerenciamento de endereços
 const mostrarFormularioEndereco = ref(false)
 const editandoEndereco = ref(false)
 const enderecoEditando = ref(null)
@@ -32,7 +30,6 @@ const novoEndereco = ref({
   cep: ''
 })
 
-// Inputs de perfil
 const nome = ref('')
 const telefone = ref('')
 const email = ref('')
@@ -41,26 +38,22 @@ const nascimento = ref('')
 const endereco = ref('Rua Principal, 100')
 const descricao = ref('')
 
-// Inputs ida e volta
 const ira = ref('')
 const voltara = ref('')
 const horario = ref('')
 
-// Inicialização do tema e autenticação
 onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
   const t = localStorage.getItem('jwt_access')
   if (t) axios.defaults.headers.common['Authorization'] = `Bearer ${t}`
 
-  // Carregar dados do usuário do backend
   await userData.fetchUserData()
 
   initMap()
   iniciarPollingLocalizacao()
 })
 
-// Observa mudanças nos dados do usuário para atualizar inputs
 watch(
   () => userData.userData,
   (novoUsuario) => {
@@ -77,18 +70,15 @@ watch(
   { immediate: true }
 )
 
-// Inicialização do mapa
 function initMap() {
   const mapId = window.innerWidth > 768 ? "mapaNotebook" : "mapaCelular"
   const map = L.map(mapId).setView([-23.5505, -46.6333], 13)
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors"
   }).addTo(map)
-  // marcador do motorista será criado dinamicamente
   motoristaMap.value = { map, marker: null }
 }
 
-// Estado do mapa/marcador do motorista
 const motoristaMap = ref({ map: null, marker: null })
 const apiMotorista = new MotoristaAPI()
 const motoristaId = ref(null)
@@ -96,18 +86,15 @@ let pollingId = null
 
 async function obterELancarMarcador() {
   try {
-    // Sempre busca motoristas com rota ativa a cada verificação
     let motoristaComRotaAtiva = null
     try {
       const lista = await axios.get('http://localhost:8000/api/motoristas/')
-      // Procura por um motorista com rota ativa
       motoristaComRotaAtiva = lista?.data?.find(m => m.rota_ativa === true)
     } catch (error) {
       console.error('Erro ao buscar motoristas:', error)
       return
     }
 
-    // Se não há motorista com rota ativa, remove marcador e retorna
     if (!motoristaComRotaAtiva) {
       if (motoristaMap.value.marker) {
         motoristaMap.value.map.removeLayer(motoristaMap.value.marker)
@@ -117,7 +104,6 @@ async function obterELancarMarcador() {
       return
     }
 
-    // Atualiza o ID do motorista ativo
     motoristaId.value = motoristaComRotaAtiva.idMotorista
 
     const loc = await apiMotorista.obterLocalizacaoAtual(motoristaId.value)
@@ -127,7 +113,6 @@ async function obterELancarMarcador() {
     const ativa = !!loc?.rota_ativa
     const hasCoords = loc?.latitude != null && loc?.longitude != null
 
-    // Só exibe se rota estiver ativa E tiver coordenadas
     if (!ativa || !hasCoords) {
       if (motoristaMap.value.marker) {
         motoristaMap.value.map.removeLayer(motoristaMap.value.marker)
@@ -157,10 +142,8 @@ function iniciarPollingLocalizacao() {
 }
 
 
-// Toggle edição do perfil
 async function toggleEdicao() {
   if (modoEdicao.value && userData.userData) {
-    // Salvar no backend
     const success = await userData.updateUserData({
       nome: nome.value,
       telefone: telefone.value,
@@ -180,20 +163,17 @@ async function toggleEdicao() {
   modoEdicao.value = !modoEdicao.value
 }
 
-// Sair da conta
 function sairDaConta() {
   userData.clearUserData()
   authState.reset()
   router.push('/')
 }
 
-// Confirmar ida/volta
 function confirmarIdaVolta() {
   console.log({ ira: ira.value, voltara: voltara.value, horario: horario.value })
   alert("Informações de ida e volta salvas!")
 }
 
-// Funções para gerenciar endereços
 function abrirFormularioEndereco() {
   mostrarFormularioEndereco.value = true
   editandoEndereco.value = false
@@ -235,13 +215,11 @@ function fecharFormularioEndereco() {
 
 async function salvarEndereco() {
   try {
-    // Validar campos obrigatórios
     if (!novoEndereco.value.cidade || !novoEndereco.value.bairro || !novoEndereco.value.rua || !novoEndereco.value.numero) {
       alert('Por favor, preencha todos os campos obrigatórios.')
       return
     }
 
-    // Preparar dados do endereço com tipos corretos
     const enderecoData = {
       cidade: novoEndereco.value.cidade,
       bairro: novoEndereco.value.bairro,
@@ -254,10 +232,8 @@ async function salvarEndereco() {
 
     let success = false
     if (editandoEndereco.value) {
-      // Editar endereço existente
       success = await userData.editarEndereco(enderecoEditando.value.idEndereco, enderecoData)
     } else {
-      // Adicionar novo endereço
       success = await userData.adicionarEndereco(enderecoData)
     }
 
@@ -299,7 +275,7 @@ function formatarEndereco(endereco) {
           <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline" @click="abrirFormularioEndereco"></span></p>
           <ul>
             <li v-for="endereco in userData.userData?.enderecos || []" :key="endereco.idEndereco">
-              <span class="mdi mdi-map-marker"></span>
+              
               <p>{{ formatarEndereco(endereco) }}</p>
               <div class="endereco-actions">
                 <span class="mdi mdi-pencil" @click="abrirEdicaoEndereco(endereco)"></span>
@@ -307,7 +283,7 @@ function formatarEndereco(endereco) {
               </div>
             </li>
             <li v-if="!userData.userData?.enderecos || userData.userData?.enderecos.length === 0">
-              <span class="mdi mdi-map-marker"></span>
+              
               <p>Nenhum endereço cadastrado</p>
             </li>
           </ul>
@@ -412,7 +388,7 @@ function formatarEndereco(endereco) {
             <p>MEUS ENDEREÇOS <span class="mdi mdi-plus-circle-outline" @click="abrirFormularioEndereco"></span></p>
             <ul>
               <li v-for="endereco in userData.userData?.enderecos || []" :key="endereco.idEndereco">
-                <span class="mdi mdi-map-marker"></span>
+                
                 <p>{{ formatarEndereco(endereco) }}</p>
                 <div class="endereco-actions">
                   <span class="mdi mdi-pencil" @click="abrirEdicaoEndereco(endereco)"></span>
@@ -420,7 +396,7 @@ function formatarEndereco(endereco) {
                 </div>
               </li>
               <li v-if="!userData.userData?.enderecos || userData.userData?.enderecos.length === 0">
-                <span class="mdi mdi-map-marker"></span>
+                
                 <p>Nenhum endereço cadastrado</p>
               </li>
             </ul>
@@ -507,37 +483,36 @@ function formatarEndereco(endereco) {
     </div>
   </section>
 
-  <!-- Modal para adicionar/editar endereço -->
   <div v-if="mostrarFormularioEndereco" class="modal-overlay" @click="fecharFormularioEndereco">
     <div class="modal-content" :style="{ backgroundColor: themeManager.fundo }" @click.stop>
       <div class="modal-header">
-        <h3>{{ editandoEndereco ? 'Editar Endereço' : 'Adicionar Endereço' }}</h3>
+        <h3 :style="{ color: themeManager.text }">{{ editandoEndereco ? 'Editar Endereço' : 'Adicionar Endereço' }}</h3>
         <span class="mdi mdi-close" @click="fecharFormularioEndereco"></span>
       </div>
 
       <div class="modal-body">
         <div class="form-group">
-          <label>Cidade *</label>
+          <label :style="{ color: themeManager.text }">Cidade *</label>
           <input v-model="novoEndereco.cidade" type="text" placeholder="Digite a cidade" />
         </div>
 
         <div class="form-group">
-          <label>Bairro *</label>
+          <label :style="{ color: themeManager.text }" >Bairro *</label>
           <input v-model="novoEndereco.bairro" type="text" placeholder="Digite o bairro" />
         </div>
 
         <div class="form-group">
-          <label>Rua *</label>
+          <label :style="{ color: themeManager.text }">Rua *</label>
           <input v-model="novoEndereco.rua" type="text" placeholder="Digite a rua" />
         </div>
 
         <div class="form-group">
-          <label>Número *</label>
+          <label :style="{ color: themeManager.text }">Número *</label>
           <input v-model="novoEndereco.numero" type="number" placeholder="Digite o número" />
         </div>
 
         <div class="form-group">
-          <label>CEP</label>
+          <label :style="{ color: themeManager.text }">CEP</label>
           <input v-model="novoEndereco.cep" type="number" placeholder="Digite o CEP" />
         </div>
       </div>
@@ -603,7 +578,7 @@ function formatarEndereco(endereco) {
 }
 
 .enderecos p {
-  font-size: 20px;
+  font-size: 18px;
   border-bottom: 1px solid #dadadab4;
   margin-bottom: 4px;
   color: #fff;
@@ -1001,7 +976,6 @@ function formatarEndereco(endereco) {
 
 }
 
-/* Estilos do Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1123,7 +1097,6 @@ function formatarEndereco(endereco) {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsividade do Modal */
 @media (max-width: 768px) {
   .modal-content {
     width: 95%;

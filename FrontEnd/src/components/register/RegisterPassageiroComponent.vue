@@ -270,10 +270,10 @@ button:hover {
     padding: 20px;
   }
   input, textarea {
-    min-width: 100%;
+    width: 343px;
   }
 
-  textarea {
+  textarea, .input-field {
     max-width: 343px;
   }
   button {

@@ -7,7 +7,7 @@ import { useAuthStateStore } from '@/stores/authState'
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 
-const step = ref('request') // 'request' or 'reset'
+const step = ref('request') 
 const email = ref('')
 const uid = ref('')
 const token = ref('')
@@ -20,7 +20,6 @@ onMounted(async () => {
   themeManager.init()
   authState.restaurarState()
 
-  // Check if there's a token in URL for reset
   const urlParams = new URLSearchParams(window.location.search)
   const resetToken = urlParams.get('token')
   if (resetToken) {

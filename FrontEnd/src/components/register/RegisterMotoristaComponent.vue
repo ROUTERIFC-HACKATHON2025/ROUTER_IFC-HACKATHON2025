@@ -10,7 +10,6 @@ const authState = useAuthStateStore()
 const motoristaStore = useMotoristaStore()
 const router = useRouter()
 
-// Modelo padrão do motorista
 const defaultMotorista = {
   idMotorista: 0,
   nome: '',
@@ -30,25 +29,22 @@ const isEditing = ref(false)
 const empresas = ['SulTurismo', 'IndyTour']
 const aberto = ref(false)
 
-// Dropdown empresa
 function toggleSelect() {
   aberto.value = !aberto.value
 }
 
 function selecionarEmpresa(nome) {
-  motorista.empresa = nome // 🔥 corrigido para reactive
-  authState.mudarStateEmpresa(nome) // atualiza no store
+  motorista.empresa = nome 
+  authState.mudarStateEmpresa(nome) 
   aberto.value = false
 }
 
-// Reset do formulário
 function resetForm() {
   Object.assign(motorista, { ...defaultMotorista })
   authState.mudarState('inicio')
   router.push('/login')
 }
 
-// Cadastro ou edição
 async function cadastrar() {
   if (isEditing.value) {
     await motoristaStore.updateMotorista({ ...motorista })
@@ -63,7 +59,6 @@ async function cadastrar() {
   resetForm()
 }
 
-// Animação scroll
 onMounted(() => {
   themeManager.init()
   authState.restaurarStateEmpresa()
@@ -312,9 +307,13 @@ button:hover {
   form {
     padding: 20px;
   }
-  input, .input-field {
-    min-width: 100%;
+  input {
+    min-width: 200px;
   }
+  .input-field {
+    min-width: 150px;
+  }
+
   button {
     width: 100%;
   }

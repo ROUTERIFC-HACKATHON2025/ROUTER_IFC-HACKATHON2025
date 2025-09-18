@@ -6,15 +6,12 @@ import { useUserProfileStore } from '@/stores/userProfile'
 const themeManager = useThemeManagerStore()
 const userProfile = useUserProfileStore()
 
-// Informações da empresa logada
 const empresaLogada = computed(() => userProfile.usuarioLogado)
 
-// Função de logout
 function fazerLogout() {
   userProfile.fazerLogout()
 }
 
-// Função para mostrar informações específicas da empresa
 function getInfoEmpresa() {
   if (empresaLogada.value?.empresa === 'IndyTour') {
     return {

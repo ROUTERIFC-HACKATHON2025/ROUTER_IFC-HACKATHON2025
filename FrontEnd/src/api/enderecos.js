@@ -2,7 +2,6 @@ import axios from "axios";
 
 const API_BASE_URL = "http://localhost:8000/api/enderecos/";
 
-// Função para obter headers com autenticação
 function getAuthHeaders() {
     const token = localStorage.getItem('jwt_access');
     return {
