@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
+import { RouterLink } from 'vue-router'
 
 const themeManager = useThemeManagerStore()
 
@@ -50,7 +51,7 @@ onMounted(async () => {
             A nossa principal funcionalidade é otimizar a locomoção dos alunos no trajeto “casa - escola”,
             por meio de ferramentas que viabilizem uma melhor comunicação entre empresa e cliente.
           </p>
-          <button class="equipe-button" :style="{backgroundColor: themeManager.detalhe}">CONHEÇA NOSSA EQUIPE</button>
+          <RouterLink to="/equipe"><button class="equipe-button" :style="{backgroundColor: themeManager.detalhe}">CONHEÇA NOSSA EQUIPE</button></RouterLink>
         </div>
         <div class="imagem animate-on-scroll fade-in-right">
           <div style="
@@ -230,8 +231,12 @@ h1{
   border-radius: 30px;
   cursor: pointer;
   font-size: 1.1rem;
-  transition: background-color 0.3s ease;
+  transition: transform 0.3s ease;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.equipe-button:hover {
+  transform: scale(1.05);
 }
 
 .quem-somos .imagem {

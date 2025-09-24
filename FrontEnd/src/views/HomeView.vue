@@ -96,7 +96,7 @@ onUnmounted(() => {
             <h3 :style="{ color: themeManager.detalhe }">Indy Tour</h3>
             <p :style="{ color: themeManager.text }">
               A IndyTour, criada em 2020, é uma empresa de transporte por vans que atende os estudantes do IFC com segurança e conforto...
-              <RouterLink to="/IndyTour" :style="{ color: themeManager.detalheAlternativo }" @click="authStore.mudarStateEmpresa('Indy')">Saiba mais</RouterLink>
+              <RouterLink to="/IndySul" :style="{ color: themeManager.detalheAlternativo }" @click="authStore.mudarStateEmpresa('Indy')">Saiba mais</RouterLink>
             </p>
             <div class="empresa-redes-sociais">
               <a href="https://www.instagram.com/indytour.oficial" target="_blank" :style="{ color: themeManager.detalhe }"><span class="mdi mdi-instagram"></span></a>
@@ -145,8 +145,8 @@ onUnmounted(() => {
     <section class="start-section animate-on-scroll">
       <h2 :style="{ color: themeManager.detalhe }">PRONTO PARA COMEÇAR SUA JORNADA?</h2>
       <p :style="{ color: themeManager.text }">Cadastre-se já para garantir seu lugar na melhor opção de transporte para o IFC-Araquari</p>
-      <button :style="{ backgroundColor: themeManager.detalhe }" class="cadastre-se">CADASTRE-SE</button>
-      <button :style="{ borderColor: themeManager.detalhe, color: themeManager.detalhe }" class="login">FAÇA LOGIN</button>
+      <RouterLink to="/login"><button @click="authStore.mudarState('inicio')" :style="{ backgroundColor: themeManager.detalhe }" class="cadastre-se">CADASTRE-SE</button></RouterLink>
+      <RouterLink to="/login"><button @click="authStore.mudarState('inicio')" :style="{ borderColor: themeManager.detalhe, color: themeManager.detalhe }" class="login">FAÇA LOGIN</button></RouterLink>
     </section>
   </main>
 
@@ -199,28 +199,6 @@ onUnmounted(() => {
         </div>
       </div>
     </section>
-
-     <section class="tab-section animate-on-scroll">
-    <div
-      class="carousel-container"
-      :style="{ backgroundColor: themeManager.detalhe }"
-    >
-      <div
-        v-for="(slide, i) in slides"
-        :key="i"
-        class="carousel-slide"
-        :class="{ active: slideIndex === i }"
-      >
-        <div class="carousel-text">
-          <h2>{{ slide.title }}</h2>
-          <p v-html="slide.text"></p>
-        </div>
-      </div>
-
-      <button class="prev" @click="prevSlide">&#10094;</button>
-      <button class="next" @click="nextSlide">&#10095;</button>
-    </div>
-  </section>
 
     <section class="start-section animate-on-scroll">
       <h2 :style="{ color: themeManager.detalhe }">PRONTO PARA COMEÇAR SUA JORNADA?</h2>
@@ -440,7 +418,7 @@ onUnmounted(() => {
   border-radius: 30px;
   background-color: transparent;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .start-section .cadastre-se:hover,
@@ -510,12 +488,6 @@ onUnmounted(() => {
   background: rgba(0, 0, 0, 0.3);
   border-radius: 50%;
   user-select: none;
-  transition: background 0.3s;
-}
-
-.prev:hover,
-.next:hover {
-  background: rgba(0, 0, 0, 0.6);
 }
 
 .prev {
@@ -582,57 +554,5 @@ onUnmounted(() => {
     margin-right: 0;
     margin-bottom: 15px;
   }
-
- .carousel-container {
-  position: relative;
-  overflow: hidden;
-  height: 300px;
-  margin: 0px 20px;
-}
-
-.carousel-slide {
-  display: none;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transition: opacity 0.6s ease;
-  opacity: 0;
-}
-
-.carousel-slide.active {
-  display: block;
-  opacity: 1;
-}
-
-.carousel-text {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: white;
-  text-align: center;
-  padding: 0 0 15px 0;
-}
-
-button.prev,
-button.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 24px;
-  background: rgba(0, 0, 0, 0.3);
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 50%;
-}
-
-button.prev {
-  left: 10px;
-}
-button.next {
-  right: 10px;
-}
 }
 </style>

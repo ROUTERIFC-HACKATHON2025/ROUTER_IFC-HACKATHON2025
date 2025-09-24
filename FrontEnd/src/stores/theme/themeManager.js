@@ -17,7 +17,7 @@ const CORES_ESCURAS = {
   fundoAlternativo: '#1f1f1f',
   fundoHeader: '#1a1a1a96',
   texto: '#e4e4e4',
-  detalhe: '#0d3e67ff',
+  detalhe: '#1c5889ff',
   detalheAlternativo: '#1863A2',
 }
 

@@ -237,7 +237,7 @@ async function handleLogin() {
   border-radius: 30px;
   background-color: white;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .left-panel button:hover {
@@ -287,7 +287,6 @@ async function handleLogin() {
   font-size: 1rem;
   border: 1px solid;
   margin-top: 1rem;
-  transition: border-color 0.3s ease;
 }
 
 .input:focus {
@@ -323,7 +322,7 @@ async function handleLogin() {
   color: white;
   cursor: pointer;
   margin-top: 1rem;
-  transition: background-color 0.3s, transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .submit-btn:hover {
@@ -399,7 +398,7 @@ async function handleLogin() {
   border-radius: 30px;
   background-color: white;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .login-box-right button:hover {
@@ -448,7 +447,7 @@ h1 {
   cursor: pointer;
   display: block;
   gap: 8px;
-  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
