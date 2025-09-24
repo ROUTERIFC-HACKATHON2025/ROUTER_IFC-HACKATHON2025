@@ -11,12 +11,43 @@ import { Check } from 'lucide-vue-next'
 // Aba ativa
 const activeTab = ref('transportes')
 
-// Dados derivados da store
-const van = computed(() => {
-  return admin.selectedVan || {
-    placa: '—', modelo: '—', cor: '—', acentos: 0, status: 'Ativo', caracteristicas: []
+// Dados mockados do veículo
+const van = {
+  placa: 'ABC-1234',
+  modelo: 'Sprinter',
+  cor: 'Branca',
+  capacidade: 20,
+  ocupacao: 4,
+  status: 'Ativo',
+  caracteristicas: [
+    { nome: 'Ar Condicionado', ativo: true },
+    { nome: 'Wi-Fi', ativo: true },
+    { nome: 'USB', ativo: true }
+  ],
+  motorista: null
+}
+
+// Rotas editáveis - computadas para serem reativas
+const rotas = computed(() => [
+  {
+    titulo: 'Ida - 06:00h',
+    passageiros: admin.getRotaEditada('ida') || []
+  },
+  {
+    titulo: 'Volta - 12:00h',
+    passageiros: admin.getRotaEditada('volta12') || []
+  },
+  {
+    titulo: 'Volta - 17:00h',
+    passageiros: admin.getRotaEditada('volta17') || []
   }
-})
+])
+
+function editarRota(index) {
+  const tipoRota = index === 0 ? 'ida' : index === 1 ? 'volta12' : 'volta17'
+  admin.setRotaEmEdicao({ tipo: tipoRota, index })
+  authState.mudarAdminPage('editarRota')
+}
 </script>
 
 <template>
@@ -55,7 +86,7 @@ const van = computed(() => {
             <p><strong>Placa:</strong> {{ van.placa }}</p>
             <p><strong>Modelo:</strong> {{ van.modelo }}</p>
             <p><strong>Cor:</strong> {{ van.cor }}</p>
-            <p><strong>Capacidade:</strong> {{ van.acentos }}</p>
+            <p><strong>Capacidade:</strong> {{ van.capacidade }}</p>
 
             <div class="status">
               <button class="ativo" :style="{ background: themeManager.detalhe, color: '#fff' }">Veículo Ativo</button>
@@ -77,40 +108,29 @@ const van = computed(() => {
           <div class="card-ocupacao">
             <h2 :style="{ color: themeManager.detalhe }">Ocupação:</h2>
             <div class="progress">
-            <div class="progress-bar" :style="{ width: ((admin.vanPassengers.length || 0) / (van.acentos || 1)) * 100 + '%', background: themeManager.detalhe }"></div>
-            </div>
-            <p>{{ admin.vanPassengers.length }}/{{ van.acentos }}</p>
+            <div class="progress-bar" :style="{ width: ((admin.vanPassengers.length || 0) / (admin.selectedVan?.acentos || 1)) * 100 + '%', background: themeManager.detalhe }"></div>
+          </div>
+            <p>{{ admin.vanPassengers.length || 0 }}/{{ admin.selectedVan?.acentos || 0 }}</p>
             <button class="secundario" :style="{ background: themeManager.detalhe, color: '#fff' }" @click="authState.mudarAdminPage('passageiro')">Ver Passageiros</button>
           </div>
         </div>
 
         <div class="rotas-grid">
-          <div class="rota-card" :style="{ backgroundColor: themeManager.detalhe }">
+          <div v-for="(rota, index) in rotas" :key="rota.titulo" class="rota-card" :style="{ backgroundColor: themeManager.detalhe }">
            <div class="rota-header">
-             <h3 :style="{ color: '#fff' }">Passageiros</h3>
+             <h3 :style="{ color: '#fff' }">{{ rota.titulo }}</h3>
+             <span class="mdi mdi-pencil" :style="{ color: '#fff' }" @click="editarRota(index)" ></span>
            </div>
-            <div v-for="p in admin.vanPassengers" :key="p.id" class="passageiro-card">
+            <div v-for="p in rota.passageiros" :key="p.id" class="passageiro-card">
               <img src="/src-auth/passageiro.png" class="avatar" alt="">
               <div>
                 <p class="nome">{{ p.nome }}</p>
               </div>
             </div>
-            <div v-if="admin.vanPassengers.length === 0" class="passageiro-card" style="opacity:.8">Nenhum passageiro adicionado</div>
-          </div>
-
-          <div class="rota-card" :style="{ backgroundColor: themeManager.detalhe }">
-           <div class="rota-header">
-             <h3 :style="{ color: '#fff' }">Motorista</h3>
-           </div>
-            <div v-if="admin.selectedDriver" class="passageiro-card">
-              <img src="/src-auth/motorista.png" class="avatar" alt="">
-              <div>
-                <p class="nome">{{ admin.selectedDriver.nome }}</p>
-              </div>
-            </div>
-            <div v-else class="passageiro-card" style="opacity:.8">Nenhum motorista selecionado</div>
+            <div v-if="rota.passageiros.length === 0" class="passageiro-card" style="opacity:.8">Nenhum passageiro nesta rota</div>
           </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -313,4 +333,5 @@ section {
   font-size: 0.85rem;
   color: #555;
 }
+
 </style>

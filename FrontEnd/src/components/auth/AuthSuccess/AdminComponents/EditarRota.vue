@@ -167,7 +167,7 @@ function voltarParaConfigVans() {
         <button class="btn-cadastrar" @click="authState.mudarAdminPage('configVans')" :style="{ backgroundColor: themeManager.detalhe }">
         Sair
       </button>
-      <button class="btn-cadastrar" @click="authState.mudarAdminPage('configVans')" :style="{ border: '2px solid' + themeManager.detalhe, color: themeManager.detalhe }">
+      <button class="btn-cadastrar" @click="voltarParaConfigVans()" :style="{ border: '2px solid' + themeManager.detalhe, color: themeManager.detalhe }">
         Salvar
       </button>
       </div>
