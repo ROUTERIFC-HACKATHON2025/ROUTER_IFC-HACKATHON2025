@@ -156,7 +156,7 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -167,7 +167,7 @@ h1 {
 
 .icon {
   font-size: 3rem;
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .login-button:hover .icon {

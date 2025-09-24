@@ -74,95 +74,95 @@ onMounted(() => {
 <template>
   <section class="form-container animate-on-scroll" :style="{ color: themeManager.text }">
     <h1>
-      CADASTRO <span :style="{ color: themeManager.detalheAlternativo }">PASSAGEIRO</span>
+      CADASTRO <span :style="{ color: themeManager.detalhe }">PASSAGEIRO</span>
     </h1>
 
-    <form @submit.prevent="cadastrar" :style="{ borderColor: themeManager.detalheAlternativo }">
+    <form @submit.prevent="cadastrar" :style="{ borderColor: themeManager.detalhe }">
 
-      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
+      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalhe }">
         <h2>
-          <span class="mdi mdi-account" :style="{ color: themeManager.detalheAlternativo }"></span>
+          <span class="mdi mdi-account" :style="{ color: themeManager.detalhe }"></span>
           Informações Pessoais
         </h2>
         <div class="grid">
           <div>
             <p>Nome Completo: *</p>
             <input v-model="passageiro.nome" required placeholder="Nome Sobrenome"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>E-mail: *</p>
             <input v-model="passageiro.email" type="email" required placeholder="exemplo@dominio.com"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>CPF do Aluno: *</p>
             <input v-model="passageiro.cpf" placeholder="000.000.000-00" required
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Telefone: *</p>
             <input class="input-field" v-model="passageiro.telefone" required placeholder="(00) 00000-0000"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Data de Nascimento: *</p>
             <input class="input-field" v-model="passageiro.dataNascimento" type="date" required
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Senha: *</p>
             <input v-model="passageiro.senha" type="password" required placeholder="Mínimo 8 caracteres"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Confirme sua Senha: *</p>
             <input v-model="passageiro.confirmarSenha" type="password" required placeholder="Repita a senha"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Informações adicionais:</p>
             <textarea v-model="passageiro.informacoesAdicionais" class="input-field-add" placeholder="Ex: Alergias, necessidades especiais, etc."
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }">
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }">
             </textarea>
           </div>
         </div>
       </div>
 
-      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
+      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalhe }">
         <h2 class="responsaveis">
-          <span class="mdi mdi-human-male-male-child" :style="{ color: themeManager.detalheAlternativo }"></span>
+          <span class="mdi mdi-human-male-male-child" :style="{ color: themeManager.detalhe }"></span>
           Informações dos Responsáveis
         </h2>
         <div class="grid">
           <div>
             <p>Nome Completo do Responsável: *</p>
             <input v-model="passageiro.nomeResponsavel" placeholder="Nome Sobrenome"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
           <div>
             <p>CPF do Responsável: *</p>
             <input class="input-field" v-model="passageiro.cpfResponsavel" placeholder="000.000.000-00"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
           <div>
             <p>Telefone: *</p>
             <input class="input-field" v-model="passageiro.telefoneResponsavel" placeholder="(00) 00000-0000"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
         </div>
       </div>
 
       <div class="buttons">
         <button type="submit" class="submit" :style="{ backgroundColor: themeManager.detalhe }">Cadastrar-se</button>
-        <button type="button" @click="resetForm" :style="{ backgroundColor: themeManager.detalheAlternativo }">Voltar</button>
+        <button type="button" @click="resetForm" :style="{ border: '2px solid' + themeManager.detalhe,backgroundColor: themeManager.fundo, color: themeManager.detalhe }">Voltar</button>
       </div>
     </form>
   </section>
@@ -190,6 +190,7 @@ form {
   border: 2px solid;
   padding: 40px 100px 160px 100px;
   border-radius: 10px;
+  box-shadow: 0 0px 30px rgba(0, 0, 0, 0.142);
 }
 
 h1 {
@@ -255,7 +256,7 @@ button {
   border-radius: 12px;
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 button:hover {
   transform: scale(1.05);
@@ -270,12 +271,17 @@ button:hover {
     padding: 20px;
   }
   input, textarea {
-    width: 343px;
+    width: 330px;
   }
 
   textarea, .input-field {
-    max-width: 343px;
+    max-width: 330px;
   }
+
+  .input-field {
+    width: 150px;
+  }
+
   button {
     width: 100%;
   }

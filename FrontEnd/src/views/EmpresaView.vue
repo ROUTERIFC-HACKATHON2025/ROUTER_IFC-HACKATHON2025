@@ -52,7 +52,7 @@ onMounted(async () => {
           <p class="descricao" :style="{ color: themeManager.text }">
             Nosso site busca fortalecer parcerias com empresas responsáveis e comprometidas. Mais do que estar presente na plataforma, ser parceira significa assumir o compromisso com segurança, confiança e transparência, garantindo benefícios para motoristas, passageiros e toda a comunidade. Juntos, construímos uma rede organizada, eficiente e que gera resultados melhores para todos.
           </p>
-          <button class="equipe-button" :style="{ backgroundColor: themeManager.detalhe }">SAIBA MAIS SOBRE NÓS</button>
+          <RouterLink to="/SobreNos"><button class="equipe-button" :style="{ backgroundColor: themeManager.detalhe }">SAIBA MAIS SOBRE NÓS</button></RouterLink>
         </div>
         <div class="imagem animate-on-scroll fade-in-right">
           <div style="
@@ -238,9 +238,14 @@ h1{
   border-radius: 30px;
   cursor: pointer;
   font-size: 1.1rem;
-  transition: background-color 0.3s ease;
+  transition: transform 0.3s ease;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
+
+.equipe-button:hover {
+  transform: scale(1.05);
+}
+
 
 .quem-somos .imagem {
   flex: 1;
@@ -303,6 +308,11 @@ h1{
   width: 100%;
   font-size: 1.2rem;
   font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.card button:hover {
+  transform: scale(1.05);
 }
 
 .line {

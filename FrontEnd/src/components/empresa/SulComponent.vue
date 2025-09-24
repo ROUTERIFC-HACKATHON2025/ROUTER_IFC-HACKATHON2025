@@ -276,10 +276,12 @@ h1 {
   cursor: pointer;
   background-color: #fff;
   box-shadow: 0 0px 30px rgba(0, 0, 0, 0.142);
-  transition: background-color 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
-
+.solicite-button:hover {
+  transform: scale(1.05);
+}
 
 @media (max-width: 768px) {
  .sobre-nos {

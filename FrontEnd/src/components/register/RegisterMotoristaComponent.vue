@@ -81,10 +81,10 @@ onMounted(() => {
 <template>
   <section class="form-container animate-on-scroll" :style="{ color: themeManager.text }">
 
-    <form @submit.prevent="cadastrar" >
-      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
+    <form @submit.prevent="cadastrar" :style="{ border: '2px solid' + themeManager.detalhe}">
+      <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalhe }">
         <h2>
-          <span class="mdi mdi-account" :style="{ color: themeManager.detalheAlternativo }"></span>
+          <span class="mdi mdi-account" :style="{ color: themeManager.detalhe }"></span>
           Informações Pessoais
         </h2>
 
@@ -92,44 +92,44 @@ onMounted(() => {
           <div>
             <p>Nome Completo: *</p>
             <input v-model="motorista.nome" required placeholder="Nome Sobrenome"
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+              :style="{borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
             <p>E-mail: *</p>
             <input v-model="motorista.email" type="email" required placeholder="exemplo@dominio.com"
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+              :style="{borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
             <p>CPF: *</p>
             <input v-model="motorista.cpf" placeholder="000.000.000-00" required
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+              :style="{borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
             <p>Data de Nascimento: *</p>
             <input class="input-field" v-model="motorista.dataNascimento" type="date" required 
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
           <div>
             <p>Telefone: *</p>
             <input v-model="motorista.telefone" class="input-field" required placeholder="(00) 00000-0000"
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+              :style="{borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
             <p>Crie uma senha: *</p>
             <input v-model="motorista.senha" type="password" required placeholder="Mínimo 8 caracteres"
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+              :style="{borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
           <div>
             <p>Confirme sua Senha: *</p>
             <input v-model="motorista.confirmarSenha" type="password" required placeholder="Repita a senha" 
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text }" />
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text }" />
           </div>
 
           <div>
             <p>Selecione a empresa: *</p>
             <div
               class="select-custom input-field"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.detalhe, color: '#fff' }"
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.detalhe, color: '#fff' }"
               @click="toggleSelect"
             >
               {{ motorista.empresa || 'Selecione a empresa' }}
@@ -141,7 +141,7 @@ onMounted(() => {
             <div
               v-show="aberto"
               class="opcoes"
-              :style="{ borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo }"
+              :style="{ borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo }"
             >
               <div
                 v-for="empresa in empresas"
@@ -162,14 +162,14 @@ onMounted(() => {
           <div>
             <p>CNH(nº registro): *</p>
             <input v-model="motorista.codigoCnh" required placeholder="00000000000"
-              :style="{borderColor: themeManager.detalheAlternativo, backgroundColor: themeManager.fundo, color: themeManager.text}" />
+              :style="{borderColor: themeManager.detalhe, backgroundColor: themeManager.fundo, color: themeManager.text}" />
           </div>
         </div>
       </div>
 
       <div class="buttons">
         <button type="submit" class="submit" :style="{ backgroundColor: themeManager.detalhe }">Cadastrar-se</button>
-        <button type="button" @click="resetForm" :style="{ backgroundColor: themeManager.detalheAlternativo }">Cancelar</button>
+        <button type="button" @click="resetForm" :style="{ backgroundColor: themeManager.fundo, border:'2px solid' + themeManager.detalhe, color: themeManager.detalhe }">Cancelar</button>
       </div>
     </form>
   </section>
@@ -258,7 +258,7 @@ button {
   border-radius: 12px;
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 button:hover {
@@ -290,7 +290,6 @@ button:hover {
 .opcao {
   width: 100%;
   cursor: pointer;
-  transition: background-color 0.2s;
   border: none;
 }
 
@@ -303,17 +302,22 @@ button:hover {
     padding: 20px;
   }
   input {
-    min-width: 200px;
+    width: 330px;
   }
   .input-field {
-    min-width: 150px;
+    width: 140px;
   }
 
   button {
     width: 100%;
   }
+
+  .select-custom {
+    width: 330px;
+  }
+
   .opcoes {
-    width: 100%;
+    width: 330px;
   }
 }
 </style>

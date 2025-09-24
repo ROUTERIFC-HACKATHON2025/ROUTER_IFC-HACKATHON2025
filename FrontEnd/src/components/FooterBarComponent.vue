@@ -11,7 +11,7 @@ onMounted(themeManager.init)
   <footer class="notebook" :style="{ backgroundColor: themeManager.detalhe }">
     <div class="footer-top">
       <img src="/src-logos/logo-footer.png" alt="">
-      <button class="login">Entrar</button>
+      <button class="login"><RouterLink to="/login">Entrar</RouterLink></button>
     </div>
     <div class="container">
       <div class="footer-content">
@@ -56,7 +56,7 @@ onMounted(themeManager.init)
   <footer class="celular" :style="{ backgroundColor: themeManager.detalhe }">
     <div class="footer-top">
       <img src="/src-logos/logo-footer.png" alt="">
-      <button class="login">Entrar</button>
+      <button class="login"><RouterLink to="/login">Entrar</RouterLink></button>
     </div>
     <div class="container">
       <div class="footer-content">
@@ -127,6 +127,12 @@ footer {
   cursor: pointer;
   font-size: 1rem;
   font-weight: bold;
+}
+
+.footer-top button a{
+  color: #08253c;
+  font-weight: bold;
+
 }
 
 .container {

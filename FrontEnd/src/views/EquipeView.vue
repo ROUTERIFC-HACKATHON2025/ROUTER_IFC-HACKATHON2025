@@ -9,9 +9,12 @@ const themeEquipe = useThemeEquipeStore()
 const slideIndex = ref(0)
 
 const slides = ref([
-  { src: '/src-home/Passageiros.png', alt: 'Passageiro' },
-  { src: '/src-home/motorista.png', alt: 'Motorista' },
-  { src: '/src-home/empresa.png', alt: 'Gestão' }
+  { src: '/src-equipe/equipe.png', alt: 'equipe' },
+  { src: '/src-equipe/equipe1.png', alt: 'equipe1' },
+  { src: '/src-equipe/equipe2.png', alt: 'equipe2' },
+  { src: '/src-equipe/equipe3.png', alt: 'equipe3' },
+  { src: '/src-equipe/equipe4.png', alt: 'equipe4' },
+
 ])
 
 let intervalId = null
