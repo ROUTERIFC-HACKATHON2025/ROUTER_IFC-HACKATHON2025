@@ -58,6 +58,12 @@ onMounted(() => {
     const statusPersistido = admin.getVanStatus(van.id)
     van.status = statusPersistido
   })
+  // Limpa dados pré-definidos ao carregar
+  admin.clearPredefinedData()
+  // Força limpeza adicional após um pequeno delay
+  setTimeout(() => {
+    admin.clearPredefinedData()
+  }, 100)
 })
 </script>
 <template>

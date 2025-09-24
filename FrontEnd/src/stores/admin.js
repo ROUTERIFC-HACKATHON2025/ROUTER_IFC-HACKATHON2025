@@ -108,9 +108,37 @@ export const useAdminStore = defineStore('admin', () => {
     
     selectedVan.value = van
     const id = van?.id
-    if (id !== undefined && !assignments.value[id]) {
-      assignments.value[id] = { driver: null, passengers: [] }
+    if (id !== undefined) {
+      // Sempre inicializa com array vazio para evitar passageiros pré-definidos
+      if (!assignments.value[id]) {
+        assignments.value[id] = { driver: null, passengers: [] }
+      } else {
+        // Garante que não há passageiros pré-definidos
+        assignments.value[id] = { 
+          driver: assignments.value[id].driver || null, 
+          passengers: assignments.value[id].passengers || [] 
+        }
+      }
+      // Força limpeza de dados pré-definidos para esta van específica
+      clearPredefinedDataForVan(id)
       persist()
+    }
+  }
+
+  function clearPredefinedDataForVan(vanId) {
+    const assn = assignments.value[vanId]
+    if (assn && assn.passengers && assn.passengers.length > 0) {
+      // Verifica se são dados pré-definidos
+      const hasPredefinedPassengers = assn.passengers.some(p => 
+        p.id === 0 || p.id === 1 || p.id === 2 || p.id === 3 || p.id === 4 ||
+        p.nome === 'Ana Luiza' || p.nome === 'Maria Fernanda Santos' ||
+        p.nome === 'Carlos Eduardo Oliveira' || p.nome === 'Juliana Pereira Costa' ||
+        p.nome === 'Rafael Lima Andrade' || p.nome === 'Fernanda Alves Rodrigues'
+      )
+      if (hasPredefinedPassengers) {
+        assignments.value[vanId] = { driver: assn.driver || null, passengers: [] }
+        persist()
+      }
     }
   }
 
@@ -121,6 +149,8 @@ export const useAdminStore = defineStore('admin', () => {
       return
     }
     const alvoId = selectedVan.value.id
+    
+    // Remove passageiro de outras vans se já estiver em alguma
     for (const [vanId, assn] of Object.entries(assignments.value)) {
       if ((assn.passengers || []).some(p => p.id === passageiro.id)) {
         assignments.value[vanId] = {
@@ -129,8 +159,19 @@ export const useAdminStore = defineStore('admin', () => {
         }
       }
     }
+    
+    // Adiciona à van atual
     const assnAtual = currentAssignment.value
-    if (capacidadeRestante.value <= 0) return
+    if (capacidadeRestante.value <= 0) {
+      alert('Capacidade da van atingida.')
+      return
+    }
+    
+    // Verifica se já não está na van atual
+    if ((assnAtual.passengers || []).some(p => p.id === passageiro.id)) {
+      return
+    }
+    
     const novaLista = [...(assnAtual.passengers || []), passageiro]
     assignments.value[alvoId] = { ...assnAtual, passengers: novaLista }
     persist()
@@ -145,8 +186,9 @@ export const useAdminStore = defineStore('admin', () => {
   }
 
   function isPassengerAdded(passageiroId) {
-    const assn = currentAssignment.value
-    return (assn.passengers || []).some(p => p.id === passageiroId)
+    if (!selectedVan.value) return false
+    const assn = assignments.value[selectedVan.value.id]
+    return (assn?.passengers || []).some(p => p.id === passageiroId)
   }
 
   function selectDriver(motorista) {
@@ -156,11 +198,15 @@ export const useAdminStore = defineStore('admin', () => {
       return
     }
     const alvoId = selectedVan.value.id
+    
+    // Remove motorista de outras vans se já estiver em alguma
     for (const [vanId, assn] of Object.entries(assignments.value)) {
       if (assn.driver && assn.driver.id === motorista.id) {
         assignments.value[vanId] = { ...assn, driver: null }
       }
     }
+    
+    // Adiciona à van atual
     const assnAtual = currentAssignment.value
     assignments.value[alvoId] = { ...assnAtual, driver: motorista }
     persist()
@@ -180,6 +226,46 @@ export const useAdminStore = defineStore('admin', () => {
     persist()
   }
 
+  function clearPredefinedData() {
+    // Limpa dados pré-definidos de todas as vans
+    Object.keys(assignments.value).forEach(vanId => {
+      const assn = assignments.value[vanId]
+      if (assn && assn.passengers && assn.passengers.length > 0) {
+        // Verifica se são dados pré-definidos (baseado em IDs específicos ou outros critérios)
+        const hasPredefinedPassengers = assn.passengers.some(p => 
+          p.id === 0 || p.id === 1 || p.id === 2 || p.id === 3 || p.id === 4 ||
+          p.nome === 'Ana Luiza' || p.nome === 'Maria Fernanda Santos' ||
+          p.nome === 'Carlos Eduardo Oliveira' || p.nome === 'Juliana Pereira Costa' ||
+          p.nome === 'Rafael Lima Andrade' || p.nome === 'Fernanda Alves Rodrigues'
+        )
+        if (hasPredefinedPassengers) {
+          assignments.value[vanId] = { driver: assn.driver || null, passengers: [] }
+        }
+      }
+    })
+    // Limpa também as rotas editadas
+    Object.keys(rotasEditadas.value).forEach(vanId => {
+      const rotas = rotasEditadas.value[vanId]
+      if (rotas) {
+        Object.keys(rotas).forEach(tipoRota => {
+          if (rotas[tipoRota] && rotas[tipoRota].length > 0) {
+            const hasPredefinedPassengers = rotas[tipoRota].some(p => 
+              p.id === 0 || p.id === 1 || p.id === 2 || p.id === 3 || p.id === 4 ||
+              p.nome === 'Ana Luiza' || p.nome === 'Maria Fernanda Santos' ||
+              p.nome === 'Carlos Eduardo Oliveira' || p.nome === 'Juliana Pereira Costa' ||
+              p.nome === 'Rafael Lima Andrade' || p.nome === 'Fernanda Alves Rodrigues'
+            )
+            if (hasPredefinedPassengers) {
+              rotas[tipoRota] = []
+            }
+          }
+        })
+      }
+    })
+    persist()
+    persistRotas()
+  }
+
   watch(assignments, persist, { deep: true })
   
   watch(vanStatus, persistStatus, { deep: true })
@@ -196,7 +282,9 @@ export const useAdminStore = defineStore('admin', () => {
   }
 
   function isDriverAssigned(motoristaId) {
-    return getDriverVanId(motoristaId) !== null
+    if (!selectedVan.value) return false
+    const assn = assignments.value[selectedVan.value.id]
+    return assn?.driver?.id === motoristaId
   }
 
   function updateVanStatus(status) {
@@ -204,6 +292,16 @@ export const useAdminStore = defineStore('admin', () => {
       const vanId = selectedVan.value.id
       selectedVan.value.status = status
       vanStatus.value[vanId] = status
+      
+      // Se colocar em manutenção, remove todos os passageiros
+      if (status === 'Manutenção') {
+        const assn = assignments.value[vanId]
+        if (assn) {
+          assignments.value[vanId] = { ...assn, passengers: [], driver: null }
+          persist()
+        }
+      }
+      
       persistStatus()
     }
   }
@@ -302,6 +400,8 @@ export const useAdminStore = defineStore('admin', () => {
     selectDriver,
     clearDriver,
     clearAllPassengers,
+    clearPredefinedData,
+    clearPredefinedDataForVan,
     getDriverVanId,
     isDriverAssigned,
     updateVanStatus,

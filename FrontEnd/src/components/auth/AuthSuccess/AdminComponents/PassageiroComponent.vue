@@ -14,11 +14,17 @@ const busca = ref('')
 const expandidoId = ref(null)
 
 const passageirosFiltrados = computed(() => {
-    if (!busca.value.trim()) return userProfile.passageiros
+    if (!busca.value.trim()) return admin.vanPassengers
 
     const termoBusca = busca.value.toLowerCase().trim()
-    return userProfile.passageiros.filter(p => p.nome && p.nome.toLowerCase().includes(termoBusca))
+    return admin.vanPassengers.filter(p => p.nome && p.nome.toLowerCase().includes(termoBusca))
 })
+
+const todosPassageiros = computed(() => {
+    return userProfile.passageiros || []
+})
+
+const mostrarTodosPassageiros = ref(false)
 
 const toggleExpand = (id) => {
     expandidoId.value = expandidoId.value === id ? null : id
@@ -26,11 +32,16 @@ const toggleExpand = (id) => {
 
 function adicionarNaVan(passageiro) {
     admin.addPassenger(passageiro)
-    authState.mudarAdminPage('configVans')
+    mostrarTodosPassageiros.value = false
+    // Não redireciona, fica na aba de passageiros
 }
 
 function jaAdicionado(id) {
     return admin.isPassengerAdded(id)
+}
+
+function toggleMostrarTodos() {
+    mostrarTodosPassageiros.value = !mostrarTodosPassageiros.value
 }
 
 
@@ -54,10 +65,10 @@ function jaAdicionado(id) {
   </div>
 
   <div class="gerenciar" :style="{ backgroundColor: themeManager.fundo }">
-    <div class="header-actions">
-      <button class="btn-cadastrar" @click="authState.mudarAdminPage('addpassageiro')" :style="{ backgroundColor: themeManager.detalhe }">
-        Adicionar Passageiro
-      </button>
+      <div class="header-actions">
+        <button class="btn-cadastrar" @click="toggleMostrarTodos()" :style="{ backgroundColor: themeManager.detalhe }">
+          {{ mostrarTodosPassageiros ? 'Ver Passageiros da Van' : 'Adicionar Passageiro' }}
+        </button>
 
       <div class="search">
         <input 
@@ -71,58 +82,96 @@ function jaAdicionado(id) {
     </div>
 
     <div class="lista-passageiros" :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }">
-      <div v-for="p in passageirosFiltrados" :key="p.id" class="passageiro">
-        <div class="linha-passageiro" @click="toggleExpand(p.id)">
-          <div class="info-passageiro">
-            <img src="/src-auth/passageiro.png" class="avatar" />
-            <span>{{ p.nome }}</span>
+      <!-- Mostrar passageiros da van quando não estiver no modo de adicionar -->
+      <div v-if="!mostrarTodosPassageiros">
+        <div v-for="p in passageirosFiltrados" :key="p.id" class="passageiro">
+          <div class="linha-passageiro" @click="toggleExpand(p.id)">
+            <div class="info-passageiro">
+              <img src="/src-auth/passageiro.png" class="avatar" />
+              <span>{{ p.nome }}</span>
+            </div>
+            <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === p.id }"></span>
           </div>
-          <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === p.id }"></span>
+
+          <div v-if="expandidoId === p.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
+            <div class="card-detalhes">
+              <div class="avatar-container">
+                <img src="/src-auth/passageiro.png" class="avatarG" />
+                <h3>{{ p.nome }}</h3>
+              </div>
+              <div class="info">
+                <p><strong>Data de nascimento:</strong> {{ p.nascimento }}</p>
+                <p><strong>CPF:</strong> {{ p.cpf }}</p>
+                <p><strong>E-mail:</strong> {{ p.email }}</p>
+                <p><strong>Telefone:</strong> {{ p.telefone }}</p>
+                <p class="descricao" :style="{ color: '#000' }">{{ p.descricao }}</p>
+              </div>
+              <div class="enderecos">
+                <h3>ENDEREÇOS:</h3>
+                <ul>
+                  <li>📍 {{ p.endereco }}</li>
+                </ul>
+                <button
+                  class="btn-add"
+                  :style="{ backgroundColor: themeManager.detalheAlternativo }"
+                  @click="admin.removePassenger(p.id)"
+                >
+                  Remover da Van
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div v-if="expandidoId === p.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
-          <div class="card-detalhes">
-            <div class="avatar-container">
-              <img src="/src-auth/passageiro.png" class="avatarG" />
-              <h3>{{ p.nome }}</h3>
-            </div>
-            <div class="info">
-              <p><strong>Data de nascimento:</strong> {{ p.nascimento }}</p>
-              <p><strong>CPF:</strong> {{ p.cpf }}</p>
-              <p><strong>E-mail:</strong> {{ p.email }}</p>
-              <p><strong>Telefone:</strong> {{ p.telefone }}</p>
-              <p class="descricao" :style="{ color: '#000' }">{{ p.descricao }}</p>
-            </div>
-            <div class="enderecos">
-              <h3>ENDEREÇOS:</h3>
-              <ul>
-                <li>📍 {{ p.endereco }}</li>
-              </ul>
-              <button
-                class="btn-add"
-                :disabled="jaAdicionado(p.id) || (admin.selectedVan && admin.selectedVan.status === 'Manutenção')"
-                :style="{
-                  backgroundColor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? '#666' : themeManager.detalheAlternativo,
-                  opacity: jaAdicionado(p.id) ? 0.7 : 1,
-                  cursor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'not-allowed' : 'pointer'
-                }"
-                @click="(!jaAdicionado(p.id) && (!admin.selectedVan || admin.selectedVan.status !== 'Manutenção')) && adicionarNaVan(p)"
-              >
-                {{ jaAdicionado(p.id) ? 'Já adicionado' : 'Adicionar Passageiro' }}
-              </button>
-            </div>
+        <div v-if="passageirosFiltrados.length === 0" class="nenhum-passageiro">
+          <div class="nenhum-passageiro-content">
+            <span class="mdi mdi-account-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>
+            <h3>Nenhum passageiro adicionado à van</h3>
+            <p>Clique em "Adicionar Passageiro" para selecionar passageiros</p>
           </div>
         </div>
       </div>
 
-      <div v-if="busca.trim() && passageirosFiltrados.length === 0" class="nenhum-passageiro">
-        <div class="nenhum-passageiro-content">
-          <span class="mdi mdi-account-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>
-          <h3>Nenhum passageiro encontrado</h3>
-          <p>Tente usar termos diferentes na busca</p>
-          <button class="btn-limpar-busca" @click="busca = ''" :style="{ color: themeManager.detalhe }">
-            Limpar busca
-          </button>
+      <!-- Mostrar todos os passageiros cadastrados quando estiver no modo de adicionar -->
+      <div v-else>
+        <div v-for="p in todosPassageiros" :key="p.id" class="passageiro">
+          <div class="linha-passageiro" @click="toggleExpand(p.id)">
+            <div class="info-passageiro">
+              <img src="/src-auth/passageiro.png" class="avatar" />
+              <span>{{ p.nome }}</span>
+            </div>
+            <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === p.id }"></span>
+          </div>
+
+          <div v-if="expandidoId === p.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
+            <div class="card-detalhes">
+              <div class="avatar-container">
+                <img src="/src-auth/passageiro.png" class="avatarG" />
+                <h3>{{ p.nome }}</h3>
+              </div>
+              <div class="info">
+                <p><strong>Data de nascimento:</strong> {{ p.nascimento }}</p>
+                <p><strong>CPF:</strong> {{ p.cpf }}</p>
+                <p><strong>E-mail:</strong> {{ p.email }}</p>
+                <p><strong>Telefone:</strong> {{ p.telefone }}</p>
+                <p class="descricao" :style="{ color: '#000' }">{{ p.descricao }}</p>
+              </div>
+              <div class="enderecos">
+                <h3>ENDEREÇOS:</h3>
+                <ul>
+                  <li>📍 {{ p.endereco }}</li>
+                </ul>
+                <button
+                  class="btn-add"
+                  :style="{ backgroundColor: jaAdicionado(p.id) ? '#999' : themeManager.detalheAlternativo }"
+                  :disabled="jaAdicionado(p.id)"
+                  @click="adicionarNaVan(p)"
+                >
+                  {{ jaAdicionado(p.id) ? 'Já Adicionado' : 'Adicionar à Van' }}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
