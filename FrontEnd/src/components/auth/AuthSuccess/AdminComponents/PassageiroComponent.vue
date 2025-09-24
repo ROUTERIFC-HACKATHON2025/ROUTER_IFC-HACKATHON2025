@@ -98,6 +98,18 @@ function jaAdicionado(id) {
               <ul>
                 <li>📍 {{ p.endereco }}</li>
               </ul>
+              <button
+                class="btn-add"
+                :disabled="jaAdicionado(p.id) || (admin.selectedVan && admin.selectedVan.status === 'Manutenção')"
+                :style="{
+                  backgroundColor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? '#666' : themeManager.detalheAlternativo,
+                  opacity: jaAdicionado(p.id) ? 0.7 : 1,
+                  cursor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'not-allowed' : 'pointer'
+                }"
+                @click="(!jaAdicionado(p.id) && (!admin.selectedVan || admin.selectedVan.status !== 'Manutenção')) && adicionarNaVan(p)"
+              >
+                {{ jaAdicionado(p.id) ? 'Já adicionado' : 'Adicionar Passageiro' }}
+              </button>
             </div>
           </div>
         </div>

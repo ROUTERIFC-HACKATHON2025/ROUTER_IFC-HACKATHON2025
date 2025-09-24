@@ -327,9 +327,9 @@ function formatarEndereco(endereco) {
       <h2>SEU TRANSPORTE PARA HOJE</h2>
       <div class="card">
         <div class="card-text">
-          <p><strong>nome:</strong> Van Executiva Premium</p>
-          <p><strong>modelo:</strong> Sprinter 515 CDI</p>
-          <p><strong>placa:</strong> ABC-1234</p>
+          <p><strong>Nome:</strong> Van Executiva Premium</p>
+          <p><strong>Modelo:</strong> Sprinter 515 CDI</p>
+          <p><strong>Placa:</strong> ABC-1234</p>
         </div>
       </div>
     </div>

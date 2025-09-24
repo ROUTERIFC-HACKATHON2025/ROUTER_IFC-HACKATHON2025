@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 import { useAdminStore } from '@/stores/admin'
@@ -11,47 +11,12 @@ import { Check } from 'lucide-vue-next'
 // Aba ativa
 const activeTab = ref('transportes')
 
-// Dados mockados
-const van = {
-  placa: 'ABC-1234',
-  modelo: 'Sprinter',
-  cor: 'Branca',
-  capacidade: 20,
-  ocupacao: 4,
-  status: 'Ativo',
-  caracteristicas: [
-    { nome: 'Ar Condicionado', ativo: true },
-    { nome: 'Wi-Fi', ativo: true },
-    { nome: 'USB', ativo: true }
-  ],
-  motorista: null
-}
-
-const rotas = [
-  {
-    titulo: 'Ida - 06:00',
-    passageiros: [
-      { id: 1, nome: 'Nome Completo', endereco: 'Endereço' },
-      { id: 2, nome: 'Nome Completo', endereco: 'Endereço' },
-      { id: 3, nome: 'Nome Completo', endereco: 'Endereço' }
-    ]
-  },
-  {
-    titulo: 'Volta - 12:00',
-    passageiros: [
-      { id: 4, nome: 'Nome Completo', endereco: 'Endereço' },
-      { id: 5, nome: 'Nome Completo', endereco: 'Endereço' },
-      { id: 6, nome: 'Nome Completo', endereco: 'Endereço' }
-    ]
-  },
-  {
-    titulo: 'Volta - 17:00',
-    passageiros: [
-      { id: 7, nome: 'Nome Completo', endereco: 'Endereço' },
-      { id: 8, nome: 'Nome Completo', endereco: 'Endereço' }
-    ]
+// Dados derivados da store
+const van = computed(() => {
+  return admin.selectedVan || {
+    placa: '—', modelo: '—', cor: '—', acentos: 0, status: 'Ativo', caracteristicas: []
   }
-]
+})
 </script>
 
 <template>
@@ -90,7 +55,7 @@ const rotas = [
             <p><strong>Placa:</strong> {{ van.placa }}</p>
             <p><strong>Modelo:</strong> {{ van.modelo }}</p>
             <p><strong>Cor:</strong> {{ van.cor }}</p>
-            <p><strong>Capacidade:</strong> {{ van.capacidade }}</p>
+            <p><strong>Capacidade:</strong> {{ van.acentos }}</p>
 
             <div class="status">
               <button class="ativo" :style="{ background: themeManager.detalhe, color: '#fff' }">Veículo Ativo</button>
@@ -112,25 +77,38 @@ const rotas = [
           <div class="card-ocupacao">
             <h2 :style="{ color: themeManager.detalhe }">Ocupação:</h2>
             <div class="progress">
-              <div class="progress-bar" :style="{ width: (van.ocupacao / van.capacidade) * 100 + '%', background: themeManager.detalhe }"></div>
+            <div class="progress-bar" :style="{ width: ((admin.vanPassengers.length || 0) / (van.acentos || 1)) * 100 + '%', background: themeManager.detalhe }"></div>
             </div>
-            <p>{{ van.ocupacao }}/{{ van.capacidade }}</p>
+            <p>{{ admin.vanPassengers.length }}/{{ van.acentos }}</p>
             <button class="secundario" :style="{ background: themeManager.detalhe, color: '#fff' }" @click="authState.mudarAdminPage('passageiro')">Ver Passageiros</button>
           </div>
         </div>
 
         <div class="rotas-grid">
-          <div v-for="rota in rotas" :key="rota.titulo" class="rota-card" :style="{ backgroundColor: themeManager.detalhe }">
+          <div class="rota-card" :style="{ backgroundColor: themeManager.detalhe }">
            <div class="rota-header">
-             <h3 :style="{ color: '#fff' }">{{ rota.titulo }}</h3>
-             <span class="mdi mdi-pencil" :style="{ color: '#fff' }" @click="authState.mudarAdminPage('editarRota')" ></span>
+             <h3 :style="{ color: '#fff' }">Passageiros</h3>
            </div>
-            <div v-for="p in rota.passageiros" :key="p.id" class="passageiro-card">
+            <div v-for="p in admin.vanPassengers" :key="p.id" class="passageiro-card">
               <img src="/src-auth/passageiro.png" class="avatar" alt="">
               <div>
                 <p class="nome">{{ p.nome }}</p>
               </div>
             </div>
+            <div v-if="admin.vanPassengers.length === 0" class="passageiro-card" style="opacity:.8">Nenhum passageiro adicionado</div>
+          </div>
+
+          <div class="rota-card" :style="{ backgroundColor: themeManager.detalhe }">
+           <div class="rota-header">
+             <h3 :style="{ color: '#fff' }">Motorista</h3>
+           </div>
+            <div v-if="admin.selectedDriver" class="passageiro-card">
+              <img src="/src-auth/motorista.png" class="avatar" alt="">
+              <div>
+                <p class="nome">{{ admin.selectedDriver.nome }}</p>
+              </div>
+            </div>
+            <div v-else class="passageiro-card" style="opacity:.8">Nenhum motorista selecionado</div>
           </div>
         </div>
       </div>

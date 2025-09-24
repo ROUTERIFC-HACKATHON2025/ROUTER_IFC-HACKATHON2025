@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
+import AdminAPI from '@/api/admin'
 
 export const useAdminStore = defineStore('admin', () => {
   const selectedVan = ref(null)
@@ -7,6 +8,8 @@ export const useAdminStore = defineStore('admin', () => {
   const vanStatus = ref({})
   const rotaEmEdicao = ref(null)
   const rotasEditadas = ref({})
+  const carregando = ref(false)
+  const erroCarregamento = ref(null)
 
   const STORAGE_KEY = 'adminAssignments'
   const STATUS_STORAGE_KEY = 'vanStatus'
@@ -21,8 +24,7 @@ export const useAdminStore = defineStore('admin', () => {
           assignments.value = parsed
         }
       }
-    } catch (_) {
-    }
+    } catch (e) { void e }
     
     try {
       const statusRaw = localStorage.getItem(STATUS_STORAGE_KEY)
@@ -32,8 +34,7 @@ export const useAdminStore = defineStore('admin', () => {
           vanStatus.value = statusParsed
         }
       }
-    } catch (_) {
-    }
+    } catch (e) { void e }
 
     try {
       const rotasRaw = localStorage.getItem(ROTAS_STORAGE_KEY)
@@ -43,29 +44,25 @@ export const useAdminStore = defineStore('admin', () => {
           rotasEditadas.value = rotasParsed
         }
       }
-    } catch (_) {
-    }
+    } catch (e) { void e }
   }
 
   function persist() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(assignments.value))
-    } catch (_) {
-    }
+    } catch (e) { void e }
   }
 
   function persistStatus() {
     try {
       localStorage.setItem(STATUS_STORAGE_KEY, JSON.stringify(vanStatus.value))
-    } catch (_) {
-    }
+    } catch (e) { void e }
   }
 
   function persistRotas() {
     try {
       localStorage.setItem(ROTAS_STORAGE_KEY, JSON.stringify(rotasEditadas.value))
-    } catch (_) {
-    }
+    } catch (e) { void e }
   }
 
   loadFromStorage()
@@ -249,6 +246,46 @@ export const useAdminStore = defineStore('admin', () => {
     return rotasEditadas.value[vanId][tipoRota] || []
   }
 
+  async function loadBackendData() {
+    carregando.value = true
+    erroCarregamento.value = null
+    try {
+      const api = new AdminAPI()
+      const { passageiros, motoristas } = await api.fetchAll()
+
+      const passageirosMapeados = (Array.isArray(passageiros) ? passageiros : []).map((p) => ({
+        id: p.idPassageiros ?? p.id ?? p.pk ?? null,
+        nome: p.nome ?? '',
+        nascimento: p.dataNascimento ?? p.nascimento ?? '',
+        cpf: p.cpf ?? '',
+        email: p.email ?? '',
+        telefone: p.telefone ?? '',
+        endereco: Array.isArray(p.endereco) && p.endereco.length > 0 ? String(p.endereco[0]) : (p.endereco ?? ''),
+        descricao: p.descricao ?? '',
+      }))
+
+      const motoristasMapeados = (Array.isArray(motoristas) ? motoristas : []).map((m) => ({
+        id: m.idMotorista ?? m.id ?? m.pk ?? null,
+        nome: m.nome ?? '',
+        nascimento: m.dataNascimento ?? m.nascimento ?? '',
+        cpf: m.cpf ?? '',
+        email: m.email ?? '',
+        telefone: m.telefone ?? '',
+        endereco: m.endereco ?? '',
+        descricao: m.descricao ?? '',
+      }))
+
+      const { useUserProfileStore } = await import('@/stores/userProfile')
+      const userProfile = useUserProfileStore()
+      userProfile.passageiros = passageirosMapeados
+      userProfile.motoristas = motoristasMapeados
+    } catch (e) {
+      erroCarregamento.value = e?.message ?? String(e)
+    } finally {
+      carregando.value = false
+    }
+  }
+
   return {
     selectedVan,
     vanPassengers,
@@ -256,6 +293,8 @@ export const useAdminStore = defineStore('admin', () => {
     capacidadeRestante,
     rotaEmEdicao,
     rotasEditadas,
+    carregando,
+    erroCarregamento,
     selectVan,
     addPassenger,
     removePassenger,
@@ -271,6 +310,7 @@ export const useAdminStore = defineStore('admin', () => {
     setPassengers,
     salvarRotaEditada,
     getRotaEditada,
+    loadBackendData,
   }
 })
 

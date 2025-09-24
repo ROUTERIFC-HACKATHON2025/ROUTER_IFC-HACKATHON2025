@@ -96,7 +96,7 @@ onUnmounted(() => {
             <h3 :style="{ color: themeManager.detalhe }">Indy Tour</h3>
             <p :style="{ color: themeManager.text }">
               A IndyTour, criada em 2020, é uma empresa de transporte por vans que atende os estudantes do IFC com segurança e conforto...
-              <RouterLink to="/IndyTour" :style="{ color: themeManager.detalheAlternativo }" @click="authStore.mudarStateEmpresa('Indy')">saiba mais</RouterLink>
+              <RouterLink to="/IndyTour" :style="{ color: themeManager.detalheAlternativo }" @click="authStore.mudarStateEmpresa('Indy')">Saiba mais</RouterLink>
             </p>
             <div class="empresa-redes-sociais">
               <a href="https://www.instagram.com/indytour.oficial" target="_blank" :style="{ color: themeManager.detalhe }"><span class="mdi mdi-instagram"></span></a>
@@ -111,7 +111,7 @@ onUnmounted(() => {
             <h3 :style="{ color: themeManager.detalhe }">Sul Turismo</h3>
             <p :style="{ color: themeManager.text }">
               A Sul Turismo, criada em 2015, atua no transporte de estudantes com foco em eficiência e qualidade...
-              <RouterLink to="/IndySul" :style="{ color: themeManager.detalheAlternativo }" @click="authStore.mudarStateEmpresa('Sul')">saiba mais</RouterLink>
+              <RouterLink to="/IndySul" :style="{ color: themeManager.detalheAlternativo }" @click="authStore.mudarStateEmpresa('Sul')">Saiba mais</RouterLink>
             </p>
             <div class="empresa-redes-sociais">
               <a href="https://www.instagram.com/sul.turismo.jlle" target="_blank" :style="{ color: themeManager.detalhe }"><span class="mdi mdi-instagram"></span></a>
