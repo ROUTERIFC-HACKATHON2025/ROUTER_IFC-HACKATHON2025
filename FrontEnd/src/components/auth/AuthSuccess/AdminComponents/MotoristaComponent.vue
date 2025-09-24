@@ -42,51 +42,38 @@ function selecionarMotorista(motorista) {
 
 <template>
     <section :style="{ color: themeManager.text }">
-        <h1 class="titulo" :style="{ color: themeManager.text }">
-            PÁGINA DE
-            <span class="azul" :style="{ color: themeManager.detalheAlternativo }">
-                GERENCIAMENTO
-            </span>
-        </h1>
+       <div class="tabs" :style="{ backgroundColor: themeManager.detalhe }">
+        <div class="tabs-button">
+          <button :class="{ active: admin.page === 'transportes' }" @click="authState.mudarAdminPage('configVans')"
+          :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">
+          Transportes
+        </button>
+        <button :class="{ active: admin.page === 'passageiros' }" @click="authState.mudarAdminPage('passageiro')"
+          :style="{  backgroundColor: themeManager.detalhe, color: '#fff' }">
+          Passageiros
+        </button>
+        <button :class="{ active: admin.page === 'motoristas' }" @click="authState.mudarAdminPage('motorista')"
+          :style="{ backgroundColor: '#fff', color: themeManager.detalhe }">
+          Motoristas
+        </button>
+        </div>
+        <div class="tabs-sair">
+          <button :class="{ active: admin.page === 'motoristas' }" @click="authState.mudarAdminPage('vans')"
+          :style="{ backgroundColor: '#fff', color: themeManager.detalhe  }">
+          Sair da Van
+        </button>
+        </div>
+      </div>
+      <div class="gerenciar" :style="{ backgroundColor: themeManager.fundo }">
+      <div class="header-actions">
+        <button class="btn-cadastrar" @click="authState.mudarAdminPage('addmotorista')" :style="{ backgroundColor: themeManager.detalhe }">
+          Adicionar Motorista
+        </button>
 
-        <p class="footer" :style="{ color: themeManager.text }">
-            <button class="link" @click="authState.mudarAdminPage('configVans')"
-                :style="{ color: themeManager.detalhe }">
-                &larr; Voltar
-            </button>
-        </p>
-
-        <div class="gerenciar" :style="{ borderColor: themeManager.detalhe }">
-            <div class="header" :style="{ backgroundColor: themeManager.detalhe }">
-                <h2>GERENCIAR<br> MOTORISTAS</h2>
-                <div class="search">
-                    <input type="text" placeholder="Buscar por nome do motorista..." v-model="busca" :style="{
-                        backgroundColor: '#fff',
-                        color: '#000',
-                        border: '2px solid ' + themeManager.detalhe
-                    }" />
-                    <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe }"></span>
-                </div>
-            </div>
-
-            <div v-if="busca.trim()" class="resultados-busca" :style="{ color: themeManager.text }">
-                <p>
-                    {{ motoristasFiltrados.length }} motorista{{ motoristasFiltrados.length !== 1 ? 's' : '' }} encontrado{{ motoristasFiltrados.length !== 1 ? 's' : '' }}
-                    {{ motoristasFiltrados.length !== userProfile.motoristas.length ? ` de ${userProfile.motoristas.length}` : '' }}
-                    para "{{ busca }}"
-                </p>
-            </div>
+      </div>
 
             <div class="lista-motoristas" :style="{ backgroundColor: '#fff', color: '#000' }">
                 <div v-for="m in motoristasFiltrados" :key="m.id" class="motorista">
-                    <div class="linha-motorista" @click="toggleExpand(m.id)">
-                        <div class="info-motorista">
-                            <img src="/src-auth/motorista.png" class="avatar" />
-                            <span>{{ m.nome }}</span>
-                        </div>
-                        <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === m.id }"></span>
-                    </div>
-
                         <div v-if="expandidoId === m.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
                             <div class="card-detalhes">
                                 <div class="avatar-container">
@@ -137,73 +124,79 @@ function selecionarMotorista(motorista) {
 </template>
 
 <style scoped>
-section{
-    padding: 0px 100px 100px 100px;
-
-}
-.titulo {
-    font-size: 3rem;
-    margin: 30px 0 0px 0;
+section {
+  padding: 60px 100px 100px 100px;
 }
 
-.link {
-    background: none;
-    border: none;
-    text-decoration: underline;
-    font-weight: 500;
-    cursor: pointer;
-    margin-bottom: 30px;
+.tabs {
+  display: flex;
+  justify-content: right;
+  gap: 20px;
+  margin: 0px;
+  padding: 20px 20px;
+  box-shadow: 0 0px 30px rgba(0, 0, 0, 0.142);
+  border-radius: 10px 10px 0 0;
+}
+
+.tabs button {
+  border: none;
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tabs-button{
+  margin-right: 280px;
 }
 
 .gerenciar {
-    margin-top: 30px;
-    border: 1px solid;
-    border-radius: 8px;
+  border-radius: 0 0 10px 10px;
+  padding: 20px 30px;
+  box-shadow: 0 0px 30px rgba(0, 0, 0, 0.142);
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 50px;
-    border-radius: 8px 8px 0 0;
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-h2 {
-    font-size: 2rem;
-    text-align: left;
-    color: #fff;
+.btn-cadastrar {
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .search {
-    position: relative;
-    margin: 8px 0;
+  position: relative;
 }
 
 .search input {
-    padding: 10px 38px 10px 15px;
-    border-radius: 25px;
-    width: 400px;
-    font-size: 1rem;
-    border: 2px solid;
+  padding: 8px 38px 8px 15px;
+  border-radius: 25px;
+  width: 400px;
+  font-size: 1rem;
+  border: 2px solid;
 }
 
 .search input:focus {
-    outline: none;
+  outline: none;
 }
 
 .search .mdi {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.3em;
-    pointer-events: none;
-    transition: transform 0.3s ease;
-}
-
-.search input:focus+.mdi {
-    transform: translateY(-50%) scale(1.2);
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.3em;
 }
 
 .lista-motoristas {

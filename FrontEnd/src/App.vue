@@ -2,11 +2,14 @@
 import { RouterView } from 'vue-router'
 import NavigationBarComponent from './components/NavigationBarComponent.vue'
 import FooterBarComponent from './components/FooterBarComponent.vue'
+import { useThemeManagerStore } from '@/stores/theme/themeManager'
+
+const themeManager = useThemeManagerStore()
 </script>
 
 <template>
   <NavigationBarComponent/>
-  <main >
+  <main :style="{ backgroundColor: themeManager.fundo }">
     <RouterView class="view"/>
   </main>
   <FooterBarComponent/>

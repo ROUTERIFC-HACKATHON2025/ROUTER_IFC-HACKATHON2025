@@ -149,9 +149,9 @@ function voltarParaConfigVans() {
     <div class="tabs" :style="{ backgroundColor: themeManager.detalhe }">
     <div class="tabs-button">
       <button :class="{ active: admin.page === 'transportes' }" @click="authState.mudarAdminPage('configVans')"
-        :style="{  backgroundColor: '#fff', color: themeManager.detalhe }">Transportes</button>
+        :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">Transportes</button>
       <button :class="{ active: admin.page === 'passageiros' }" @click="authState.mudarAdminPage('passageiro')"
-        :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">Passageiros</button>
+        :style="{ backgroundColor: '#fff', color: themeManager.detalhe }">Passageiros</button>
       <button :class="{ active: admin.page === 'motoristas' }" @click="authState.mudarAdminPage('motorista')"
         :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">Motoristas</button>
     </div>
@@ -164,10 +164,10 @@ function voltarParaConfigVans() {
   <div class="gerenciar" :style="{ backgroundColor: themeManager.fundo }">
     <div class="header-actions">
       <div class="buttons">
-        <button class="btn-cadastrar" @click="authState.mudarAdminPage('configVans')" :style="{ backgroundColor: themeManager.detalhe }">
+        <button class="btn-cadastrar" @click="authState.mudarAdminPage('passageiro')" :style="{ backgroundColor: themeManager.detalhe }">
         Sair
       </button>
-      <button class="btn-cadastrar" @click="authState.mudarAdminPage('configVans')" :style="{ border: '2px solid' + themeManager.detalhe, color: themeManager.detalhe }">
+      <button class="btn-cadastrar" @click="authState.mudarAdminPage('passageiro')" :style="{ border: '2px solid' + themeManager.detalhe, color: themeManager.detalhe }">
         Salvar
       </button>
       </div>
@@ -218,7 +218,7 @@ function voltarParaConfigVans() {
     <!-- COLUNA DIREITA -->
     <div class="col-direita">
       <header class="header-direita">
-        <h3>{{ tituloRota }} - 06:00</h3>
+        <h3>Passageiros da Van</h3>
         <span class="contador">{{ passageirosAdicionados.length }}/{{ vanSelecionada.acentos }}</span>
       </header>
 
