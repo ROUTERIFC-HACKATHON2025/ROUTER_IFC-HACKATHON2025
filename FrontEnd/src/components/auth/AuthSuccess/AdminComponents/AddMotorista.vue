@@ -13,27 +13,21 @@ const admin = useAdminStore()
 const busca = ref('')
 const expandidoId = ref(null)
 
-const passageirosFiltrados = computed(() => {
-    if (!busca.value.trim()) return userProfile.passageiros
+const motoristasFiltrados = computed(() => {
+    if (!busca.value.trim()) return userProfile.motoristas
 
     const termoBusca = busca.value.toLowerCase().trim()
-    return userProfile.passageiros.filter(p => p.nome && p.nome.toLowerCase().includes(termoBusca))
+    return userProfile.motoristas.filter(m => m.nome && m.nome.toLowerCase().includes(termoBusca))
 })
 
 const toggleExpand = (id) => {
     expandidoId.value = expandidoId.value === id ? null : id
 }
 
-function adicionarNaVan(passageiro) {
-    admin.addPassenger(passageiro)
+function selecionarMotorista(motorista) {
+    admin.selectDriver(motorista)
     authState.mudarAdminPage('configVans')
 }
-
-function jaAdicionado(id) {
-    return admin.isPassengerAdded(id)
-}
-
-
 </script>
 
 <template>
@@ -43,20 +37,20 @@ function jaAdicionado(id) {
       <button :class="{ active: admin.page === 'transportes' }" @click="authState.mudarAdminPage('configVans')"
         :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">Transportes</button>
       <button :class="{ active: admin.page === 'passageiros' }" @click="authState.mudarAdminPage('passageiro')"
-        :style="{ backgroundColor: '#fff', color: themeManager.detalhe }">Passageiros</button>
+        :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">Passageiros</button>
       <button :class="{ active: admin.page === 'motoristas' }" @click="authState.mudarAdminPage('motorista')"
-        :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">Motoristas</button>
+        :style="{ backgroundColor: '#fff', color: themeManager.detalhe }">Motoristas</button>
     </div>
     <div class="tabs-sair">
       <button @click="authState.mudarAdminPage('vans')"
-        :style="{ backgroundColor: '#fff', color: themeManager.detalhe  }">Sair da Van</button>
+        :style="{ backgroundColor: '#fff', color: themeManager.detalhe }">Sair da Van</button>
     </div>
   </div>
 
   <div class="gerenciar" :style="{ backgroundColor: themeManager.fundo }">
     <div class="header-actions">
-      <button class="btn-cadastrar" @click="authState.mudarAdminPage('addpassageiro')" :style="{ backgroundColor: themeManager.detalhe }">
-        Adicionar Passageiro
+      <button class="btn-cadastrar" @click="authState.mudarAdminPage('motorista')" :style="{ backgroundColor: themeManager.detalhe }">
+        Voltar
       </button>
 
       <div class="search">
@@ -70,43 +64,53 @@ function jaAdicionado(id) {
       </div>
     </div>
 
-    <div class="lista-passageiros" :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }">
-      <div v-for="p in passageirosFiltrados" :key="p.id" class="passageiro">
-        <div class="linha-passageiro" @click="toggleExpand(p.id)">
-          <div class="info-passageiro">
-            <img src="/src-auth/passageiro.png" class="avatar" />
-            <span>{{ p.nome }}</span>
+    <div class="lista-motoristas" :style="{ backgroundColor: '#fff', color: '#000' }">
+      <div v-for="m in motoristasFiltrados" :key="m.id" class="motorista">
+        <div class="linha-motorista" @click="toggleExpand(m.id)">
+          <div class="info-motorista">
+            <img src="/src-auth/motorista.png" class="avatar" />
+            <span>{{ m.nome }}</span>
           </div>
-          <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === p.id }"></span>
+          <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === m.id }"></span>
         </div>
 
-        <div v-if="expandidoId === p.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
+        <div v-if="expandidoId === m.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
           <div class="card-detalhes">
             <div class="avatar-container">
-              <img src="/src-auth/passageiro.png" class="avatarG" />
-              <h3>{{ p.nome }}</h3>
+              <img src="/src-auth/motorista.png" class="avatarG" />
+              <h3>{{ m.nome }}</h3>
             </div>
             <div class="info">
-              <p><strong>Data de nascimento:</strong> {{ p.nascimento }}</p>
-              <p><strong>CPF:</strong> {{ p.cpf }}</p>
-              <p><strong>E-mail:</strong> {{ p.email }}</p>
-              <p><strong>Telefone:</strong> {{ p.telefone }}</p>
-              <p class="descricao" :style="{ color: '#000' }">{{ p.descricao }}</p>
+              <p><strong>Data de nascimento:</strong> {{ m.nascimento }}</p>
+              <p><strong>CPF:</strong> {{ m.cpf }}</p>
+              <p><strong>E-mail:</strong> {{ m.email }}</p>
+              <p><strong>Telefone:</strong> {{ m.telefone }}</p>
             </div>
-            <div class="enderecos">
-              <h3>ENDEREÇOS:</h3>
-              <ul>
-                <li>📍 {{ p.endereco }}</li>
-              </ul>
+            <div class="vans">
+              <h3>Vans:</h3>
+              <p v-if="!admin.isDriverAssigned(m.id)">Nenhuma van cadastrada a esse motorista</p>
+              <p v-else>Motorista cadastrado em uma van</p>
+              <button
+                class="btn-add"
+                :disabled="admin.selectedVan && admin.selectedVan.status === 'Manutenção'"
+                :style="{
+                  backgroundColor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? '#666' : themeManager.detalheAlternativo,
+                  opacity: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 0.6 : 1,
+                  cursor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'not-allowed' : 'pointer'
+                }"
+                @click="(admin.selectedVan && admin.selectedVan.status !== 'Manutenção') && selecionarMotorista(m)"
+              >
+                {{ (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'Van em Manutenção' : 'Adicionar Motorista' }}
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div v-if="busca.trim() && passageirosFiltrados.length === 0" class="nenhum-passageiro">
-        <div class="nenhum-passageiro-content">
+      <div v-if="busca.trim() && motoristasFiltrados.length === 0" class="nenhum-motorista">
+        <div class="nenhum-motorista-content">
           <span class="mdi mdi-account-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>
-          <h3>Nenhum passageiro encontrado</h3>
+          <h3>Nenhum motorista encontrado</h3>
           <p>Tente usar termos diferentes na busca</p>
           <button class="btn-limpar-busca" @click="busca = ''" :style="{ color: themeManager.detalhe }">
             Limpar busca
@@ -194,16 +198,16 @@ section {
   font-size: 1.3em;
 }
 
-.lista-passageiros {
+.lista-motoristas {
     display: flex;
     flex-direction: column;
 }
 
-.passageiro {
+.motorista {
     border-top: 1px solid #ccc;
 }
 
-.linha-passageiro {
+.linha-motorista {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -218,7 +222,7 @@ section {
     margin-right: 10px;
 }
 
-.info-passageiro {
+.info-motorista {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -272,33 +276,22 @@ section {
     padding: 0 50px;
 }
 
-.info .descricao {
-    width: 100%;
-    height: 120px;
-    margin-top: 10px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 10px;
-    font-size: 1rem;
-}
-
-.enderecos {
+.vans {
     width: 200px;
 }
 
-.enderecos h3{
+.vans h3{
   color: #fff;
   font-size: 2rem;
   border-bottom: 1px solid #ccc;
 }
 
-.enderecos ul {
+.vans ul {
     list-style: none;
     padding: 0;
 }
 
-.enderecos li {
+.vans li {
     padding: 5px 0;
     border-bottom: 1px solid #ccc;
 }
@@ -307,21 +300,11 @@ section {
     color: white;
     border: none;
     padding: 15px;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     margin-top: 10px;
     cursor: pointer;
     border-radius: 5px;
     width: 100%;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
 }
 
 .resultados-busca {
@@ -335,25 +318,25 @@ section {
     margin: 0;
 }
 
-.nenhum-passageiro {
+.nenhum-motorista {
     text-align: center;
     padding: 40px 20px;
 }
 
-.nenhum-passageiro-content {
+.nenhum-motorista-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
 }
 
-.nenhum-passageiro-content h3 {
+.nenhum-motorista-content h3 {
     margin: 0;
     font-size: 1.5rem;
     color: inherit;
 }
 
-.nenhum-passageiro-content p {
+.nenhum-motorista-content p {
     margin: 0;
     font-size: 1rem;
     opacity: 0.7;
@@ -372,9 +355,7 @@ section {
 .btn-limpar-busca:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
-</style>
 
-<style scoped>
 @media (max-width: 768px) {
 
   section{
@@ -430,12 +411,12 @@ h2 {
     margin: 30px 0;
 }
 
-.enderecos {
+.vans {
     width: 250px;
     margin: 0 45px;
 }
 
-.enderecos h3{
+.vans h3{
   text-align: center;
   border-bottom: 1px solid #ccc;
 

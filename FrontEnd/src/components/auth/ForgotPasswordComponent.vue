@@ -226,11 +226,11 @@ function goBack() {
   border-radius: 12px;
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: transform 0.3s;
 }
 
 .submit-btn:hover {
-  opacity: 0.9;
+  transform: scale(1.05);
 }
 
 .back-btn {

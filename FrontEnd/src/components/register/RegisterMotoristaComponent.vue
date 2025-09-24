@@ -80,9 +80,8 @@ onMounted(() => {
 
 <template>
   <section class="form-container animate-on-scroll" :style="{ color: themeManager.text }">
-    <h1>CADASTRO <span :style="{ color: themeManager.detalheAlternativo }">MOTORISTA</span></h1>
 
-    <form @submit.prevent="cadastrar" :style="{ borderColor: themeManager.detalheAlternativo }">
+    <form @submit.prevent="cadastrar" >
       <div class="space animate-on-scroll" :style="{ borderColor: themeManager.detalheAlternativo }">
         <h2>
           <span class="mdi mdi-account" :style="{ color: themeManager.detalheAlternativo }"></span>
@@ -196,16 +195,12 @@ onMounted(() => {
 }
 
 form {
-  border: 2px solid;
   padding: 40px 100px 160px 100px;
   border-radius: 10px;
+  margin-top: 100px;
+  box-shadow: 0 0px 30px rgba(0, 0, 0, 0.142);
 }
 
-h1 {
-  text-align: center;
-  font-size: 2.5rem;
-  padding: 100px 0 60px 0;
-}
 
 .space {
   margin-bottom: 15px;

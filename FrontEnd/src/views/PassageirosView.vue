@@ -46,7 +46,6 @@ async function deleteSelectedPassageiro(idPassageiros) {
     <div>
         <h1>Gerenciamento de Passageiros</h1>
 
-        <!-- Formulário para Adicionar/Editar Passageiro -->
         <form @submit.prevent="submitPassageiro">
             <h2>{{ isEditing ? 'Editar Passageiro' : 'Adicionar Novo Passageiro' }}</h2>
             <div>

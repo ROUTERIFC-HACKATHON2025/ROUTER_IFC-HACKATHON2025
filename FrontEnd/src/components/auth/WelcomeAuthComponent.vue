@@ -38,62 +38,27 @@ onMounted(async () => {
 </script>
 
 <template>
-  <section class="notebook" 
-    :style="{ backgroundColor: themeManager.fundo, background: 'url(' + themeAuth.linha + ') no-repeat left center', backgroundSize: 'auto 101%' }">
-    
-    <img class="login-image animate-on-scroll fade-in-left" :src="themeAuth.menininha" alt="Ilustração de login" />
-
-    <div class="login-box animate-on-scroll fade-in-right">
-      <h1 :style="{ color: themeManager.text }">
-        SE CADASTRE <br />
-        <span class="highlight" :style="{ color: themeManager.detalheAlternativo }">ROUTER IFC!</span>
-      </h1>
-
-      <p class="subtext" :style="{ color: themeManager.text }">Como você deseja se cadastrar?</p>
-
-      <div class="button-group">
-        <RouterLink to="/Register">
-          <button class="login-button glow" :style="{ backgroundColor: themeManager.detalhe }" @click="authState.mudarStateAuth('Passageiro')">
-            <span class="mdi mdi-seat-passenger icon"></span>
-            <p>Conta Passageiro</p>
-          </button>
-        </RouterLink>
-
-        <RouterLink to="/Register">
-          <button class="login-button glow" :style="{ backgroundColor: themeManager.detalhe }" @click="authState.mudarStateAuth('Motorista')">
-            <span class="mdi mdi-bus-school icon"></span>
-            <p>Conta Motorista</p>
-          </button>
-        </RouterLink>
-      </div>
-
-      <p class="footer" :style="{ color: themeManager.text }">
-        <button class="link" @click="authState.mudarState('inicio')" :style="{ color: themeManager.detalhe }">
-          &larr; Voltar
-        </button>
-      </p>
-    </div>
-  </section>
-
   <section class="celular" :style="{ backgroundColor: themeManager.fundo }">
     <div class="login-box animate-on-scroll fade-in-right">
-      <h1 :style="{ color: themeManager.text }">
+      <h1 :style="{ color: themeManager.detalhe }">
         CADASTRE-SE NO <br />
-        <span class="highlight" :style="{ color: themeManager.detalheAlternativo }">ROUTER IFC!</span>
+        ROUTER IFC!
       </h1>
 
       <p class="subtext" :style="{ color: themeManager.text }">Como você deseja se cadastrar?</p>
 
       <div class="button-group">
         <RouterLink to="/Register">
-          <button class="login-button glow" :style="{ backgroundColor: themeManager.detalhe }" @click="authState.mudarStateAuth('Passageiro')">
+          <button class="login-button glow" :style="{ backgroundColor: themeManager.detalhe }"
+            @click="authState.mudarStateAuth('Passageiro')">
             <span class="mdi mdi-seat-passenger icon"></span>
             <p>Conta Passageiro</p>
           </button>
         </RouterLink>
 
         <RouterLink to="/Register">
-          <button class="login-button glow" :style="{ backgroundColor: themeManager.detalhe }" @click="authState.mudarStateAuth('Motorista')">
+          <button class="login-button glow" :style="{ backgroundColor: themeManager.detalhe }"
+            @click="authState.mudarStateAuth('Motorista')">
             <span class="mdi mdi-bus-school icon"></span>
             <p>Conta Motorista</p>
           </button>
@@ -124,6 +89,7 @@ onMounted(async () => {
 .fade-in-left {
   transform: translateY(50px);
 }
+
 .fade-in-left.in-view {
   transform: translateY(0);
 }
@@ -131,11 +97,13 @@ onMounted(async () => {
 .fade-in-right {
   transform: translateY(50px);
 }
+
 .fade-in-right.in-view {
   transform: translateY(0);
 }
 
-.notebook, .celular {
+.notebook,
+.celular {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -143,7 +111,7 @@ onMounted(async () => {
   min-width: 80vh;
 }
 
-.celular{
+.celular {
   display: none;
 }
 
@@ -223,6 +191,7 @@ h1 {
   .notebook {
     display: none;
   }
+
   .celular {
     display: block;
     align-items: center;
