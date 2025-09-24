@@ -2,6 +2,7 @@
 import { ref, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
+import { useAdminStore } from '@/stores/admin'
 
 import VansComponent from './AdminComponents/VansComponent.vue'
 import ConfigVans from './AdminComponents/ConfigVans.vue'
@@ -13,11 +14,17 @@ import AddPassageiro from './AdminComponents/AddPassageiro.vue'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
+const admin = useAdminStore()
 
 onMounted(async () => {
   themeManager.init()
   authState.restaurarStateEmpresa()
   await nextTick()
+
+  // Carregar dados reais do backend
+  try {
+    await admin.loadBackendData()
+  } catch (_) {}
 
   const elements = document.querySelectorAll('.animate-on-scroll')
   const observer = new IntersectionObserver((entries) => {

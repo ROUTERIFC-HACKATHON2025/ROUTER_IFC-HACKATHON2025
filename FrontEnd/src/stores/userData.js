@@ -15,15 +15,30 @@ export const useUserDataStore = defineStore('userData', () => {
   const motoristasAPI = new MotoristaAPI()
   const enderecosAPI = new EnderecosAPI()
 
+  function getToken() {
+    return localStorage.getItem('jwt_access')
+  }
+
+  function ensureAuthHeader() {
+    const t = getToken()
+    if (t) axios.defaults.headers.common['Authorization'] = `Bearer ${t}`
+  }
+
   // Buscar dados do usuário logado
   async function fetchUserData() {
     loading.value = true
     error.value = null
 
     try {
+      ensureAuthHeader()
+      const token = getToken()
+      if (!token) {
+        error.value = 'Não autenticado'
+        return false
+      }
       // Primeiro, verificar qual tipo de usuário é
       const meResponse = await axios.get('http://localhost:8000/api/usuarios/me/', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('jwt_access')}` }
+        headers: { Authorization: `Bearer ${token}` }
       })
 
       const userInfo = meResponse.data
@@ -76,17 +91,23 @@ export const useUserDataStore = defineStore('userData', () => {
             telefone: motorista.telefone,
             email: motorista.email,
             senha: motorista.senha,
+            nascimento: motorista.dataNascimento || motorista.nascimento || '',
             cpf: motorista.cpf,
             codigoCnh: motorista.codigoCnh,
             empresa: motorista.empresa,
-            endereco: 'Endereço do motorista' // Adicionar campo endereço se necessário
+            endereco: 'Endereço do motorista'
           }
         }
       }
 
     } catch (err) {
       console.error('Erro ao buscar dados do usuário:', err)
-      error.value = 'Erro ao carregar dados do usuário'
+      if (err?.response?.status === 401) {
+        error.value = 'Sessão expirada. Faça login novamente.'
+      } else {
+        error.value = 'Erro ao carregar dados do usuário'
+      }
+      return false
     } finally {
       loading.value = false
     }
@@ -147,6 +168,14 @@ export const useUserDataStore = defineStore('userData', () => {
     error.value = null
 
     try {
+      ensureAuthHeader()
+      if (!userData.value || !userData.value.id) {
+        const ok = await fetchUserData()
+        if (!ok || !userData.value?.id) {
+          error.value = 'Usuário não carregado. Faça login novamente.'
+          return false
+        }
+      }
       if (userType.value === 'passageiro') {
         console.log('Criando endereço para passageiro:', userData.value.id)
 
@@ -195,6 +224,14 @@ export const useUserDataStore = defineStore('userData', () => {
     error.value = null
 
     try {
+      ensureAuthHeader()
+      if (!userData.value || !userData.value.id) {
+        const ok = await fetchUserData()
+        if (!ok || !userData.value?.id) {
+          error.value = 'Usuário não carregado. Faça login novamente.'
+          return false
+        }
+      }
       if (userType.value === 'passageiro') {
         // Atualizar endereço
         const enderecoAtualizado = await enderecosAPI.updateEndereco({
@@ -202,10 +239,17 @@ export const useUserDataStore = defineStore('userData', () => {
           ...enderecoData
         })
 
-        // Atualizar dados locais
-        const index = userData.value.enderecos.findIndex(addr => addr.idEndereco === idEndereco)
-        if (index !== -1) {
-          userData.value.enderecos[index] = enderecoAtualizado
+        // Recarregar do backend para refletir o estado oficial
+        try {
+          const enderecosData = await enderecosAPI.getEnderecosAll()
+          const idsVinculados = (userData.value.endereco || []).map?.(x => x) || userData.value.enderecos.map(e => e.idEndereco)
+          userData.value.enderecos = enderecosData.filter(addr => idsVinculados.includes(addr.idEndereco))
+        } catch (_) {
+          // fallback: atualiza localmente se reload falhar
+          const index = userData.value.enderecos.findIndex(addr => addr.idEndereco === idEndereco)
+          if (index !== -1) {
+            userData.value.enderecos[index] = enderecoAtualizado
+          }
         }
 
         return true
@@ -226,6 +270,14 @@ export const useUserDataStore = defineStore('userData', () => {
     error.value = null
 
     try {
+      ensureAuthHeader()
+      if (!userData.value || !userData.value.id) {
+        const ok = await fetchUserData()
+        if (!ok || !userData.value?.id) {
+          error.value = 'Usuário não carregado. Faça login novamente.'
+          return false
+        }
+      }
       if (userType.value === 'passageiro') {
         console.log('Removendo endereço:', idEndereco, 'do passageiro:', userData.value.id)
 
