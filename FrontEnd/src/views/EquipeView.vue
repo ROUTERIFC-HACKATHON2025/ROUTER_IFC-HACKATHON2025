@@ -83,7 +83,7 @@ onMounted(() => {
 
     <section class="equipe-cards">
       <h2 :style="{ color: themeManager.detalhe }">
-        CONHEÇA A EQUIPE QUE DESENVOLVEU<br />O ROUTE IFC!
+        CONHEÇA A EQUIPE QUE DESENVOLVEU<br />O ROUTER IFC!
       </h2>
 
       <div class="cards">
