@@ -15,17 +15,24 @@ const expandidoId = ref(null)
 
 const motoristasFiltrados = computed(() => {
     if (!busca.value.trim()) {
-        return userProfile.motoristas
+        return admin.selectedDriver ? [admin.selectedDriver] : []
     }
 
     const termoBusca = busca.value.toLowerCase().trim()
+    const motoristaAtual = admin.selectedDriver
 
-    return userProfile.motoristas.filter(m => {
-        if (m.nome && m.nome.toLowerCase().includes(termoBusca)) return true
+    if (motoristaAtual && motoristaAtual.nome && motoristaAtual.nome.toLowerCase().includes(termoBusca)) {
+        return [motoristaAtual]
+    }
 
-        return false
-    })
+    return []
 })
+
+const todosMotoristas = computed(() => {
+    return userProfile.motoristas || []
+})
+
+const mostrarTodosMotoristas = ref(false)
 
 const toggleExpand = (id) => {
     expandidoId.value = expandidoId.value === id ? null : id
@@ -33,7 +40,12 @@ const toggleExpand = (id) => {
 
 function selecionarMotorista(motorista) {
     admin.selectDriver(motorista)
-    authState.mudarAdminPage('configVans')
+    mostrarTodosMotoristas.value = false
+    // Não redireciona, fica na aba de motoristas
+}
+
+function toggleMostrarTodos() {
+    mostrarTodosMotoristas.value = !mostrarTodosMotoristas.value
 }
 
 
@@ -42,93 +54,132 @@ function selecionarMotorista(motorista) {
 
 <template>
     <section :style="{ color: themeManager.text }">
-        <h1 class="titulo" :style="{ color: themeManager.text }">
-            PÁGINA DE
-            <span class="azul" :style="{ color: themeManager.detalheAlternativo }">
-                GERENCIAMENTO
-            </span>
-        </h1>
+       <div class="tabs" :style="{ backgroundColor: themeManager.detalhe }">
+        <div class="tabs-button">
+          <button :class="{ active: admin.page === 'transportes' }" @click="authState.mudarAdminPage('configVans')"
+          :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">
+          Transportes
+        </button>
+        <button :class="{ active: admin.page === 'passageiros' }" @click="authState.mudarAdminPage('passageiro')"
+          :style="{  backgroundColor: themeManager.detalhe, color: '#fff' }">
+          Passageiros
+        </button>
+        <button :class="{ active: admin.page === 'motoristas' }" @click="authState.mudarAdminPage('motorista')"
+          :style="{ backgroundColor: '#fff', color: themeManager.detalhe }">
+          Motoristas
+        </button>
+        </div>
+        <div class="tabs-sair">
+          <button :class="{ active: admin.page === 'motoristas' }" @click="authState.mudarAdminPage('vans')"
+          :style="{ backgroundColor: '#fff', color: themeManager.detalhe  }">
+          Sair da Van
+        </button>
+        </div>
+      </div>
+      <div class="gerenciar" :style="{ backgroundColor: themeManager.fundo }">
+      <div class="header-actions">
+        <button class="btn-cadastrar" @click="toggleMostrarTodos()" :style="{ backgroundColor: themeManager.detalhe }">
+          {{ mostrarTodosMotoristas ? 'Voltar' : 'Adicionar Motorista' }}
+        </button>
 
-        <p class="footer" :style="{ color: themeManager.text }">
-            <button class="link" @click="authState.mudarAdminPage('configVans')"
-                :style="{ color: themeManager.detalhe }">
-                &larr; Voltar
-            </button>
-        </p>
+        <div class="search">
+          <input 
+            type="text" 
+            placeholder="Pesquisar..." 
+            v-model="busca"
+            :style="{ borderColor: themeManager.detalhe, color: themeManager.text, backgroundColor: themeManager.fundo }"
+          />
+          <span class="mdi mdi-magnify" aria-hidden="true" :style="{color: themeManager.detalhe}"></span>
+        </div>
+      </div>
 
-        <div class="gerenciar" :style="{ borderColor: themeManager.detalhe }">
-            <div class="header" :style="{ backgroundColor: themeManager.detalhe }">
-                <h2>GERENCIAR<br> MOTORISTAS</h2>
-                <div class="search">
-                    <input type="text" placeholder="Buscar por nome do motorista..." v-model="busca" :style="{
-                        backgroundColor: '#fff',
-                        color: '#000',
-                        border: '2px solid ' + themeManager.detalhe
-                    }" />
-                    <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe }"></span>
-                </div>
-            </div>
-
-            <div v-if="busca.trim()" class="resultados-busca" :style="{ color: themeManager.text }">
-                <p>
-                    {{ motoristasFiltrados.length }} motorista{{ motoristasFiltrados.length !== 1 ? 's' : '' }} encontrado{{ motoristasFiltrados.length !== 1 ? 's' : '' }}
-                    {{ motoristasFiltrados.length !== userProfile.motoristas.length ? ` de ${userProfile.motoristas.length}` : '' }}
-                    para "{{ busca }}"
-                </p>
-            </div>
-
-            <div class="lista-motoristas" :style="{ backgroundColor: '#fff', color: '#000' }">
-                <div v-for="m in motoristasFiltrados" :key="m.id" class="motorista">
-                    <div class="linha-motorista" @click="toggleExpand(m.id)">
-                        <div class="info-motorista">
-                            <img src="/src-auth/motorista.png" class="avatar" />
-                            <span>{{ m.nome }}</span>
-                        </div>
-                        <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === m.id }"></span>
-                    </div>
-
-                        <div v-if="expandidoId === m.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
-                            <div class="card-detalhes">
-                                <div class="avatar-container">
-                                    <img src="/src-auth/motorista.png" class="avatarG" />
-                                    <h3>{{ m.nome }}</h3>
-                                </div>
-                                <div class="info">
-                                    <p><strong>Data de nascimento:</strong> {{ m.nascimento }}</p>
-                                    <p><strong>CPF:</strong> {{ m.cpf }}</p>
-                                    <p><strong>E-mail:</strong> {{ m.email }}</p>
-                                    <p><strong>Telefone:</strong> {{ m.telefone }}</p>
-                                </div>
-                                <div class="vans">
-                                    <h3>Vans:
-                                    </h3>
-                                    <p v-if="!admin.isDriverAssigned(m.id)">Nenhuma van cadastrada a esse motorista</p>
-                                    <p v-else>Motorista cadastrado em uma van</p>
-                                    <button
-                                        class="btn-add"
-                                        :disabled="admin.selectedVan && admin.selectedVan.status === 'Manutenção'"
-                                        :style="{
-                                            backgroundColor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? '#666' : themeManager.detalheAlternativo,
-                                            opacity: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 0.6 : 1,
-                                            cursor: (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'not-allowed' : 'pointer'
-                                        }"
-                                        @click="(admin.selectedVan && admin.selectedVan.status !== 'Manutenção') && selecionarMotorista(m)"
-                                    >
-                                        {{ (admin.selectedVan && admin.selectedVan.status === 'Manutenção') ? 'Van em Manutenção' : 'Adicionar Motorista' }}
-                                    </button>
+            <div class="lista-motoristas" :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }">
+                <!-- Mostrar motorista da van quando não estiver no modo de adicionar -->
+                <div v-if="!mostrarTodosMotoristas">
+                    <div v-for="m in motoristasFiltrados" :key="m.id" class="motorista">
+                            <div class="linha-motorista" @click="toggleExpand(m.id)">
+                              <div class="info-motorista">
+                                <img src="/src-auth/motorista.png" class="avatar" />
+                                <span>{{ m.nome }}</span>
+                              </div>
+                              <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === m.id }"></span>
+                            </div>
+                            <div v-if="expandidoId === m.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
+                                <div class="card-detalhes">
+                                    <div class="avatar-container">
+                                        <img src="/src-auth/motorista.png" class="avatarG" />
+                                        <h3>{{ m.nome }}</h3>
+                                    </div>
+                                    <div class="info">
+                                        <p><strong>Data de nascimento:</strong> {{ m.nascimento }}</p>
+                                        <p><strong>CPF:</strong> {{ m.cpf }}</p>
+                                        <p><strong>E-mail:</strong> {{ m.email }}</p>
+                                        <p><strong>Telefone:</strong> {{ m.telefone }}</p>
+                                    </div>
+                                    <div class="vans">
+                                        <h3>Vans:
+                                        </h3>
+                                        <p v-if="!admin.isDriverAssigned(m.id)">Nenhuma van cadastrada a esse motorista</p>
+                                        <p v-else>Motorista cadastrado em uma van</p>
+                                        <button
+                                            class="btn-add"
+                                            :style="{ backgroundColor: '#fff', color: themeManager.detalhe }"
+                                            @click="admin.clearDriver()"
+                                        >
+                                            Remover da Van
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+                    </div>
+
+                    <div v-if="motoristasFiltrados.length === 0" class="nenhum-motorista">
+                        <div class="nenhum-motorista-content">
+                            <span class="mdi mdi-account-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>
+                            <h3>Nenhum motorista designado para a van</h3>
+                            <p>Clique em "Adicionar Motorista" para selecionar um motorista</p>
                         </div>
+                    </div>
                 </div>
 
-                <div v-if="busca.trim() && motoristasFiltrados.length === 0" class="nenhum-motorista">
-                    <div class="nenhum-motorista-content">
-                        <span class="mdi mdi-account-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>
-                        <h3>Nenhum motorista encontrado</h3>
-                        <p>Tente usar termos diferentes na busca</p>
-                        <button class="btn-limpar-busca" @click="busca = ''" :style="{ color: themeManager.detalhe }">
-                            Limpar busca
-                        </button>
+                <!-- Mostrar todos os motoristas cadastrados quando estiver no modo de adicionar -->
+                <div v-else>
+                    <div v-for="m in todosMotoristas" :key="m.id" class="motorista">
+                            <div class="linha-motorista" @click="toggleExpand(m.id)">
+                              <div class="info-motorista">
+                                <img src="/src-auth/motorista.png" class="avatar" />
+                                <span>{{ m.nome }}</span>
+                              </div>
+                              <span class="mdi mdi-chevron-down seta" :class="{ rotaciona: expandidoId === m.id }"></span>
+                            </div>
+                            <div v-if="expandidoId === m.id" class="detalhes" :style="{ backgroundColor: themeManager.detalhe }">
+                                <div class="card-detalhes">
+                                    <div class="avatar-container">
+                                        <img src="/src-auth/motorista.png" class="avatarG" />
+                                        <h3>{{ m.nome }}</h3>
+                                    </div>
+                                    <div class="info">
+                                        <p><strong>Data de nascimento:</strong> {{ m.nascimento }}</p>
+                                        <p><strong>CPF:</strong> {{ m.cpf }}</p>
+                                        <p><strong>E-mail:</strong> {{ m.email }}</p>
+                                        <p><strong>Telefone:</strong> {{ m.telefone }}</p>
+                                    </div>
+                                    <div class="vans">
+                                        <h3>Vans:
+                                        </h3>
+                                        <p v-if="!admin.isDriverAssigned(m.id)">Nenhuma van cadastrada a esse motorista</p>
+                                        <p v-else>Motorista cadastrado em uma van</p>
+                                        <button
+                                            class="btn-add"
+                                            :style="{ backgroundColor: admin.isDriverAssigned(m.id) ? '#999' : '#fff', color: themeManager.detalhe }"
+                                            :disabled="admin.isDriverAssigned(m.id)"
+                                            @click="selecionarMotorista(m)"
+                                        >
+                                            {{ admin.isDriverAssigned(m.id) ? 'Já Adicionado' : 'Adicionar ao Veículo' }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -137,73 +188,79 @@ function selecionarMotorista(motorista) {
 </template>
 
 <style scoped>
-section{
-    padding: 0px 100px 100px 100px;
-
-}
-.titulo {
-    font-size: 3rem;
-    margin: 30px 0 0px 0;
+section {
+  padding: 60px 100px 100px 100px;
 }
 
-.link {
-    background: none;
-    border: none;
-    text-decoration: underline;
-    font-weight: 500;
-    cursor: pointer;
-    margin-bottom: 30px;
+.tabs {
+  display: flex;
+  justify-content: right;
+  gap: 20px;
+  margin: 0px;
+  padding: 20px 20px;
+  box-shadow: 0 0px 30px rgba(0, 0, 0, 0.142);
+  border-radius: 10px 10px 0 0;
+}
+
+.tabs button {
+  border: none;
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tabs-button{
+  margin-right: 280px;
 }
 
 .gerenciar {
-    margin-top: 30px;
-    border: 1px solid;
-    border-radius: 8px;
+  border-radius: 0 0 10px 10px;
+  padding: 20px 30px;
+  box-shadow: 0 0px 30px rgba(0, 0, 0, 0.142);
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 50px;
-    border-radius: 8px 8px 0 0;
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-h2 {
-    font-size: 2rem;
-    text-align: left;
-    color: #fff;
+.btn-cadastrar {
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .search {
-    position: relative;
-    margin: 8px 0;
+  position: relative;
 }
 
 .search input {
-    padding: 10px 38px 10px 15px;
-    border-radius: 25px;
-    width: 400px;
-    font-size: 1rem;
-    border: 2px solid;
+  padding: 8px 38px 8px 15px;
+  border-radius: 25px;
+  width: 400px;
+  font-size: 1rem;
+  border: 2px solid;
 }
 
 .search input:focus {
-    outline: none;
+  outline: none;
 }
 
 .search .mdi {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.3em;
-    pointer-events: none;
-    transition: transform 0.3s ease;
-}
-
-.search input:focus+.mdi {
-    transform: translateY(-50%) scale(1.2);
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.3em;
 }
 
 .lista-motoristas {
@@ -365,69 +422,165 @@ h2 {
 }
 
 @media (max-width: 768px) {
-
-  section{
-    padding: 0px 0px 50px 0px;
-
+  section {
+    padding: 80px 10px;
   }
-  .titulo {
-  font-size: 2.5rem;
-  margin: 20px 0 0px 0;
+
+  .tabs {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .tabs-button {
+    margin-right: 0;
+    justify-content: center;
+  }
+
+  .tabs button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 8px 15px;
+  }
+
+  .page {
+    padding: 15px;
+  }
+
+  .gerenciar {
+    padding: 20px 20px 20px 10px;
+  }
+
+  .search input {
+    width: 100%;
+    min-width: 200px;
+    font-size: 0.95rem;
+    margin-left: 10px;
+  }
 }
 
-.link {
-  margin-bottom: 0px;
-}
 
-.gerenciar {
-  margin-top: 30px;
-    border: none;
-    border-radius: 0;
-}
+@media (max-width: 768px) {
+  section {
+    padding: 80px 10px;
+  }
 
-.header {
-  display: block;
-  padding: 20px 5px 20px 5px;
-  border-radius: 0;
-}
+  .tabs {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+  }
 
-h2 {
-    font-size: 1.5rem;
-    text-align: center;
-}
+  .tabs-button {
+    margin-right: 0;
+    justify-content: center;
+  }
+
+  .tabs button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 8px 15px;
+  }
+
+  .page {
+    padding: 15px;
+  }
+
+  .gerenciar {
+    padding: 20px 20px 20px 10px;
+  }
+
+  .search input {
+    width: 100%;
+    min-width: 200px;
+    font-size: 0.95rem;
+    margin-left: 10px;
+  }
+
 
 .detalhes {
     padding: 50px 20px;
+    color: #fff;
+    margin: 10px;
     border-radius: 8px;
 }
 
 .card-detalhes {
     display: block;
+    gap: 0px;
+    text-align: left;
+}
+
+.avatar-container {
+  text-align: center;
+  display: block;
+  margin: 0;
+}
+
+.avatar-container h3 {
+  display: block;
+  margin-top: 10px;
+  color: #fff;
+  font-size: 2rem;
 }
 
 .avatarG{
- width: 150px;
-    height: 150px;
+ width: 200px;
+    height: 200px;
+    border-radius: 50%;
 }
 
 .info {
+    flex: 1;
     border-right: none;
     border-left: none;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    padding: 30px 0px;
-    margin: 30px 0;
+    padding: 0 0px;
+}
+
+.info .descricao {
+    width: 100%;
+    height: 120px;
+    margin-top: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1rem;
 }
 
 .vans {
-    width: 250px;
-    margin: 0 45px;
+    width: 200px;
+    margin-left: 35px;
 }
 
 .vans h3{
+  color: #fff;
+  font-size: 2rem;
   text-align: center;
   border-bottom: 1px solid #ccc;
+}
 
+.enderecos ul {
+    list-style: none;
+    padding: 0;
+}
+
+.enderecos li {
+    padding: 5px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.btn-add {
+    background-color: white;
+    border: none;
+    padding: 15px;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
 }
 }
 

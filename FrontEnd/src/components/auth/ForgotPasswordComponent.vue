@@ -1,13 +1,14 @@
 <script setup>
 import axios from 'axios'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useThemeManagerStore } from '@/stores/theme/themeManager'
 import { useAuthStateStore } from '@/stores/authState'
 
 const themeManager = useThemeManagerStore()
 const authState = useAuthStateStore()
 
-const step = ref('request') 
+// Estados
+const step = ref('request')
 const email = ref('')
 const uid = ref('')
 const token = ref('')
@@ -16,25 +17,45 @@ const confirmPassword = ref('')
 const erro = ref('')
 const sucesso = ref('')
 
+// Inicialização
 onMounted(async () => {
   themeManager.init()
-  authState.restaurarState()
+  authState.restaurarStateEmpresa?.() || authState.restaurarState()
 
+  await nextTick()
+
+  // Verifica se existe token na URL (link enviado por e-mail)
   const urlParams = new URLSearchParams(window.location.search)
   const resetToken = urlParams.get('token')
   if (resetToken) {
     token.value = resetToken
     step.value = 'reset'
   }
+
+  // Animação ao rolar a página
+  const animateElements = () => {
+    const elements = document.querySelectorAll('.animate-on-scroll')
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        entry.target.classList.toggle('in-view', entry.isIntersecting)
+      })
+    }, { threshold: 0.1 })
+
+    elements.forEach(el => observer.observe(el))
+  }
+
+  animateElements()
+  window.addEventListener('scroll', animateElements)
 })
 
+// Solicitar link de redefinição
 async function requestReset() {
   erro.value = ''
   sucesso.value = ''
   try {
-    const response = await axios.post('http://localhost:8000/api/password-reset/', { email: email.value })
-    uid.value = response.data.uid
-    token.value = response.data.token
+    const { data } = await axios.post('http://localhost:8000/api/password-reset/', { email: email.value })
+    uid.value = data.uid
+    token.value = data.token
     step.value = 'reset'
   } catch (err) {
     console.error('Erro ao solicitar redefinição:', err)
@@ -42,23 +63,24 @@ async function requestReset() {
   }
 }
 
+// Redefinir senha
 async function resetPassword() {
   erro.value = ''
   sucesso.value = ''
+
   if (newPassword.value !== confirmPassword.value) {
     erro.value = 'As senhas não coincidem.'
     return
   }
+
   try {
-    const response = await axios.post('http://localhost:8000/api/password-reset/confirm/', {
+    await axios.post('http://localhost:8000/api/password-reset/confirm/', {
       uid: uid.value,
       token: token.value,
       password: newPassword.value
     })
     sucesso.value = 'Senha alterada com sucesso. Você pode fazer login agora.'
-    setTimeout(() => {
-      authState.mudarState('inicio')
-    }, 2000)
+    setTimeout(() => authState.mudarState('inicio'), 2000)
   } catch (err) {
     console.error('Erro ao alterar senha:', err)
     erro.value = 'Erro ao alterar senha. Verifique o token.'
@@ -71,12 +93,15 @@ function goBack() {
 </script>
 
 <template>
-  <section class="forgot-container" :style="{ backgroundColor: themeManager.fundo }">
+  <section class="forgot-container animate-on-scroll" :style="{ backgroundColor: themeManager.fundo }">
     <div class="form-box" :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.text }">
       <h1 class="title" :style="{ color: themeManager.text }">Esqueceu sua senha?</h1>
 
+      <!-- Passo 1: Solicitar e-mail -->
       <div v-if="step === 'request'">
-        <p class="subtitle" :style="{ color: themeManager.text }">Digite seu e-mail para receber instruções de redefinição.</p>
+        <p class="subtitle" :style="{ color: themeManager.text }">
+          Digite seu e-mail para receber instruções de redefinição.
+        </p>
 
         <form @submit.prevent="requestReset" class="form">
           <p v-if="erro" class="erro-msg">{{ erro }}</p>
@@ -84,11 +109,7 @@ function goBack() {
 
           <div class="input-group">
             <span class="mdi mdi-email icon" :style="{ color: themeManager.text }"></span>
-            <input
-              v-model="email"
-              type="email"
-              placeholder="E-mail"
-              class="input"
+            <input v-model="email" type="email" placeholder="E-mail" class="input"
               :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, borderColor: themeManager.text }"
               required />
           </div>
@@ -99,8 +120,11 @@ function goBack() {
         </form>
       </div>
 
-      <div v-else-if="step === 'reset'">
-        <p class="subtitle" :style="{ color: themeManager.text }">Digite o UID, token e sua nova senha.</p>
+      <!-- Passo 2: Redefinir senha -->
+      <div v-else>
+        <p class="subtitle" :style="{ color: themeManager.text }">
+          Digite o UID, token e sua nova senha.
+        </p>
 
         <form @submit.prevent="resetPassword" class="form">
           <p v-if="erro" class="erro-msg">{{ erro }}</p>
@@ -108,44 +132,28 @@ function goBack() {
 
           <div class="input-group">
             <span class="mdi mdi-account icon" :style="{ color: themeManager.text }"></span>
-            <input
-              v-model="uid"
-              type="text"
-              placeholder="UID"
-              class="input"
+            <input v-model="uid" type="text" placeholder="UID" class="input"
               :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, borderColor: themeManager.text }"
               required />
           </div>
 
           <div class="input-group">
             <span class="mdi mdi-key icon" :style="{ color: themeManager.text }"></span>
-            <input
-              v-model="token"
-              type="text"
-              placeholder="Token"
-              class="input"
+            <input v-model="token" type="text" placeholder="Token" class="input"
               :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, borderColor: themeManager.text }"
               required />
           </div>
 
           <div class="input-group">
             <span class="mdi mdi-lock icon" :style="{ color: themeManager.text }"></span>
-            <input
-              v-model="newPassword"
-              type="password"
-              placeholder="Nova senha"
-              class="input"
+            <input v-model="newPassword" type="password" placeholder="Nova senha" class="input"
               :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, borderColor: themeManager.text }"
               required />
           </div>
 
           <div class="input-group">
             <span class="mdi mdi-lock icon" :style="{ color: themeManager.text }"></span>
-            <input
-              v-model="confirmPassword"
-              type="password"
-              placeholder="Confirme a nova senha"
-              class="input"
+            <input v-model="confirmPassword" type="password" placeholder="Confirme a nova senha" class="input"
               :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, borderColor: themeManager.text }"
               required />
           </div>
@@ -164,6 +172,18 @@ function goBack() {
 </template>
 
 <style scoped>
+/* Mesmos estilos, apenas limpos */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(.2, .65, .25, 1);
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .forgot-container {
   display: flex;
   justify-content: center;
@@ -184,7 +204,7 @@ function goBack() {
 
 .title {
   font-size: 2rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: .5rem;
 }
 
 .subtitle {
@@ -223,20 +243,20 @@ function goBack() {
   font-size: 1rem;
   font-weight: bold;
   border: none;
-  border-radius: 12px;
+  border-radius: 30px;
   color: white;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: transform .3s;
 }
 
 .submit-btn:hover {
-  opacity: 0.9;
+  transform: scale(1.05);
 }
 
 .back-btn {
   background: none;
   border: none;
-  font-size: 0.9rem;
+  font-size: .9rem;
   cursor: pointer;
   margin-top: 1rem;
   text-decoration: underline;
@@ -244,19 +264,15 @@ function goBack() {
 
 .erro-msg {
   color: red;
-  font-size: 0.9rem;
+  font-size: .9rem;
 }
 
 .sucesso-msg {
   color: green;
-  font-size: 0.9rem;
+  font-size: .9rem;
 }
 
 @media (max-width: 768px) {
-  .forgot-container {
-    padding: 10px;
-  }
-
   .form-box {
     padding: 20px;
   }

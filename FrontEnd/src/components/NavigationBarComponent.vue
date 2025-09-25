@@ -60,12 +60,15 @@ const isLoading = ref(false)
 const selectedIndex = ref(-1)
 const isMobile = ref(window.innerWidth < 768)
 
+const showSearchInput = ref(false)
+const searchInputRef = ref(null)
+
 const searchData = ref({
   paginas: [
     { id: 1, nome: 'Início', descricao: 'Página principal', tipo: 'pagina', rota: '/' },
     { id: 2, nome: 'Sobre Nós', descricao: 'Conheça o projeto', tipo: 'pagina', rota: '/SobreNos' },
     { id: 3, nome: 'Equipe', descricao: 'Nossa equipe', tipo: 'pagina', rota: '/equipe' },
-    { id: 4, nome: 'Empresas', descricao: 'Parceiros de transporte', tipo: 'pagina', rota: '/Empresa' },
+    { id: 4, nome: 'Empresas', descricao: 'Parceiros de transporte', tipo: 'empresa', rota: '/Empresa' },
     { id: 5, nome: 'Login', descricao: 'Acesse sua conta', tipo: 'pagina', rota: '/login' },
     { id: 6, nome: 'Cadastro Motorista', descricao: 'Crie sua conta', tipo: 'pagina', rota: '/Register', alterar: 'Motorista' },
     { id: 7, nome: 'Cadastro Passageiro', descricao: 'Crie sua conta', tipo: 'pagina', rota: '/Register', alterar: 'Passageiro' }
@@ -75,6 +78,13 @@ const searchData = ref({
     { id: 2, nome: 'Sul Turismo', descricao: 'Transporte escolar de qualidade', tipo: 'empresa', rota: '/IndySul', alterar: 'Sul' }
   ]
 })
+
+function toggleSearchInput() {
+  showSearchInput.value = !showSearchInput.value
+  if (showSearchInput.value) {
+    setTimeout(() => searchInputRef.value?.focus(), 50)
+  }
+}
 
 function performSearch() {
   const query = searchQuery.value.toLowerCase().trim()
@@ -161,6 +171,7 @@ function handleClickOutside(event) {
   if (searchContainer && !searchContainer.contains(event.target)) {
     showSearchResults.value = false
     selectedIndex.value = -1
+    showSearchInput.value = false 
   }
 }
 
@@ -214,50 +225,26 @@ onUnmounted(() => {
 <template>
   <div v-if="menuAberto" class="menu-overlay" @click="fecharMenu" :style="{ opacity: overlayOpacity }"></div>
 
-  <div class="notebook" :class="showHeader ? 'animate-slideDown' : 'animate-slideUp'">
-    <div class="top-bar" :style="{ backgroundColor: themeManager.detalhe }">
+  <div class="notebook" :class="showHeader ? 'animate-slideDown' : 'animate-slideUp'"
+    :style="{ backgroundColor: themeManager.fundoHeader }">
+    <div class="top-bar" :style="{ backgroundColor: themeManager.detalhe, borderBottom: '2px solid ' + themeManager.detalhe }">
       <p>Transporte escolar para o IFC de forma segura e fácil.</p>
       <span :class="themeManager.icone" @click="themeManager.toggleTheme"></span>
     </div>
 
-    <header :style="{ backgroundColor: themeManager.fundo }">
-      <div class="container"
-        :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
-        <div class="logo">
+    <header>
+      <div class="container" :style="{ borderBottom: '2px solid ' + themeManager.detalhe }">
+        <div class="left-section">
+          <div class="logo">
           <RouterLink to="/">
-            <img :src="themeManager.logo" alt="Logotipo ROUTER" />
+            <img src="/src-logos/logo.png" alt="Logotipo ROUTER" />
             <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">
               Sua rota<br /><span>mais segura</span>
             </p>
           </RouterLink>
         </div>
 
-        <div class="search" :style="{ color: themeManager.text }">
-          <input v-model="searchQuery" @keydown="handleSearchKeydown" type="text"
-            placeholder="Pesquisar páginas, empresas..."
-            :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, border: '2px solid ' + themeManager.detalhe }" />
-          <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe }"></span>
-          <div v-if="isLoading" class="search-loading">
-            <div class="spinner"></div>
-          </div>
-          <div v-if="showSearchResults && searchResults.length > 0" class="search-results"
-            :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
-            <div v-for="(result, index) in searchResults" :key="`${result.tipo}-${result.id}`"
-              class="search-result-item" :class="{ 'selected': index === selectedIndex }"
-              @click="navigateToResult(result)" @mouseenter="selectedIndex = index">
-              <div class="result-content">
-                <div class="result-title">{{ result.nome }}</div>
-                <div class="result-subtitle">{{ result.descricao }} <span v-if="result.alterar"
-                    class="result-alterar">({{ result.alterar }})</span></div>
-              </div>
-            </div>
-          </div>
-          <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results"
-            :style="{ backgroundColor: themeManager.fundo, borderColor: themeManager.detalhe }">
-            <span class="mdi mdi-magnify-close" :style="{ color: themeManager.detalhe }"></span>
-            <p :style="{ color: themeManager.text }">Nenhum resultado encontrado</p>
-          </div>
-        </div>
+
 
         <nav aria-label="Menu principal">
           <ul>
@@ -273,24 +260,56 @@ onUnmounted(() => {
             <li>
               <RouterLink to="/empresa" :style="{ color: themeManager.text }">Empresas</RouterLink>
             </li>
-            <li>
-              <RouterLink to="/login">
-                <span class="mdi mdi-account" :style="{ color: themeManager.text }"></span>
-              </RouterLink>
-            </li>
           </ul>
         </nav>
+        </div>
+        <div class="right-section">
+          <div class="search" :style="{ color: themeManager.text }">
+            <button v-if="!showSearchInput" @click.stop="toggleSearchInput" class="search-lupa" :style="{ width: '33px', height: '33px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }">
+              <span class="mdi mdi-magnify" :style="{ color: themeManager.detalhe, fontSize: '1.5rem' }"></span>
+            </button>
+
+              <input v-if="showSearchInput" ref="searchInputRef" v-model="searchQuery"
+                type="text" placeholder="Pesquisar páginas, empresas..."
+                :style="{ color: themeManager.text, border: '2px solid ' + themeManager.detalhe }" />
+            <span v-if="showSearchInput" class="mdi mdi-magnify" :style="{ color: themeManager.detalhe, fontSize: '1.5rem' }"></span>
+
+            <div v-if="showSearchResults && searchResults.length > 0" class="search-results"
+              :style="{ backgroundColor: '#ffffff96', borderColor: themeManager.detalhe }">
+              <div v-for="(result, index) in searchResults" :key="`${result.tipo}-${result.id}`"
+                class="search-result-item" :class="{ 'selected': index === selectedIndex }"
+                @click="navigateToResult(result)" @mouseenter="selectedIndex = index">
+                <div class="result-content">
+                  <div class="result-title">{{ result.nome }}</div>
+                  <div class="result-subtitle">{{ result.descricao }} <span v-if="result.alterar"
+                      class="result-alterar">({{ result.alterar }})</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="showSearchResults && searchResults.length === 0 && searchQuery.trim()" class="search-no-results"
+              :style="{ backgroundColor: '#ffffff96', borderColor: themeManager.detalhe }">
+              <span class="mdi mdi-magnify-close" :style="{ color: themeManager.detalhe }"></span>
+              <p :style="{ color: themeManager.text }">Nenhum resultado encontrado</p>
+            </div>
+          </div>
+        <div class="login" :style="{ backgroundColor: themeManager.detalhe }">
+          <RouterLink to="/login">
+            <span class="mdi mdi-account"></span>
+          </RouterLink>
+        </div>
       </div>
-    </header>
+        </div>
+
+  </header>
   </div>
 
   <div class="celular" :class="showHeader ? 'animate-slideDown' : 'animate-slideUp'">
     <header :style="{ backgroundColor: themeManager.fundo }">
-      <div class="container"
-        :style="{ backgroundColor: themeManager.fundo, borderBottom: '2px solid ' + themeManager.detalhe }">
+      <div class="container" :style="{ borderBottom: '2px solid ' + themeManager.detalhe }">
         <div class="logo-bar">
           <RouterLink to="/">
-            <img :src="themeManager.logo" alt="Logotipo ROUTER" />
+            <img src="/src-logos/logo.png" alt="Logotipo ROUTER" />
             <p :style="{ color: themeManager.text, borderLeft: '2px solid ' + themeManager.text }">Sua
               rota<br /><span>mais segura</span></p>
           </RouterLink>
@@ -356,6 +375,20 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.search-lupa {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
 .menu-overlay {
   position: fixed;
   top: 0;
@@ -407,14 +440,12 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 5vw;
+  padding: 2px 5vw;
   color: #e4e4e4;
-  font-weight: 600;
-  font-size: 0.85rem;
 }
 
 .top-bar p {
-  font-size: 1em;
+  font-size: 0.8rem;
 }
 
 .top-bar span {
@@ -433,8 +464,12 @@ onUnmounted(() => {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  padding: 5px 0;
   margin: 0 120px;
+}
+
+.left-section {
+  display: flex;
+  gap: 250px;
 }
 
 .logo a {
@@ -458,15 +493,16 @@ onUnmounted(() => {
 
 .search {
   position: relative;
-  margin: 8px 0;
+  margin: 12px 0;
 }
 
 .search input {
-  padding: 10px 38px 10px 15px;
+  padding: 6px 38px 6px 15px;
   border-radius: 25px;
   width: 400px;
   font-size: 1rem;
   border: 2px solid;
+  background-color: transparent;
 }
 
 .search input:focus {
@@ -492,7 +528,7 @@ onUnmounted(() => {
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
+  background: #ffffff96;
   border: 2px solid;
   border-top: none;
   border-radius: 0 0 15px 15px;
@@ -608,7 +644,6 @@ onUnmounted(() => {
   top: 100%;
   left: 0;
   right: 0;
-  background: white;
   border: 2px solid;
   border-top: none;
   border-radius: 0 0 15px 15px;
@@ -645,6 +680,7 @@ nav ul {
   margin: 0;
   align-items: center;
   flex-wrap: wrap;
+  margin-top: 5px;
 }
 
 nav ul li {
@@ -669,6 +705,23 @@ nav ul li a:hover {
 
 nav ul li a span {
   font-size: 2em;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.login {
+  padding: 0px 8px;
+  border-radius: 100%;
+}
+
+.login .mdi {
+  font-size: 1.5rem;
+  color: #e4e4e4;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 @keyframes slideDown {

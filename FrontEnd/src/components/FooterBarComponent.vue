@@ -9,12 +9,12 @@ onMounted(themeManager.init)
 
 <template>
   <footer class="notebook" :style="{ backgroundColor: themeManager.detalhe }">
+    <div class="footer-top">
+      <img src="/src-logos/logo-footer.png" alt="">
+      <button class="login"><RouterLink to="/login">Entrar</RouterLink></button>
+    </div>
     <div class="container">
       <div class="footer-content">
-        <div class="footer-section">
-          <img :src="themeManager.logofooter" alt="Logo da Router">
-          <p>Transporte escolar <br> para o IFC de forma <br> segura e fácil.</p>
-        </div>
         <div class="footer-section">
           <h2>Serviços</h2>
           <ul>
@@ -29,6 +29,14 @@ onMounted(themeManager.init)
             <li><RouterLink to="/SobreNos" :style="{ color: '#fff' }">Sobre nós</RouterLink></li>
             <li><RouterLink to="/equipe" :style="{ color: '#fff' }">Equipe</RouterLink></li>
             <li><RouterLink to="/Empresa" :style="{ color: '#fff' }">Empresa</RouterLink></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h2>Contato</h2>
+          <ul>
+            <li>routerifc@gmail.com</li>
+            <li>(47) 99125-5265</li>
+            <li>@routerifc</li>
           </ul>
         </div>
         <div class="footer-section-icons">
@@ -46,40 +54,44 @@ onMounted(themeManager.init)
     </div>
   </footer>
   <footer class="celular" :style="{ backgroundColor: themeManager.detalhe }">
+    <div class="footer-top">
+      <img src="/src-logos/logo-footer.png" alt="">
+      <button class="login"><RouterLink to="/login">Entrar</RouterLink></button>
+    </div>
     <div class="container">
       <div class="footer-content">
-        <div>
-          <div class="footer-section" id="footer-section-space">
-            <img :src="themeManager.logofooter" alt="Logo da Router">
-            <p>Transporte escolar <br> para o IFC de forma <br> segura e fácil.</p>
-          </div>
-          <div class="footer-section">
-            <h2>Serviços</h2>
-            <ul>
-              <li><RouterLink to="/login" :style="{ color: '#fff' }">Para Motoristas</RouterLink></li>
-              <li><RouterLink to="/login" :style="{ color: '#fff' }">Para Estudantes</RouterLink></li>
-              <li><RouterLink to="/empresas" :style="{ color: '#fff' }">Para Empresas</RouterLink></li>
-            </ul>
-          </div>
+        <div class="footer-section">
+          <h2>Serviços</h2>
+          <ul>
+            <li><RouterLink to="/login" :style="{ color: '#fff' }">Para Motoristas</RouterLink></li>
+            <li><RouterLink to="/login" :style="{ color: '#fff' }">Para Estudantes</RouterLink></li>
+            <li><RouterLink to="/empresas" :style="{ color: '#fff' }">Para Empresas</RouterLink></li>
+          </ul>
         </div>
-        <div>
-          <div class="footer-section-icons">
+        <div class="footer-section">
+          <h2>Empresa</h2>
+          <ul>
+            <li><RouterLink to="/SobreNos" :style="{ color: '#fff' }">Sobre nós</RouterLink></li>
+            <li><RouterLink to="/equipe" :style="{ color: '#fff' }">Equipe</RouterLink></li>
+            <li><RouterLink to="/Empresa" :style="{ color: '#fff' }">Empresa</RouterLink></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h2>Contato</h2>
+          <ul>
+            <li>routerifc@gmail.com</li>
+            <li>(47) 99125-5265</li>
+            <li>@routerifc</li>
+          </ul>
+        </div>
+        <div class="footer-section-icons">
           <h2>Redes Sociais</h2>
           <ul class="social-icons">
             <li><a href="https://www.instagram.com/routerifc" target="_blank"><span class="mdi mdi-instagram"></span></a></li>
             <li><a href="https://www.facebook.com/people/Router-Ifc/pfbid02KpkKuZ7J8CJAtjzN1ZfBAWa8nDZXJBhJYyaehTLEJ5Wm6KLJ6cxik9zB8UU4Mp5Ql/" target="_blank"><span class="mdi mdi-facebook"></span></a></li>
             <li><a href="https://www.twitter.com/routerifc" target="_blank"><span class="mdi mdi-twitter"></span></a></li>
           </ul>
-        </div>
-
-          <div class="footer-section">
-            <h2>Empresa</h2>
-            <ul>
-              <li><RouterLink to="/SobreNos" :style="{ color: '#fff' }">Sobre nós</RouterLink></li>
-              <li><RouterLink to="/equipe" :style="{ color: '#fff' }">Equipe</RouterLink></li>
-              <li><RouterLink to="/Empresa" :style="{ color: '#fff' }">Empresa</RouterLink></li>
-            </ul>
-          </div>
         </div>
       </div>
       <div class="footer-bottom">
@@ -92,6 +104,35 @@ onMounted(themeManager.init)
 <style scoped>
 footer {
   color: #e4e4e4;
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 100px;
+  border-bottom: 2px solid #e4e4e4;
+}
+
+.footer-top img {
+  width: 150px;
+}
+
+.footer-top button {
+  padding: 10px 20px;
+  background-color: #ffffff;
+  color: #08253c;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.footer-top button a{
+  color: #08253c;
+  font-weight: bold;
+
 }
 
 .container {
@@ -119,6 +160,7 @@ footer {
   font-weight: bold;
   color: #fff;
   margin-bottom: 10px;
+  text-align: left;
 }
 
 .footer-section ul,
@@ -129,6 +171,7 @@ footer {
 
 .footer-section ul li {
   cursor: pointer;
+  font-weight: 500;
 }
 
 .footer-section ul li:hover {
@@ -179,14 +222,37 @@ footer {
     margin-bottom: 50px;
   }
 
+  .footer-top {
+    padding: 10px 20px;
+  }
+
+  .footer-top img {
+    width: 120px;
+  }
+
+  .footer-top button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .footer-content {
+    display: block;
+    padding-bottom: 0;
+  }
+
+  .footer-content .footer-section {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
   .footer-section img {
     width: 100px;
     margin-bottom: 0px;
   }
 
   .footer-section h2 {
-    font-size: 1.5rem;
-    text-align: left;
+    font-size: 1.7rem;
+    text-align: center;
   }
 
   .footer-section ul li {
@@ -210,8 +276,16 @@ footer {
     margin-bottom: 50px;
   }
 
+  .footer-section-icons ul{
+    justify-content: center;
+  }
+
   .social-icons li a {
     font-size: 1.5rem;
+  }
+
+  .footer-bottom {
+    font-size: 0.8rem;
   }
 }
 </style>

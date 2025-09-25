@@ -16,25 +16,19 @@ const vansFiltradas = computed(() => {
   if (!termoBusca.value.trim()) {
     return userProfile.vans
   }
-  
+
   const busca = termoBusca.value.toLowerCase().trim()
-  
+
   return userProfile.vans.filter(van => {
     if (van.nome.toLowerCase().includes(busca)) return true
-    
     if (van.modelo && van.modelo.toLowerCase().includes(busca)) return true
-    
     if (van.marca && van.marca.toLowerCase().includes(busca)) return true
-    
     if (van.placa && van.placa.toLowerCase().includes(busca)) return true
-    
-    if (van.caracteristicas && van.caracteristicas.some(carac => 
+    if (van.caracteristicas && van.caracteristicas.some(carac =>
       carac.toLowerCase().includes(busca)
     )) return true
-    
     const status = admin.getVanStatus(van.id)
     if (status.toLowerCase().includes(busca)) return true
-    
     return false
   })
 })
@@ -48,7 +42,6 @@ function abrirConfigVan(van) {
 
 function destacarTexto(texto, termo) {
   if (!termo || !texto) return texto
-  
   const regex = new RegExp(`(${termo})`, 'gi')
   return texto.replace(regex, '<mark>$1</mark>')
 }
@@ -58,43 +51,39 @@ onMounted(() => {
     const statusPersistido = admin.getVanStatus(van.id)
     van.status = statusPersistido
   })
+  admin.clearPredefinedData()
+  setTimeout(() => {
+    admin.clearPredefinedData()
+  }, 100)
 })
 </script>
 
 <template>
   <section :style="{color: themeManager.text}">
-    <h1 class="titulo" :style="{ color: themeManager.text }">
-      PÁGINA DE 
-      <span class="azul" :style="{ color: themeManager.detalheAlternativo }">
-        GERENCIAMENTO
-      </span>
-    </h1>
-
-    <p class="footer" :style="{ color: themeManager.text }">
-      <button class="link" @click="authState.mudarState('inicio')" :style="{ color: themeManager.detalhe }">
-        &larr; Sair
+    <!-- Tabs -->
+    <div class="tabs" :style="{ backgroundColor: themeManager.detalhe }">
+      <h1 style=" color: #fff;">GERENCIAMENTO</h1>
+      <button @click="authState.mudarState('inicio')" :style="{ color: themeManager.detalhe }">
+        Sair da Pagina
       </button>
-    </p>
+    </div>
 
-    <div class="gerenciar" :style="{ borderColor: themeManager.detalhe }">
-      <div class="header" :style="{backgroundColor: themeManager.detalhe}">
-        <h2>GERENCIAR<br></br> TRANSPORTES</h2>
+    <!-- Caixa de gerenciamento -->
+    <div class="gerenciar" :style="{ backgroundColor: themeManager.fundo }">
+      <div class="header-actions">
         <div class="search">
-          <input 
-            type="text" 
-            placeholder="Pesquisar vans..." 
+          <input
+            type="text"
+            placeholder="Pesquisar..."
             v-model="termoBusca"
-            :style="{
-              backgroundColor: '#fff',
-              color: '#000',
-              border: '2px solid ' + themeManager.detalhe
-            }"
+            :style="{ borderColor: themeManager.detalhe, color: themeManager.text, backgroundColor: themeManager.fundo }"
           />
-          <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
+          <span class="mdi mdi-magnify" aria-hidden="true"></span>
         </div>
       </div>
 
-      <div v-if="termoBusca.trim()" class="resultados-busca" :style="{ color: themeManager.text }">
+      <!-- Resultados -->
+      <div v-if="termoBusca.trim()" class="resultados-busca">
         <p>
           {{ vansFiltradas.length }} van{{ vansFiltradas.length !== 1 ? 's' : '' }} encontrada{{ vansFiltradas.length !== 1 ? 's' : '' }}
           {{ vansFiltradas.length !== userProfile.vans.length ? ` de ${userProfile.vans.length}` : '' }}
@@ -102,28 +91,29 @@ onMounted(() => {
         </p>
       </div>
 
-      <ul :style="{ borderColor: themeManager.detalhe, backgroundColor: '#fff', color: '#000' }">
-        <li v-for="van in vansFiltradas" :key="van.id" class="card-van" :style="{ borderColor: themeManager.detalhe, backgroundColor: '#fff', color: '#000' }" @click="abrirConfigVan(van)">
-          <div class="van-header">
-            <span class="mdi mdi-van-passenger icone" :style="{ color: themeManager.detalhe }"></span>
-            <span class="status-badge" :style="{ backgroundColor: admin.getVanStatus(van.id) === 'Ativo' ? '#4CAF50' : '#FF9800' }">{{ admin.getVanStatus(van.id) }}</span>
-          </div>
-          <h3 v-html="destacarTexto(van.nome, termoBusca)"></h3>
-          <p class="modelo" v-html="destacarTexto(van.modelo, termoBusca)"></p>
-          <p class="placa" v-html="destacarTexto(van.placa, termoBusca)"></p>
-          <p class="capacidade">{{ van.acentos }} lugares</p>
-          <div class="caracteristicas-preview">
-            <span v-for="carac in van.caracteristicas.slice(0, 2)" :key="carac" class="carac-tag">{{ carac }}</span>
-            <span v-if="van.caracteristicas.length > 2" class="carac-tag">+{{ van.caracteristicas.length - 2 }}</span>
+      <!-- Grid de vans -->
+      <ul>
+        <li
+          v-for="van in vansFiltradas"
+          :key="van.id"
+          class="card-van"
+          @click="abrirConfigVan(van)"
+          :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }"
+        >
+          <span class="mdi mdi-van-passenger icone" style="color: #fff;"></span>
+          <div>
+            <h3 v-html="destacarTexto(van.nome, termoBusca)" style="color: #fff;"></h3>
+            <p class="placa" v-html="destacarTexto(van.placa, termoBusca)" style="color: #fff;"></p>
           </div>
         </li>
-        
+
+        <!-- Caso não tenha resultados -->
         <li v-if="termoBusca.trim() && vansFiltradas.length === 0" class="nenhuma-van">
           <div class="nenhuma-van-content">
-            <span class="mdi mdi-van-off" :style="{ color: themeManager.detalhe, fontSize: '4rem' }"></span>
+            <span class="mdi mdi-van-off"></span>
             <h3>Nenhuma van encontrada</h3>
             <p>Tente usar termos diferentes na busca</p>
-            <button class="btn-limpar-busca" @click="termoBusca = ''" :style="{ color: themeManager.detalhe }">
+            <button class="btn-limpar-busca" @click="termoBusca = ''">
               Limpar busca
             </button>
           </div>
@@ -134,52 +124,53 @@ onMounted(() => {
 </template>
 
 <style scoped>
-section{
-    padding: 0px 100px 100px 100px;
-
+section {
+  padding: 60px 100px 100px 100px;
 }
 
-.titulo {
-  font-size: 3rem;
-  margin: 30px 0 0px 0;
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 0px;
+  padding: 20px 40px;
+  box-shadow: 0 0px 30px rgba(0, 0, 0, 0.142);
+  border-radius: 10px 10px 0 0;
 }
 
-.link {
-  background: none;
+.tabs h1 {
+  font-size: 2.5rem;
+}
+
+.tabs button {
   border: none;
-  text-decoration: underline;
-  font-weight: 500;
+  padding: 5px 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1.1rem;
   cursor: pointer;
-  margin-bottom: 30px;
+  transition: all 0.3s ease;
 }
 
 .gerenciar {
-  margin-top: 30px;
-    border: 1px solid ;
-    border-radius: 8px;
+  border-radius: 0 0 10px 10px;
+  padding: 20px 30px;
+  box-shadow: 0 0px 30px rgba(0, 0, 0, 0.142);
 }
 
-.header {
+.header-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   align-items: center;
-  padding: 20px 50px 20px 50px;
-  border-radius: 8px 8px 0 0;
-}
-
-h2 {
-    font-size: 2rem;
-    text-align: left;
-    color: #fff;
+  margin-bottom: 20px;
 }
 
 .search {
   position: relative;
-  margin: 8px 0;
 }
 
 .search input {
-  padding: 10px 38px 10px 15px;
+  padding: 8px 38px 8px 15px;
   border-radius: 25px;
   width: 400px;
   font-size: 1rem;
@@ -196,115 +187,57 @@ h2 {
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.3em;
-  pointer-events: none;
-  transition: transform 0.3s ease;
-}
-
-.search input:focus+.mdi {
-  transform: translateY(-50%) scale(1.2);
+  color: #002f6c;
 }
 
 ul {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 50px 100px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
   list-style: none;
-  padding: 50px 120px 50px 120px;
+  padding: 20px 0;
+  justify-items: center;
 }
 
 .card-van {
-  cursor: pointer;
-  border: 1px solid;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: left;
-  box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
-  min-height: 250px;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 300px;
+  cursor: pointer;
+  box-shadow: 0 0px 30px rgba(0, 0, 0, 0.142);
+  border-radius: 10px;
+  padding: 0 40px;
+  align-items: center;
+  text-align: left;
+  background: #fff;
+  min-width: 320px;
+  max-width: 320px;
+  transition: transform 0.2s ease;
 }
 
 .card-van:hover {
   transform: scale(1.05);
 }
 
-.van-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0px;
-  border-bottom: 2px solid;
-}
-
 .icone {
-  font-size: 100px;
-}
-
-.status-badge {
-  color: white;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: bold;
+  font-size: 90px;
+  margin-bottom: 10px;
+  margin-right: 20px;
 }
 
 .card-van h3 {
-  text-align: center;
-  font-weight: bold;
-  margin: 10px 0;
-  font-size: 1.2rem;
-  color: inherit;
-}
-
-.modelo {
-  font-size: 0.9rem;
-  margin: 5px 0;
-  opacity: 0.8;
-  border-bottom: 1px solid;
-}
-
-.placa {
   font-size: 1rem;
   font-weight: bold;
   margin: 5px 0;
-  border-bottom: 1px solid;
 }
 
-.capacidade {
+.placa {
   font-size: 0.9rem;
-  margin: 5px 0;
-  opacity: 0.7;
-  border-bottom: 1px solid;
-}
-
-.caracteristicas-preview {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  justify-content: center;
-  margin-top: 10px;
-
-}
-
-.carac-tag {
-  color: inherit;
-  padding: 2px 6px;
-  border-radius: 10px;
-  font-size: 0.7rem;
+  color: #444;
 }
 
 .resultados-busca {
-  padding: 10px 20px;
   text-align: center;
   font-size: 0.9rem;
-  opacity: 0.8;
-}
-
-.resultados-busca p {
-  margin: 0;
+  margin-bottom: 15px;
 }
 
 .nenhuma-van {
@@ -320,21 +253,14 @@ ul {
   gap: 15px;
 }
 
-.nenhuma-van-content h3 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: inherit;
-}
-
-.nenhuma-van-content p {
-  margin: 0;
-  font-size: 1rem;
-  opacity: 0.7;
+.nenhuma-van-content .mdi {
+  font-size: 3rem;
+  color: #002f6c;
 }
 
 .btn-limpar-busca {
   background: none;
-  border: 1px solid;
+  border: 1px solid #002f6c;
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
@@ -343,60 +269,67 @@ ul {
 }
 
 .btn-limpar-busca:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 47, 108, 0.1);
 }
 
-mark {
-  background-color: #FFD700;
-  color: #000;
-  padding: 1px 3px;
-  border-radius: 3px;
-  font-weight: bold;
-}
-
+/* ===================== RESPONSIVIDADE ===================== */
 @media (max-width: 768px) {
-  section{
-    padding: 0px 0px 50px 0px;
+  section {
+    padding: 80px 10px;
   }
-  .titulo {
-  font-size: 2.5rem;
-  margin: 10px 0 0px 0;
-}
 
-.link {
-  margin-bottom: 0px;
-}
-
-.gerenciar {
-  margin-top: 30px;
-    border: none;
-    border-radius: 0;
-}
-
-.header {
-  display: block;
-  padding: 20px 5px 20px 5px;
-  border-radius: 0;
-}
-
-h2 {
-    font-size: 1.5rem;
+  .tabs {
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-}
+    padding: 15px 20px;
+    gap: 10px;
+  }
 
-.search input{
-  width: 100%;
-}
+  .tabs h1 {
+    font-size: 1.8rem;
+  }
 
-ul {
-  display: block;
-  gap: 0;
-  padding: 0 0 0 50px;
-}
+  .tabs button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 8px 20px;
+  }
 
-.card-van {
-  margin-top: 20px;
-}
-  
+  .header-actions {
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+
+  .search input {
+    width: 100%;
+    min-width: 330px;
+    font-size: 0.95rem;
+  }
+
+  ul {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 10px 0;
+  }
+
+  .card-van {
+    max-width: 100%;
+    width: 90%;
+    padding: 10px 20px;
+  }
+
+  .icone {
+    font-size: 70px;
+    margin-right: 15px;
+  }
+
+  .card-van h3 {
+    font-size: 1rem;
+  }
+
+  .placa {
+    font-size: 0.85rem;
+  }
 }
 </style>
