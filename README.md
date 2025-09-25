@@ -1,69 +1,99 @@
-# ROUTERIFC
 
-## Tecnologias Utilizadas
+---
 
-- Frontend: (ex: Vue.js, Next.js, HTML, CSS, JavaScript)
-- Backend: (ex: Node.js, Django, DjangoRestFramework) 
-- Banco de Dados: (ex: MySQL) 
+# 🚍 ROUTERIFC
 
-## Integrantes
+Sistema desenvolvido para o **Hackathon IFC 2025**, com foco em otimização das rotas, organização de transporte e integração entre passageiros e empresas.
 
-- Gabriela Senderski
-- Henrique Santiago de Souza Borba
-- Higor Thiago Andresen de Braga
-- Maria Eduarda Gonçalves Tavares
-- Paulo Artur Pereira
+---
 
-## Como Rodar Localmente
+## 📌 Tecnologias Utilizadas
 
-### Clone o repositório:
+* **Frontend:** Vue.js, Node.js, HTML, CSS, JavaScript
+* **Backend:** Django, Django Rest Framework
+* **Banco de Dados:** MySQL
+* **Bibliotecas:** Axios, Lucide Vue, Leaflet
+
+---
+
+## 👩‍💻 Integrantes
+
+* Gabriela Senderski
+* Henrique Santiago de Souza Borba
+* Higor Thiago Andresen de Braga
+* Maria Eduarda Gonçalves Tavares
+* Paulo Artur Pereira
+
+---
+
+## ⚙️ Como Rodar o Projeto Localmente
+
+### 1. Clone o repositório
+
 ```sh
 git clone https://github.com/ROUTERIFC-HACKATHON2025/ROUTER_IFC-HACKATHON2025.git
 ```
 
-### Instale as dependências do FrontEnd:
-Instalar o projeto vue:
-```sh
-npm install
-```
-Instalar biblioteca de requisições axios:
-```sh
-npm install axios
-```
-Instalar a biblioteca lucide:
-```sh
-npm install lucide-vue-next
-```
-Instalar APIGeoLocation:
-```sh
-npm install leaflet ou yarn add leaflet
-```
+---
 
-### Instale as dependências do BackEnd:
-Installar django:
-```sh
-pdm install django
-```
+### 2. Instale as dependências do **Frontend**
 
-## Como iniciar o servidor
-No terminal do VsCode acesse a pasta do backend:
-```sh
-cd BackEnd1
-```
-Inicie a API:
-```sh
-pdm run python manage.py runserver
-```
-Abra o powershell do computador e acesse a pasta do projeto:
-```sh
-cd ROUTER_IFC-HACKATHON2025
-```
-Acesse o FrontEnd:
+Acesse a pasta:
+
 ```sh
 cd FrontEnd
 ```
-Rode o projeto:
+
+Instale as dependências principais:
+
+```sh
+npm install
+```
+
+Instale bibliotecas adicionais:
+
+```sh
+npm install axios
+npm install lucide-vue-next
+npm install leaflet
+```
+
+---
+
+### 3. Instale as dependências do **Backend**
+
+Acesse a pasta:
+
+```sh
+cd BackEnd1
+```
+
+Instale o Django:
+
+```sh
+pdm add django
+```
+
+> ⚠️ Caso ainda não tenha o **pdm** instalado, siga a [documentação oficial](https://pdm.fming.dev/latest/#installation).
+
+---
+
+### 4. Inicie os servidores
+
+#### Backend (API)
+
+Na pasta `BackEnd1`:
+
+```sh
+pdm run python manage.py runserver
+```
+
+#### Frontend (Vue.js)
+
+Em outro terminal, acesse a pasta `FrontEnd`:
+
 ```sh
 npm run dev
 ```
 
+---
