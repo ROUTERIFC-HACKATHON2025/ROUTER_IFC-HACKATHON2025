@@ -255,7 +255,7 @@ button {
   font-size: 1.2rem;
   font-weight: bold;
   border: none;
-  border-radius: 12px;
+  border-radius: 30px;
   color: white;
   cursor: pointer;
   transition: transform 0.3s ease;

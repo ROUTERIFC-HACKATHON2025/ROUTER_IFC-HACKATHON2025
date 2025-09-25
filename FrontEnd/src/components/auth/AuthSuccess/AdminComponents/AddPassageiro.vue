@@ -471,5 +471,45 @@ section {
 }
 
 }
+
+
+@media (max-width: 768px) {
+  section {
+    padding: 80px 10px;
+  }
+
+  .tabs {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .tabs-button {
+    margin-right: 0;
+    justify-content: center;
+  }
+
+  .tabs button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 8px 15px;
+  }
+
+  .page {
+    padding: 15px;
+  }
+
+  .gerenciar {
+    padding: 20px 20px 20px 10px;
+  }
+
+  .search input {
+    width: 100%;
+    min-width: 200px;
+    font-size: 0.95rem;
+    margin-left: 10px;
+  }
+}
 </style>
 

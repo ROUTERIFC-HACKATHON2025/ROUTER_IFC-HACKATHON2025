@@ -67,7 +67,7 @@ function toggleMostrarTodos() {
   <div class="gerenciar" :style="{ backgroundColor: themeManager.fundo }">
       <div class="header-actions">
         <button class="btn-cadastrar" @click="toggleMostrarTodos()" :style="{ backgroundColor: themeManager.detalhe }">
-          {{ mostrarTodosPassageiros ? 'Ver Passageiros da Van' : 'Adicionar Passageiro' }}
+          {{ mostrarTodosPassageiros ? 'Voltar' : 'Adicionar Passageiro' }}
         </button>
 
       <div class="search">
@@ -113,7 +113,7 @@ function toggleMostrarTodos() {
                 </ul>
                 <button
                   class="btn-add"
-                  :style="{ backgroundColor: themeManager.detalheAlternativo }"
+                  :style="{ backgroundColor: '#fff' }"
                   @click="admin.removePassenger(p.id)"
                 >
                   Remover da Van
@@ -163,7 +163,7 @@ function toggleMostrarTodos() {
                 </ul>
                 <button
                   class="btn-add"
-                  :style="{ backgroundColor: jaAdicionado(p.id) ? '#999' : themeManager.detalheAlternativo }"
+                  :style="{ backgroundColor: jaAdicionado(p.id) ? '#999' : '#fff', color: themeManager.detalhe }"
                   :disabled="jaAdicionado(p.id)"
                   @click="adicionarNaVan(p)"
                 >
@@ -365,7 +365,7 @@ section {
 }
 
 .btn-add {
-    color: white;
+    background-color: white;
     border: none;
     padding: 15px;
     font-size: 1.1rem;
@@ -433,74 +433,126 @@ section {
 .btn-limpar-busca:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
-</style>
 
-<style scoped>
 @media (max-width: 768px) {
-
-  section{
-    padding: 0px 0px 50px 0px;
-
+  section {
+    padding: 80px 10px;
   }
-  .titulo {
-  font-size: 2.5rem;
-  margin: 20px 0 0px 0;
-}
 
-.link {
-  margin-bottom: 0px;
-}
+  .tabs {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+  }
 
-.gerenciar {
-  margin-top: 30px;
-    border: none;
-    border-radius: 0;
-}
+  .tabs-button {
+    margin-right: 0;
+    justify-content: center;
+  }
 
-.header {
-  display: block;
-  padding: 20px 5px 20px 5px;
-  border-radius: 0;
-}
+  .tabs button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 8px 15px;
+  }
 
-h2 {
-    font-size: 1.5rem;
-    text-align: center;
-}
+  .page {
+    padding: 15px;
+  }
+
+  .gerenciar {
+    padding: 20px 20px 20px 10px;
+  }
+
+  .search input {
+    width: 100%;
+    min-width: 200px;
+    font-size: 0.95rem;
+    margin-left: 10px;
+  }
+
 
 .detalhes {
     padding: 50px 20px;
+    color: #fff;
+    margin: 10px;
     border-radius: 8px;
 }
 
 .card-detalhes {
     display: block;
+    gap: 0px;
+    text-align: left;
+}
+
+.avatar-container {
+  text-align: center;
+  display: block;
+  margin: 0;
+}
+
+.avatar-container h3 {
+  display: block;
+  margin-top: 10px;
+  color: #fff;
+  font-size: 2rem;
 }
 
 .avatarG{
- width: 150px;
-    height: 150px;
+ width: 200px;
+    height: 200px;
+    border-radius: 50%;
 }
 
 .info {
+    flex: 1;
     border-right: none;
     border-left: none;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    padding: 30px 0px;
-    margin: 30px 0;
+    padding: 0 0px;
+}
+
+.info .descricao {
+    width: 100%;
+    height: 120px;
+    margin-top: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1rem;
 }
 
 .enderecos {
-    width: 250px;
-    margin: 0 45px;
+    width: 200px;
+    margin-left: 35px;
 }
 
 .enderecos h3{
-  text-align: center;
+  color: #fff;
+  font-size: 2rem;
   border-bottom: 1px solid #ccc;
-
-}
 }
 
+.enderecos ul {
+    list-style: none;
+    padding: 0;
+}
+
+.enderecos li {
+    padding: 5px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.btn-add {
+    background-color: white;
+    border: none;
+    padding: 15px;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
+}
 </style>

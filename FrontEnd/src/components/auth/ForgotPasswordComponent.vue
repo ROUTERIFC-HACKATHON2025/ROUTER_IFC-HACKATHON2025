@@ -243,7 +243,7 @@ function goBack() {
   font-size: 1rem;
   font-weight: bold;
   border: none;
-  border-radius: 12px;
+  border-radius: 30px;
   color: white;
   cursor: pointer;
   transition: transform .3s;

@@ -147,97 +147,91 @@ function voltarParaConfigVans() {
 <template>
   <section :style="{ color: themeManager.text }">
     <div class="tabs" :style="{ backgroundColor: themeManager.detalhe }">
-    <div class="tabs-button">
-      <button :class="{ active: admin.page === 'transportes' }" @click="authState.mudarAdminPage('configVans')"
-        :style="{  backgroundColor: '#fff', color: themeManager.detalhe }">Transportes</button>
-      <button :class="{ active: admin.page === 'passageiros' }" @click="authState.mudarAdminPage('passageiro')"
-        :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">Passageiros</button>
-      <button :class="{ active: admin.page === 'motoristas' }" @click="authState.mudarAdminPage('motorista')"
-        :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">Motoristas</button>
-    </div>
-    <div class="tabs-sair">
-      <button @click="authState.mudarAdminPage('vans')"
-        :style="{ backgroundColor: '#fff', color: themeManager.detalhe  }">Sair da Van</button>
-    </div>
-  </div>
-
-  <div class="gerenciar" :style="{ backgroundColor: themeManager.fundo }">
-    <div class="header-actions">
-      <div class="buttons">
-        <button class="btn-cadastrar" @click="authState.mudarAdminPage('configVans')" :style="{ backgroundColor: themeManager.detalhe }">
-        Sair
-      </button>
-      <button class="btn-cadastrar" @click="voltarParaConfigVans()" :style="{ border: '2px solid' + themeManager.detalhe, color: themeManager.detalhe }">
-        Salvar
-      </button>
+      <div class="tabs-button">
+        <button :class="{ active: admin.page === 'transportes' }" @click="authState.mudarAdminPage('configVans')"
+          :style="{ backgroundColor: '#fff', color: themeManager.detalhe }">Transportes</button>
+        <button :class="{ active: admin.page === 'passageiros' }" @click="authState.mudarAdminPage('passageiro')"
+          :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">Passageiros</button>
+        <button :class="{ active: admin.page === 'motoristas' }" @click="authState.mudarAdminPage('motorista')"
+          :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">Motoristas</button>
       </div>
-
-      <div class="search">
-        <input 
-          type="text" 
-          placeholder="Pesquisar..." 
-          v-model="busca"
-          :style="{ borderColor: themeManager.detalhe, color: themeManager.text, backgroundColor: themeManager.fundo }"
-        />
-        <span class="mdi mdi-magnify" aria-hidden="true" :style="{color: themeManager.detalhe}"></span>
+      <div class="tabs-sair">
+        <button @click="authState.mudarAdminPage('vans')"
+          :style="{ backgroundColor: '#fff', color: themeManager.detalhe }">Sair da Van</button>
       </div>
     </div>
-      <div class="add-container">
-        <div class="col-esquerda" :style="{ backgroundColor: themeManager.detalhe}">
-      <header class="header-esquerda">
-        <h3 style=" color: #fff;">Passageiros:</h3>
-        <div class="search">
-          <input
-            type="text"
-            placeholder="Pesquisar..."
-            v-model="busca"
-          />
-          <span class="mdi mdi-magnify"></span>
-        </div>
-      </header>
 
-      <ul class="lista">
-        <li v-for="p in vanPassengers" :key="p.id">
-          <img src="/src-auth/passageiro.png" alt="" class="avatarP" />
-          <div class="info">
-            <span class="nome">{{ p.nome }}</span>
-            <span class="endereco">{{ p.endereco }}</span>
-          </div>
-          <button
-            class="btn-add"
-            :style="{ backgroundColor: themeManager.detalhe }"
-            :disabled="!passageiroEmOutraRota(p).podeAdicionar"
-            @click="adicionarPassageiro(p)"
-          >
-            {{ passageiroEmOutraRota(p).mensagem }}
+    <div class="gerenciar" :style="{ backgroundColor: themeManager.fundo }">
+      <div class="header-actions">
+        <div class="buttons">
+          <button class="btn-cadastrar" @click="authState.mudarAdminPage('configVans')"
+            :style="{ backgroundColor: themeManager.detalhe }">
+            Sair
           </button>
-        </li>
-      </ul>
-    </div>
+          <button class="btn-cadastrar" @click="voltarParaConfigVans()"
+            :style="{ border: '2px solid' + themeManager.detalhe, color: themeManager.detalhe, backgroundColor: themeManager.fundo }">
+            Salvar
+          </button>
+        </div>
 
-    <!-- COLUNA DIREITA -->
-    <div class="col-direita">
-      <header class="header-direita">
-        <h3>{{ tituloRota }} - 06:00</h3>
-        <span class="contador">{{ passageirosAdicionados.length }}/{{ vanSelecionada.acentos }}</span>
-      </header>
+        <div class="search">
+          <input type="text" placeholder="Pesquisar..." v-model="busca"
+            :style="{ borderColor: themeManager.detalhe, color: themeManager.text, backgroundColor: themeManager.fundo }" />
+          <span class="mdi mdi-magnify" aria-hidden="true" :style="{ color: themeManager.detalhe }"></span>
+        </div>
+      </div>
+      <div class="add-container">
+        <div class="col-esquerda" :style="{ backgroundColor: themeManager.detalhe }">
+          <header class="header-esquerda">
+            <h3 style=" color: #fff;">Passageiros:</h3>
+            <div class="search">
+              <input type="text" placeholder="Pesquisar..." v-model="busca" />
+              <span class="mdi mdi-magnify"></span>
+            </div>
+          </header>
 
-      <ul class="lista">
-        <li v-for="(p,i) in passageirosAdicionados" :key="p.id" :style="{backgroundColor: themeManager.detalhe, color: '#fff'}">
-          <img src="/src-auth/passageiro.png" alt="" class="avatarP" />
-          <div class="info">
-            <span class="nome" :style="{backgroundColor: themeManager.detalhe, color: '#fff'}">{{ p.nome }}</span>
-            <span class="endereco" :style="{backgroundColor: themeManager.detalhe, color: '#fff'}">{{ p.endereco }}</span>
-          </div>
-          <div class="acoes" :style="{backgroundColor: themeManager.detalhe, color: '#fff'}">
-            <button @click="moverCima(i)" :disabled="i===0" :style="{backgroundColor: themeManager.detalhe, color: '#fff'}">▲</button>
-            <button @click="moverBaixo(i)" :disabled="i===passageirosAdicionados.length-1" :style="{backgroundColor: themeManager.detalhe, color: '#fff'}">▼</button>
-            <button @click="removerPassageiro(i)" class="remover">✖</button>
-          </div>
-        </li>
-      </ul>
-    </div>
-    </div>
+          <ul class="lista">
+            <li v-for="p in vanPassengers" :key="p.id">
+              <img src="/src-auth/passageiro.png" alt="" class="avatarP" />
+              <div class="info">
+                <span class="nome">{{ p.nome }}</span>
+                <span class="endereco">{{ p.endereco }}</span>
+              </div>
+              <button class="btn-add" :style="{ backgroundColor: themeManager.detalhe }"
+                :disabled="!passageiroEmOutraRota(p).podeAdicionar" @click="adicionarPassageiro(p)">
+                {{ passageiroEmOutraRota(p).mensagem }}
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- COLUNA DIREITA -->
+        <div class="col-direita">
+          <header class="header-direita">
+            <h3>{{ tituloRota }} - 06:00</h3>
+            <span class="contador">{{ passageirosAdicionados.length }}/{{ vanSelecionada.acentos }}</span>
+          </header>
+
+          <ul class="lista">
+            <li v-for="(p, i) in passageirosAdicionados" :key="p.id"
+              :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">
+              <img src="/src-auth/passageiro.png" alt="" class="avatarP" />
+              <div class="info">
+                <span class="nome" :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">{{ p.nome }}</span>
+                <span class="endereco" :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">{{ p.endereco
+                  }}</span>
+              </div>
+              <div class="acoes" :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">
+                <button @click="moverCima(i)" :disabled="i === 0"
+                  :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">▲</button>
+                <button @click="moverBaixo(i)" :disabled="i === passageirosAdicionados.length - 1"
+                  :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }">▼</button>
+                <button @click="removerPassageiro(i)" class="remover">✖</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -267,7 +261,7 @@ section {
   transition: all 0.3s ease;
 }
 
-.tabs-button{
+.tabs-button {
   margin-right: 280px;
 }
 
@@ -285,7 +279,7 @@ section {
 }
 
 .buttons .btn-cadastrar {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .btn-cadastrar {
@@ -321,6 +315,7 @@ section {
   transform: translateY(-50%);
   font-size: 1.3em;
 }
+
 .add-container {
   display: flex;
   gap: 20px;
@@ -349,7 +344,7 @@ section {
 
 .header-esquerda h3,
 .header-direita h3 {
-    font-size: 2rem;
+  font-size: 2rem;
 }
 
 .search {
@@ -439,37 +434,161 @@ section {
 
 
 @media (max-width: 768px) {
-  section{
+  section {
     padding: 0px 0px 50px 0px;
   }
-  .titulo {
-  margin: 20px 0 0px;
-}
 
-.gerenciar {
-  display: block;
-  gap: 0px;
-  padding: 25px;
-  border-radius: 0;
-}
+  .titulo {
+    margin: 20px 0 0px;
+  }
+
+  .gerenciar {
+    display: block;
+    gap: 0px;
+    padding: 25px;
+    border-radius: 0;
+  }
+
   .col-passageiros {
     border-right: none;
     padding: 0;
     margin: 0 0 10px 0;
   }
 
-.col-rotas {
-  display: grid;
-  grid-template-columns: none;
+  .col-rotas {
+    display: grid;
+    grid-template-columns: none;
+
+  }
+
+  .rota {
+    width: 360px;
+    padding: 0;
+    text-align: left;
+  }
 
 }
 
-.rota {
-  width: 360px;
-  padding: 0;
-  text-align: left;
+/* 📱 Responsividade para telas menores que 768px */
+@media (max-width: 768px) {
+  section {
+    padding: 80px 10px;
+  }
+
+  /* ====== TABS ====== */
+  .tabs {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .tabs-button {
+    margin-right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tabs button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 20px;
+  }
+
+  .tabs-sair button {
+    width: 35%;
+    font-size: 1rem;
+    padding: 8px 15px;
+  }
+
+  /* ====== ÁREA GERENCIAR ====== */
+  .gerenciar {
+    padding: 15px;
+    border-radius: 0;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .btn-cadastrar {
+    flex: 1;
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  .search input {
+    width: 100%;
+    min-width: auto;
+    font-size: 0.95rem;
+    padding: 10px 35px 10px 12px;
+  }
+
+  /* ====== CONTAINER PRINCIPAL ====== */
+  .add-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0;
+  }
+
+  /* ====== COLUNAS ====== */
+  .col-esquerda,
+  .col-direita {
+    width: 100%;
+    padding: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .header-esquerda h3,
+  .header-direita h3 {
+    font-size: 1.4rem;
+  }
+
+  .contador {
+    font-size: 1rem;
+  }
+
+  /* ====== LISTA ====== */
+  .lista {
+    max-height: 320px;
+    padding: 5px;
+  }
+
+  .lista li {
+    padding: 10px;
+    flex-wrap: wrap;
+  }
+
+  .info {
+    margin: 0 8px;
+    font-size: 0.95rem;
+  }
+
+  .btn-add {
+    margin-top: 8px;
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  /* Botões de ação da direita */
+  .acoes button {
+    font-size: 1rem;
+    margin: 0 4px;
+  }
 }
 
-}
 </style>
-
