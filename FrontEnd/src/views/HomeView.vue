@@ -168,13 +168,13 @@ onUnmounted(() => {
     <section class="empresa animate-on-scroll">
       <h2 class="section-title" :style="{ color: themeManager.detalhe }">EMPRESAS PARCEIRAS:</h2>
       <div class="empresas-lista">
-        <div class="empresa-card animate-on-scroll">
+        <div class="empresa-card animate-on-scroll fade-in-left" >
           <img src="/src-home/logoindytour.png" alt="Logo Indy Tour" class="logoindy" />
           <div class="empresa-info">
             <h3 :style="{ color: themeManager.detalhe }">Indy Tour</h3>
             <p :style="{ color: themeManager.text }">
               A IndyTour, criada em 2020, é uma empresa de transporte por vans que atende os estudantes do IFC com segurança e conforto...
-              <RouterLink to="/IndyTour" :style="{ color: themeManager.detalheAlternativo }" @click="authStore.mudarStateEmpresa('Indy')">saiba mais</RouterLink>
+              <RouterLink to="/IndySul" :style="{ color: themeManager.detalheAlternativo }" @click="authStore.mudarStateEmpresa('Indy')">Saiba mais</RouterLink>
             </p>
             <div class="empresa-redes-sociais">
               <a href="https://www.instagram.com/indytour.oficial" target="_blank" :style="{ color: themeManager.detalhe }"><span class="mdi mdi-instagram"></span></a>
@@ -183,13 +183,13 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <div class="empresa-card animate-on-scroll">
+        <div class="empresa-card animate-on-scroll fade-in-right">
           <img src="/src-home/logosul.png" alt="Logo Sul Turismo" class="logo" />
           <div class="empresa-info">
             <h3 :style="{ color: themeManager.detalhe }">Sul Turismo</h3>
             <p :style="{ color: themeManager.text }">
               A Sul Turismo, criada em 2015, atua no transporte de estudantes com foco em eficiência e qualidade...
-              <RouterLink to="/IndySul" :style="{ color: themeManager.detalheAlternativo }" @click="authStore.mudarStateEmpresa('Sul')">saiba mais</RouterLink>
+              <RouterLink to="/IndySul" :style="{ color: themeManager.detalheAlternativo }" @click="authStore.mudarStateEmpresa('Sul')">Saiba mais</RouterLink>
             </p>
             <div class="empresa-redes-sociais">
               <a href="https://www.instagram.com/sul.turismo.jlle" target="_blank" :style="{ color: themeManager.detalhe }"><span class="mdi mdi-instagram"></span></a>
@@ -203,8 +203,8 @@ onUnmounted(() => {
     <section class="start-section animate-on-scroll">
       <h2 :style="{ color: themeManager.detalhe }">PRONTO PARA COMEÇAR SUA JORNADA?</h2>
       <p :style="{ color: themeManager.text }">Cadastre-se já para garantir seu lugar na melhor opção de transporte para o IFC-Araquari</p>
-      <button :style="{ backgroundColor: themeManager.detalhe }" class="cadastre-se">CADASTRE-SE</button>
-      <button :style="{ borderColor: themeManager.detalhe, color: themeManager.detalhe }" class="login">FAÇA LOGIN</button>
+      <RouterLink to="/login"><button @click="authStore.mudarState('inicio')" :style="{ backgroundColor: themeManager.detalhe }" class="cadastre-se">CADASTRE-SE</button></RouterLink>
+      <RouterLink to="/login"><button @click="authStore.mudarState('inicio')" :style="{ borderColor: themeManager.detalhe, color: themeManager.detalhe }" class="login">FAÇA LOGIN</button></RouterLink>
     </section>
   </main>
 </template>
