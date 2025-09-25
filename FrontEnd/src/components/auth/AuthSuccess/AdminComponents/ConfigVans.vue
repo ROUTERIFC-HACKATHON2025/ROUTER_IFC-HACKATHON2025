@@ -87,10 +87,10 @@ function editarRota(index) {
           <!-- Informações -->
           <div class="card" style="color: #fff">
             <h2 :style="{ color: themeManager.detalhe }">Informações do Veículo:</h2>
-            <p style="color: #fff"><strong >Placa:</strong> {{ van.placa }}</p>
-            <p style="color: #fff"><strong>Modelo:</strong> {{ van.modelo }}</p>
-            <p style="color: #fff"><strong>Cor:</strong> {{ van.cor }}</p>
-            <p style="color: #fff"><strong>Capacidade:</strong> {{ van.capacidade }}</p>
+            <p :style="{color: themeManager.text}"><strong >Placa:</strong> {{ van.placa }}</p>
+            <p :style="{color: themeManager.text}"><strong>Modelo:</strong> {{ van.modelo }}</p>
+            <p :style="{color: themeManager.text}"><strong>Cor:</strong> {{ van.cor }}</p>
+            <p :style="{color: themeManager.text}"><strong>Capacidade:</strong> {{ van.capacidade }}</p>
 
             <div class="status">
               <button class="ativo" :style="{ background: themeManager.detalhe, color: '#fff' }">
