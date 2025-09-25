@@ -909,7 +909,7 @@ h1{
   }
   .carousel-slide img {
     width: 100%;
-    height: 250px;
+    height: 200px;
     border-radius: 15px;
   }
 

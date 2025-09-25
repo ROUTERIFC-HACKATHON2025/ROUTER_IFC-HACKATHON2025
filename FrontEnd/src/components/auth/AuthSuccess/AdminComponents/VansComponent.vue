@@ -16,25 +16,19 @@ const vansFiltradas = computed(() => {
   if (!termoBusca.value.trim()) {
     return userProfile.vans
   }
-  
+
   const busca = termoBusca.value.toLowerCase().trim()
-  
+
   return userProfile.vans.filter(van => {
     if (van.nome.toLowerCase().includes(busca)) return true
-    
     if (van.modelo && van.modelo.toLowerCase().includes(busca)) return true
-    
     if (van.marca && van.marca.toLowerCase().includes(busca)) return true
-    
     if (van.placa && van.placa.toLowerCase().includes(busca)) return true
-    
-    if (van.caracteristicas && van.caracteristicas.some(carac => 
+    if (van.caracteristicas && van.caracteristicas.some(carac =>
       carac.toLowerCase().includes(busca)
     )) return true
-    
     const status = admin.getVanStatus(van.id)
     if (status.toLowerCase().includes(busca)) return true
-    
     return false
   })
 })
@@ -48,7 +42,6 @@ function abrirConfigVan(van) {
 
 function destacarTexto(texto, termo) {
   if (!termo || !texto) return texto
-  
   const regex = new RegExp(`(${termo})`, 'gi')
   return texto.replace(regex, '<mark>$1</mark>')
 }
@@ -58,30 +51,30 @@ onMounted(() => {
     const statusPersistido = admin.getVanStatus(van.id)
     van.status = statusPersistido
   })
-  // Limpa dados pré-definidos ao carregar
   admin.clearPredefinedData()
-  // Força limpeza adicional após um pequeno delay
   setTimeout(() => {
     admin.clearPredefinedData()
   }, 100)
 })
 </script>
+
 <template>
   <section :style="{color: themeManager.text}">
     <!-- Tabs -->
     <div class="tabs" :style="{ backgroundColor: themeManager.detalhe }">
       <h1 style=" color: #fff;">GERENCIAMENTO</h1>
-      <button @click="authState.mudarState('inicio')" :style="{ color: themeManager.detalhe }">Sair da Pagina</button>
+      <button @click="authState.mudarState('inicio')" :style="{ color: themeManager.detalhe }">
+        Sair da Pagina
+      </button>
     </div>
 
     <!-- Caixa de gerenciamento -->
     <div class="gerenciar" :style="{ backgroundColor: themeManager.fundo }">
       <div class="header-actions">
-
         <div class="search">
-          <input 
-            type="text" 
-            placeholder="Pesquisar..." 
+          <input
+            type="text"
+            placeholder="Pesquisar..."
             v-model="termoBusca"
             :style="{ borderColor: themeManager.detalhe, color: themeManager.text, backgroundColor: themeManager.fundo }"
           />
@@ -100,17 +93,17 @@ onMounted(() => {
 
       <!-- Grid de vans -->
       <ul>
-        <li 
-          v-for="van in vansFiltradas" 
-          :key="van.id" 
+        <li
+          v-for="van in vansFiltradas"
+          :key="van.id"
           class="card-van"
           @click="abrirConfigVan(van)"
           :style="{ backgroundColor: themeManager.detalhe, color: '#fff' }"
         >
           <span class="mdi mdi-van-passenger icone" style="color: #fff;"></span>
-          <div >
+          <div>
             <h3 v-html="destacarTexto(van.nome, termoBusca)" style="color: #fff;"></h3>
-          <p class="placa" v-html="destacarTexto(van.placa, termoBusca)" style="color: #fff;"></p>
+            <p class="placa" v-html="destacarTexto(van.placa, termoBusca)" style="color: #fff;"></p>
           </div>
         </li>
 
@@ -172,16 +165,6 @@ section {
   margin-bottom: 20px;
 }
 
-.btn-cadastrar {
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 25px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
 .search {
   position: relative;
 }
@@ -196,7 +179,6 @@ section {
 
 .search input:focus {
   outline: none;
-  border-color: #002f6c;
 }
 
 .search .mdi {
@@ -222,13 +204,12 @@ ul {
   cursor: pointer;
   box-shadow: 0 0px 30px rgba(0, 0, 0, 0.142);
   border-radius: 10px;
-  padding: 0 40px 0 40px;
+  padding: 0 40px;
   align-items: center;
   text-align: left;
   background: #fff;
   min-width: 320px;
   max-width: 320px;
-  display: flex;
   transition: transform 0.2s ease;
 }
 
@@ -289,5 +270,66 @@ ul {
 
 .btn-limpar-busca:hover {
   background-color: rgba(0, 47, 108, 0.1);
+}
+
+/* ===================== RESPONSIVIDADE ===================== */
+@media (max-width: 768px) {
+  section {
+    padding: 80px 10px;
+  }
+
+  .tabs {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 15px 20px;
+    gap: 10px;
+  }
+
+  .tabs h1 {
+    font-size: 1.8rem;
+  }
+
+  .tabs button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 8px 20px;
+  }
+
+  .header-actions {
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+
+  .search input {
+    width: 100%;
+    min-width: 330px;
+    font-size: 0.95rem;
+  }
+
+  ul {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 10px 0;
+  }
+
+  .card-van {
+    max-width: 100%;
+    width: 90%;
+    padding: 10px 20px;
+  }
+
+  .icone {
+    font-size: 70px;
+    margin-right: 15px;
+  }
+
+  .card-van h3 {
+    font-size: 1rem;
+  }
+
+  .placa {
+    font-size: 0.85rem;
+  }
 }
 </style>

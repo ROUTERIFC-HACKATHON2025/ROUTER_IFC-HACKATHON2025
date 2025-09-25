@@ -116,7 +116,7 @@ async function handleLogin() {
               <span class="mdi mdi-lock icon" :style="{ color: themeManager.text }"></span>
               <input v-model="usuario.password" :type="showPassword ? 'text' : 'password'" placeholder="Senha"
                 autocomplete="current-password" class="input"
-                :style="{ backgroundColor: themeManager.fundo, color: themeManager.text, borderColor: themeManager.text }"
+                :style="{ backgroundColor: themeManager.fundo, color: themeManager.text }"
                 @keydown.enter.prevent="handleLogin" />
               <span class="mdi toggle-eye" :class="showPassword ? 'mdi-eye-off' : 'mdi-eye'" @click="toggleShowPassword"
                 :style="{ color: themeManager.text }"></span>
