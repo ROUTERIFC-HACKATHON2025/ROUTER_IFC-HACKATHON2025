@@ -8,8 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/",
-    "vercel-build": "npm run build"
+    "format": "prettier --write src/"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
